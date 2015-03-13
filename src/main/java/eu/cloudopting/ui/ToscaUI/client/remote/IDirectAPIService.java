@@ -9,10 +9,14 @@ import org.cruxframework.crux.core.shared.rest.annotation.GET;
 import org.cruxframework.crux.core.shared.rest.annotation.HeaderParam;
 import org.cruxframework.crux.core.shared.rest.annotation.Path;
 
-
+/**
+ * This interface goes direct to the RESP API of the middleware.
+ * @author xeviscc
+ *
+ */
 @TargetEndPoint("http://localhost:8080")
 @Path("/")
-public interface IConnect2 extends RestProxy {
+public interface IDirectAPIService extends RestProxy {
 
 	@GET
 	@Path("/")

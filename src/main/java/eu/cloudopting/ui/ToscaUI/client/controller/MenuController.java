@@ -9,6 +9,11 @@ import org.cruxframework.crux.widgets.client.disposal.topmenudisposal.TopMenuDis
 
 import com.google.gwt.user.client.ui.HTML;
 
+/**
+ * 
+ * @author xeviscc
+ *
+ */
 @Controller("menuController")
 public class MenuController 
 {

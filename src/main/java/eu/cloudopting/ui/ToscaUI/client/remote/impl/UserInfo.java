@@ -10,7 +10,11 @@ import org.cruxframework.crux.core.shared.rest.annotation.QueryParam;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
+/**
+ * 
+ * @author xeviscc
+ *
+ */
 @RestService("userInfoService")
 @Path("userInfo")
 public class UserInfo {
@@ -35,7 +39,6 @@ public class UserInfo {
 			result.put("langKey", jsonObject.getString("langKey"));
 			result.put("activationKey", jsonObject.getString("activationKey"));
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return result;

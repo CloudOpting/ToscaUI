@@ -4,12 +4,17 @@ import org.cruxframework.crux.core.client.rest.Callback;
 import org.cruxframework.crux.core.client.rest.RestProxy;
 import org.cruxframework.crux.core.client.rest.RestProxy.TargetRestService;
 
-@TargetRestService("connectService")
-public interface IConnect extends RestProxy {
+/**
+ * This interface acts as a proxy to the REST API of the middleware.
+ * @author xeviscc
+ *
+ */
+@TargetRestService("proxyAPIService")
+public interface IProxyAPIService extends RestProxy {
 	
 	void connect(String user, String pass, Callback<String> callback);
 	
-	void applicationCreate(Callback<String> callback);
+	void applicationCreate(String json, Callback<String> callback);
 	
 	void applicationList(
 			String page,
@@ -21,7 +26,6 @@ public interface IConnect extends RestProxy {
 		
 	void application(String id, Callback<String> callback);
 	
-	void getUser(String user, Callback<String> callback);
-
-
+	void users(String user, Callback<String> callback);
+	
 }

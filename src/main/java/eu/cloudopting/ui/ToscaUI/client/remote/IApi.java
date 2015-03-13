@@ -12,6 +12,11 @@ import org.cruxframework.crux.core.shared.rest.annotation.POST;
 import org.cruxframework.crux.core.shared.rest.annotation.Path;
 import org.cruxframework.crux.core.shared.rest.annotation.PathParam;
 
+/**
+ * 
+ * @author xeviscc
+ *
+ */
 @TargetEndPoint("http://localhost:8080")
 @Path("api")
 //@CorsSupport(allowOrigin={"localhost", "127.0.0.1"}, maxAge=15)

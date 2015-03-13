@@ -8,15 +8,19 @@ import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.ioc.Inject;
 import org.cruxframework.crux.core.client.screen.views.BindView;
 import org.cruxframework.crux.core.client.screen.views.WidgetAccessor;
-import org.cruxframework.crux.core.rebind.screen.Widget;
 import org.cruxframework.crux.widgets.client.dialogcontainer.DialogViewContainer;
 import org.cruxframework.crux.widgets.client.storyboard.Storyboard;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 
-import eu.cloudopting.ui.ToscaUI.model.StoryboardItem;
+import eu.cloudopting.ui.ToscaUI.server.model.StoryboardItem;
 
+/**
+ * 
+ * @author xeviscc
+ *
+ */
 @Controller("serviceCatalogListController")
 public class ServiceCatalogListController 
 {
@@ -60,14 +64,11 @@ public class ServiceCatalogListController
 		}
 	}
 	
+	//TODO: Check the way to make the dialog know how is the parent, and show consistent information
 	@Expose
 //	public void openDetail(StoryboardItem widget)
 	public void openDetail()
 	{
-//		FlatMessageBox.show("DETAIL", MessageType.INFO);
-		
-//		System.out.println(widget.getTitle());
-		
 		serviceCatalogList.dialogViewContainer().loadView("detailService", true);
 		serviceCatalogList.dialogViewContainer().openDialog();
 		serviceCatalogList.dialogViewContainer().center();

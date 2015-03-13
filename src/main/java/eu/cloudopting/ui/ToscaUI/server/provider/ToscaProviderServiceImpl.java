@@ -12,6 +12,11 @@ import org.cruxframework.crux.core.shared.rest.annotation.GET;
 import org.cruxframework.crux.core.shared.rest.annotation.POST;
 import org.cruxframework.crux.core.shared.rest.annotation.Path;
 
+/**
+ * 
+ * @author xeviscc
+ *
+ */
 @RestService("toscaProviderService")
 @Path("/toscaProvider")
 public class ToscaProviderServiceImpl {

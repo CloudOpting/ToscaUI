@@ -9,6 +9,11 @@ import org.cruxframework.crux.widgets.client.select.SingleSelect;
 import org.cruxframework.crux.widgets.client.textarea.TextArea;
 import org.cruxframework.crux.widgets.client.uploader.FileUploader;
 
+/**
+ * 
+ * @author xeviscc
+ *
+ */
 @Controller("publishServiceController")
 public class PublishServiceController 
 {

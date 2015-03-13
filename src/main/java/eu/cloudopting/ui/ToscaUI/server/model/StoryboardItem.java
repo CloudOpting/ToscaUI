@@ -1,10 +1,7 @@
-package eu.cloudopting.ui.ToscaUI.model;
+package eu.cloudopting.ui.ToscaUI.server.model;
 
-import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox;
-import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox.MessageType;
 import org.cruxframework.crux.widgets.client.styledpanel.StyledPanel;
 
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -12,6 +9,11 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 
+/**
+ * 
+ * @author xeviscc
+ *
+ */
 public class StoryboardItem extends Composite {
 
 	private FlowPanel image = new FlowPanel();

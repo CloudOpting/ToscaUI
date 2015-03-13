@@ -1,4 +1,4 @@
-package eu.cloudopting.ui.ToscaUI.model;
+package eu.cloudopting.ui.ToscaUI.utils;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -13,44 +13,11 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-
-//public class UniversalNamespaceResolver implements NamespaceContext {
-//
-//    /**
-//     * This method returns the uri for all prefixes needed. Wherever possible
-//     * it uses XMLConstants.
-//     * 
-//     * @param prefix
-//     * @return uri
-//     */
-//    public String getNamespaceURI(String prefix) {
-//        if (prefix == null) {
-//            throw new IllegalArgumentException("No prefix provided!");
-//        } else if (prefix.equals(XMLConstants.DEFAULT_NS_PREFIX)) {
-//            return "http://docs.oasis-open.org/tosca/ns/2011/12";
-//        } else if (prefix.equals("xml")) {
-//            return "http://www.w3.org/XML/1998/namespace";
-//        } else if (prefix.equals("xsi")) {
-//            return "http://www.w3.org/2001/XMLSchema-instance";
-//        } else if (prefix.equals("co")) {
-//            return "http://docs.oasis-open.org/tosca/ns/2011/12/CloudOptingTypes";
-//        } else {
-//            return XMLConstants.NULL_NS_URI;
-//        }
-//    }
-//
-//    public String getPrefix(String namespaceURI) {
-//        // Not needed in this context.
-//        return null;
-//    }
-//
-//    public Iterator getPrefixes(String namespaceURI) {
-//        // Not needed in this context.
-//        return null;
-//    }
-//	
-//}
-
+/**
+ * 
+ * @author xeviscc
+ *
+ */
 public class UniversalNamespaceResolver implements NamespaceContext {
     private static final String DEFAULT_NS = "DEFAULT";
     private Map<String, String> prefix2Uri = new HashMap<String, String>();
@@ -151,9 +118,51 @@ public class UniversalNamespaceResolver implements NamespaceContext {
         return uri2Prefix.get(namespaceURI);
     }
 
-    public Iterator getPrefixes(String namespaceURI) {
+    
+    @SuppressWarnings("rawtypes")
+	public Iterator getPrefixes(String namespaceURI) {
         // Not implemented
         return null;
     }
 
 }
+
+/**
+ * HARDCODED RESOLVER
+ */
+//public class UniversalNamespaceResolver implements NamespaceContext {
+//
+//    /**
+//     * This method returns the uri for all prefixes needed. Wherever possible
+//     * it uses XMLConstants.
+//     * 
+//     * @param prefix
+//     * @return uri
+//     */
+//    public String getNamespaceURI(String prefix) {
+//        if (prefix == null) {
+//            throw new IllegalArgumentException("No prefix provided!");
+//        } else if (prefix.equals(XMLConstants.DEFAULT_NS_PREFIX)) {
+//            return "http://docs.oasis-open.org/tosca/ns/2011/12";
+//        } else if (prefix.equals("xml")) {
+//            return "http://www.w3.org/XML/1998/namespace";
+//        } else if (prefix.equals("xsi")) {
+//            return "http://www.w3.org/2001/XMLSchema-instance";
+//        } else if (prefix.equals("co")) {
+//            return "http://docs.oasis-open.org/tosca/ns/2011/12/CloudOptingTypes";
+//        } else {
+//            return XMLConstants.NULL_NS_URI;
+//        }
+//    }
+//
+//    public String getPrefix(String namespaceURI) {
+//        // Not needed in this context.
+//        return null;
+//    }
+//
+//    public Iterator getPrefixes(String namespaceURI) {
+//        // Not needed in this context.
+//        return null;
+//    }
+//	
+//}

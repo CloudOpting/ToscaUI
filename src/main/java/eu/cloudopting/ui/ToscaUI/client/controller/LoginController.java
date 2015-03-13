@@ -13,8 +13,13 @@ import org.cruxframework.crux.widgets.client.swapcontainer.HorizontalSwapContain
 
 import com.google.gwt.user.client.ui.TextBox;
 
-import eu.cloudopting.ui.ToscaUI.client.remote.IConnect;
+import eu.cloudopting.ui.ToscaUI.client.remote.IProxyAPIService;
 
+/**
+ * 
+ * @author xeviscc
+ *
+ */
 @Controller("loginController")
 public class LoginController 
 {
@@ -22,7 +27,7 @@ public class LoginController
 	public LoginView loginView;
 
 	@Inject
-	public IConnect connectApi;
+	public IProxyAPIService connectApi;
 
 	@Expose
 	public void onLoad() {

@@ -6,6 +6,11 @@ import org.cruxframework.crux.core.client.rest.Callback;
 import org.cruxframework.crux.core.client.rest.RestProxy;
 import org.cruxframework.crux.core.client.rest.RestProxy.TargetRestService;
 
+/**
+ * 
+ * @author xeviscc
+ *
+ */
 @TargetRestService("userInfoService")
 public interface IUserInfo extends RestProxy {
 	

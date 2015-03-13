@@ -6,6 +6,11 @@ import org.cruxframework.crux.core.client.ioc.Inject;
 import org.cruxframework.crux.core.client.screen.views.BindView;
 import org.cruxframework.crux.core.client.screen.views.WidgetAccessor;
 
+/**
+ * 
+ * @author xeviscc
+ *
+ */
 @Controller("detailServiceController")
 public class DetailServiceController 
 {

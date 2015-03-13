@@ -22,9 +22,8 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.TextBox;
 
 import eu.cloudopting.ui.ToscaUI.client.remote.IApi;
-import eu.cloudopting.ui.ToscaUI.client.remote.IConnect;
+import eu.cloudopting.ui.ToscaUI.client.remote.IProxyAPIService;
 import eu.cloudopting.ui.ToscaUI.client.remote.IUserInfo;
-import eu.cloudopting.ui.ToscaUI.client.remote.impl.ToscaProviderService;
 
 @Controller("mainController")
 public class MainController 
@@ -34,13 +33,10 @@ public class MainController
 	public MainView mainView;
 
 	@Inject
-	public ToscaProviderService service;
-
-	@Inject
 	public IApi api;
 
 	@Inject
-	public IConnect connectApi;
+	public IProxyAPIService connectApi;
 
 	@Inject
 	public IUserInfo userInfo;
@@ -74,8 +70,8 @@ public class MainController
 
 		final Callback<String> callback = new Callback<String>() {
 			@Override
-			public void onSuccess(String result) {
-				userInfo.getLastModifiedBy(result, callbackUserInfo);
+			public void onSuccess(String json) {
+				userInfo.getLastModifiedBy(json, callbackUserInfo);
 			}
 			@Override
 			public void onError(Exception e) {
@@ -83,7 +79,7 @@ public class MainController
 			}
 		};
 
-		connectApi.getUser(mainView.nameTextBox().getValue(), callback);
+		connectApi.users(mainView.nameTextBox().getValue(), callback);
 
 	}  
 	@Expose   

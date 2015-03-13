@@ -9,7 +9,12 @@ import java.net.URLConnection;
 
 import org.apache.commons.codec.binary.Base64;
 
-public class ConnectToUrlUsingBasicAuthentication {
+/**
+ * 
+ * @author xeviscc
+ *
+ */
+public class ConnectToUrlUsingBasicAuthenticationTest {
 
 	public static void main(String[] args) {
 

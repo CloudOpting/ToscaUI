@@ -8,6 +8,11 @@ import org.cruxframework.crux.core.client.screen.views.WidgetAccessor;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox.MessageType;
 
+/**
+ * 
+ * @author xeviscc
+ *
+ */
 @Controller("subscribeServiceTaylorFormController")
 public class SubscribeServiceTaylorFormController 
 {

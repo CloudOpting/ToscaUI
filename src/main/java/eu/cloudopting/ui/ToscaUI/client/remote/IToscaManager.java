@@ -1,20 +1,20 @@
 package eu.cloudopting.ui.ToscaUI.client.remote;
 
-import java.util.Map;
-
-import javax.xml.xpath.XPathExpressionException;
-
 import org.cruxframework.crux.core.client.rest.Callback;
 import org.cruxframework.crux.core.client.rest.RestProxy;
 import org.cruxframework.crux.core.client.rest.RestProxy.TargetRestService;
 
-import eu.cloudopting.ui.ToscaUI.client.remote.impl.ToscaUtil.NodeTemplateType;
-import eu.cloudopting.ui.ToscaUI.client.remote.impl.ToscaUtil.NodeType;
-import eu.cloudopting.ui.ToscaUI.client.remote.impl.ToscaUtil.Operation;
-import eu.cloudopting.ui.ToscaUI.client.remote.impl.ToscaUtil.SLA;
+import eu.cloudopting.ui.ToscaUI.client.remote.impl.ToscaManager.NodeTemplateType;
+import eu.cloudopting.ui.ToscaUI.client.remote.impl.ToscaManager.NodeType;
+import eu.cloudopting.ui.ToscaUI.client.remote.impl.ToscaManager.Operation;
 
-@TargetRestService("toscaUtilService")
-public interface IToscaUtil extends RestProxy {
+/**
+ * 
+ * @author xeviscc
+ *
+ */
+@TargetRestService("toscaManagerService")
+public interface IToscaManager extends RestProxy {
 	
 	void getTosca(Callback<String> callback);
 	

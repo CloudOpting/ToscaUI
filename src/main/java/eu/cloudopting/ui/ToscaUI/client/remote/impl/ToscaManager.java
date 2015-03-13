@@ -3,9 +3,6 @@ package eu.cloudopting.ui.ToscaUI.client.remote.impl;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -22,26 +19,28 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.xml.dtm.DTMIterator;
 import org.apache.xml.dtm.ref.DTMNodeList;
 import org.cruxframework.crux.core.server.rest.annotation.RestService;
 import org.cruxframework.crux.core.shared.rest.annotation.GET;
 import org.cruxframework.crux.core.shared.rest.annotation.POST;
 import org.cruxframework.crux.core.shared.rest.annotation.Path;
 import org.cruxframework.crux.core.shared.rest.annotation.QueryParam;
-import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import eu.cloudopting.ui.ToscaUI.model.UniversalNamespaceResolver;
+import eu.cloudopting.ui.ToscaUI.server.model.SLA;
+import eu.cloudopting.ui.ToscaUI.utils.UniversalNamespaceResolver;
 
-
-@RestService("toscaUtilService")
-@Path("toscaUtil")
-public class ToscaUtil {
+/**
+ * 
+ * @author xeviscc
+ *
+ */
+@RestService("toscaManagerService")
+@Path("toscaManager")
+public class ToscaManager {
 
 	private Document document;
 	private static XPath xpath;
@@ -217,10 +216,8 @@ public class ToscaUtil {
 	        result = sw.toString();
 	        
 		} catch (TransformerConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return result;
@@ -286,7 +283,6 @@ public class ToscaUtil {
 	throws XPathExpressionException 
 	{
 		SLA sla = new SLA();
-
 		String expression = String.format(GET_SLA, definition, serviceTemplate, nodeTemplateType, slaID);
 
 		sla.numCpus = evaluateSingleValue(expression + "/NumCpus");
@@ -358,26 +354,10 @@ public class ToscaUtil {
 	}
 
 	
-	
-	
-	
-	//** UTILS **//
-
-	/**
-	 * Transforms the file in the path to a string taking into account the ecoding charset.
-	 * 
-	 * @param path The path to the file to be transformed
-	 * @param encoding Encoding used to do the transformation.
-	 * @return a String with the file encoded with the charset specified.
-	 * @throws IOException
+	/*
+	 * TOSCA UTILS
 	 */
-	private static String readFile(String path, Charset encoding) throws IOException 
-	{
-		byte[] encoded = Files.readAllBytes(Paths.get(path));
-		return new String(encoded, encoding);
-	}
-
-
+	
 	/**
 	 * Evaluates the expression and inserts the value in the Node.
 	 * 
@@ -444,75 +424,4 @@ public class ToscaUtil {
 		return sw.toString();
 	} 
 
-	//** TESTING **//
-
-	public static void main(String[] args) throws Exception {
-
-
-		String definition = "Clearo";
-		String serviceTemplate = "Clearo";
-		String interfaceName = "http://tempuri.org";
-		String slaID = "BigCity";
-
-		ToscaUtil toscaUtil = new ToscaUtil();
-		String toscaFile = readFile("C:\\Users\\a591584\\Desktop\\CloudOpting\\TOSCA_ClearoExample.xml", Charset.defaultCharset());
-		String json = "{ \"tosca\" : \"" + StringEscapeUtils.escapeJavaScript(toscaFile) + "\"}";
-		System.out.println(json);
-		
-		//From String to JSON
-		JSONObject jsonObject = new JSONObject(json);
-		//Unescape from JavaScript
-		String toscaFileFromJson = StringEscapeUtils.unescapeJavaScript(jsonObject.getString("tosca"));
-		
-		toscaUtil.setTosca(toscaFileFromJson);
-
-		toscaUtil.getDocumentationFromOperation(definition, NodeType.VMhost, interfaceName, Operation.Install);
-//				toscaUtil.getDocumentationFromOperation(definition, NodeType.Apache, interfaceName, Operation.Install);
-//				toscaUtil.getDocumentationFromOperation(definition, NodeType.DockerContainer, interfaceName, Operation.Install);
-//				toscaUtil.getDocumentationFromOperation(definition, NodeType.ApacheVirtualHost, interfaceName, Operation.Install);
-
-//				toscaUtil.getHostName(definition, serviceTemplate, NodeTemplate.VMhost);
-//				toscaUtil.getHostName(definition, serviceTemplate, NodeTemplate.Apache);
-//				toscaUtil.getHostName(definition, serviceTemplate, NodeTemplate.DockerContainer);
-		toscaUtil.getVHostName(definition, serviceTemplate, NodeTemplateType.ApacheVirtualHost);
-		toscaUtil.setVHostName("HOSTNAME_TEST", definition, serviceTemplate, NodeTemplateType.ApacheVirtualHost);
-		toscaUtil.getVHostName(definition, serviceTemplate, NodeTemplateType.ApacheVirtualHost);
-		toscaUtil.getInputParametersNeeded(definition, NodeType.VMhost, Operation.Install);
-		toscaUtil.getSlaAvaliable(definition, serviceTemplate, NodeTemplateType.VMhost);
-		
-		System.out.println("-------------");
-
-		toscaUtil.getInputParameter(definition,  NodeType.VMhost, Operation.Install, "co:SLA");
-		toscaUtil.setInputParameter(definition,  NodeType.VMhost, Operation.Install, "co:SLA", "HOLA");
-		toscaUtil.getInputParameter(definition,  NodeType.VMhost, Operation.Install, "co:SLA");
-		
-
-		SLA sla = toscaUtil.getSLA(definition, serviceTemplate, NodeTemplateType.VMhost, slaID);
-//				toscaUtil.getSLA(definition, serviceTemplate, NodeTemplate.Apache, slaID);
-//				toscaUtil.getSLA(definition, serviceTemplate, NodeTemplate.ApacheVirtualHost, slaID);
-//				toscaUtil.getSLA(definition, serviceTemplate, NodeTemplate.DockerContainer, slaID);
-		System.out.println(sla);
-
-		json = "{ \"tosca\" : \"" + StringEscapeUtils.escapeJavaScript(toscaUtil.getTosca()) + "\"}";
-		System.out.println( json );
-		
-		
-	}
-
-	public class SLA {
-		String numCpus;
-		String memory;
-		String price;
-		String disk;
-		String chosen;
-
-		@Override
-		public String toString() {
-			return "numCpus " +  numCpus
-					+ ", memory " + memory
-					+ ", price " + price
-					+ ", disk " + disk 
-					+ ", chosen " + chosen;
-		}
-	}
 }
