@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:c="http://www.cruxframework.org/crux" 
+	xmlns:crux="http://www.cruxframework.org/crux/widgets"
+	xmlns:faces="http://www.cruxframework.org/crux/smart-faces"
+	xmlns:gwt="http://www.cruxframework.org/crux/gwt">
+	
+	<head>
+		<title>UI Tosca</title>
+	</head>
+	
+	<body>
+		<script type="text/javascript" src="../toscaui/toscaui.nocache.js"></script>
+
+		<c:screen 
+			useView="**/views/*" 
+			smallViewport="user-scalable=no, width=320" 
+			largeViewport="user-scalable=no, width=device-width, height=device-height"
+			useResource="xStandardResources,smartFacesResources" height="100%"/>
+			
+		<crux:horizontalSwapViewContainer id="views">
+			<crux:view name="login" active="true"/>
+			<crux:view name="main" active="false"/>
+			<crux:view name="toscalist" active="false"/>
+		</crux:horizontalSwapViewContainer>
+		
+	</body>
+</html>

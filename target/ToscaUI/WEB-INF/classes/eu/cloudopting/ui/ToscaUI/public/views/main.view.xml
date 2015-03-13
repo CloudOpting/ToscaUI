@@ -1,0 +1,79 @@
+<v:view xmlns="http://www.w3.org/1999/xhtml" xmlns:v="http://www.cruxframework.org/view"
+	xmlns:core="http://www.cruxframework.org/crux" xmlns:crux="http://www.cruxframework.org/crux/widgets"
+	xmlns:gwt="http://www.cruxframework.org/crux/gwt" xmlns:faces="http://www.cruxframework.org/crux/smart-faces"
+	useController="mainController" onLoad="mainController.onLoad">
+
+	<center>
+
+		<gwt:HTMLPanel id="mainPanel">
+			<gwt:simplePanel id="gwtSimplePanel">
+				<gwt:formPanel id="gwtFormPanel"></gwt:formPanel>
+			</gwt:simplePanel>
+			<crux:styledPanel id="panel">
+
+				<crux:formDisplay id="form" style="display:block; margin: 50px">
+					<crux:entry label="What is your name?">
+						<gwt:textBox id="nameTextBox" value="name" />
+					</crux:entry>
+					<crux:entry>
+						<crux:button id="okButton" text="getInfoUser"
+							onSelect="mainController.getInfoUser" />
+					</crux:entry>
+					<crux:entry>
+						<crux:button id="okButton2" text="cleanInfoUser"
+							onSelect="mainController.clean" />
+					</crux:entry>
+					<crux:entry>
+						<crux:button id="okButton3" text="createField"
+							onSelect="mainController.createField" />
+					</crux:entry>
+					<crux:entry label="createdBy">
+						<gwt:textBox id="createdBy" />
+					</crux:entry>
+					<crux:entry label="createdDate">
+						<gwt:textBox id="createdDate" />
+					</crux:entry>
+					<crux:entry label="lastModifiedBy">
+						<gwt:textBox id="lastModifiedBy" />
+					</crux:entry>
+					<crux:entry label="lastModifiedDate">
+						<gwt:textBox id="lastModifiedDate" />
+					</crux:entry>
+					<crux:entry label="id">
+						<gwt:textBox id="id" />
+					</crux:entry>
+					<crux:entry label="login">
+						<gwt:textBox id="login" />
+					</crux:entry>
+					<crux:entry label="firstName">
+						<gwt:textBox id="firstName" />
+					</crux:entry>
+					<crux:entry label="lastName">
+						<gwt:textBox id="lastName" />
+					</crux:entry>
+					<crux:entry label="email">
+						<gwt:textBox id="email" />
+					</crux:entry>
+					<crux:entry label="activated">
+						<gwt:textBox id="activated" />
+					</crux:entry>
+					<crux:entry label="langKey">
+						<gwt:textBox id="langKey" />
+					</crux:entry>
+					<crux:entry label="activationKey">
+						<gwt:textBox id="activationKey" />
+					</crux:entry>
+					<crux:entry>
+						<crux:button id="changeButton" text="ToscaList"
+							onSelect="mainController.changeView" />
+					</crux:entry>
+				</crux:formDisplay>
+			</crux:styledPanel>
+			<crux:styledPanel id="panelUploader">
+				<crux:fileUploader id="fileUploader" multiple="true"
+					fileInputText="Choose files" autoUploadFiles="true" url="/upload-endpoint" />
+			</crux:styledPanel>
+		</gwt:HTMLPanel>
+
+	</center>
+</v:view>

@@ -1,0 +1,16 @@
+<t:template xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:t="http://www.cruxframework.org/templates"
+    xmlns:crux="http://www.cruxframework.org/crux/widgets"
+    xmlns:gwt="http://www.cruxframework.org/crux/gwt" 
+    library="custom">
+    <crux:styledPanel id="panelUser">
+        <crux:formDisplay id="formUser">
+            <crux:entry label="Login:">
+                <gwt:label id="lbLogin" text="#{userLogin}" />
+            </crux:entry>
+            <crux:entry label="Name:">
+                <gwt:label id="lbName" text="#{userName}" />
+            </crux:entry>
+        </crux:formDisplay>
+    </crux:styledPanel>
+</t:template>

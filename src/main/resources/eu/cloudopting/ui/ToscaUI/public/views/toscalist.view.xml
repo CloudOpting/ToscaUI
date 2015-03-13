@@ -1,0 +1,24 @@
+<v:view xmlns="http://www.w3.org/1999/xhtml" xmlns:v="http://www.cruxframework.org/view"
+	xmlns:core="http://www.cruxframework.org/crux" xmlns:crux="http://www.cruxframework.org/crux/widgets"
+	xmlns:gwt="http://www.cruxframework.org/crux/gwt" xmlns:faces="http://www.cruxframework.org/crux/smart-faces"
+	useController="toscaListController" onLoad="toscaListController.onModuleLoad">
+
+	<center>
+		<crux:styledPanel id="panel">
+			<crux:formDisplay id="form" style="display:block; margin: 50px">
+				<crux:entry label="What is your name?">
+					<gwt:textBox id="nameTextBox" value="name" />
+				</crux:entry>
+				<crux:entry>
+					<crux:button id="sayOK" text="sayOK"
+						onSelect="toscaListController.sayOK" />
+				</crux:entry>
+				<crux:entry>
+					<crux:button id="changeView" text="Back"
+						onSelect="toscaListController.changeView" />
+				</crux:entry>
+			</crux:formDisplay>
+
+		</crux:styledPanel>
+	</center>
+</v:view>
