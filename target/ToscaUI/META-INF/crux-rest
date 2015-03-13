@@ -1,7 +1,0 @@
-#Crux RestServices implementations
-#Fri Mar 13 08:56:26 CET 2015
-toscaUtilService=eu.cloudopting.ui.ToscaUI.client.remote.impl.ToscaUtil
-otherService=eu.cloudopting.ui.ToscaUI.client.remote.impl.Other
-userInfoService=eu.cloudopting.ui.ToscaUI.client.remote.impl.UserInfo
-toscaProviderService=eu.cloudopting.ui.ToscaUI.server.provider.ToscaProviderServiceImpl
-connectService=eu.cloudopting.ui.ToscaUI.client.remote.impl.Connect
