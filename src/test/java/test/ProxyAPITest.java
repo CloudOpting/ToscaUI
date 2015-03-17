@@ -6,8 +6,8 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.json.JSONObject;
 
-import eu.cloudopting.ui.ToscaUI.client.remote.impl.ProxyAPI;
-import eu.cloudopting.ui.ToscaUI.utils.IOUtils;
+import eu.cloudopting.ui.ToscaUI.client.remote.impl.ProxyAPIService;
+import eu.cloudopting.ui.ToscaUI.server.utils.IOUtils;
 
 /**
  * 
@@ -36,7 +36,7 @@ public class ProxyAPITest {
 		 * TESTING CODE
 		 */
 		//CREATE INSTANCE
-		ProxyAPI c = new ProxyAPI();
+		ProxyAPIService c = new ProxyAPIService();
 		//CONNECT
 		c.connect(user, password);
 		//GET THE USER

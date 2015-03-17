@@ -13,8 +13,9 @@ import org.cruxframework.crux.core.shared.rest.annotation.Path;
 import org.cruxframework.crux.core.shared.rest.annotation.PathParam;
 import org.cruxframework.crux.core.shared.rest.annotation.QueryParam;
 
-import eu.cloudopting.ui.ToscaUI.utils.ConnectionUtils;
-import eu.cloudopting.ui.ToscaUI.utils.IOUtils;
+import eu.cloudopting.ui.ToscaUI.server.utils.ConnectionUtils;
+import eu.cloudopting.ui.ToscaUI.server.utils.IOUtils;
+import eu.cloudopting.ui.ToscaUI.server.utils.LogsUtil;
 
 /**
  * 
@@ -22,13 +23,13 @@ import eu.cloudopting.ui.ToscaUI.utils.IOUtils;
  *
  */
 @RestService("proxyAPIService")
-@Path("proxyAPI")
-public class ProxyAPI {
+@Path("proxyAPIService")
+public class ProxyAPIService {//implements RequestAware {
 	
-	private String baseURI = "http://localhost:8080";
-	private String restBaseURI = "http://localhost:8080/api/";
-	private String authentication = ""; //For admin/admin is: Basic YWRtaW46YWRtaW4=
-	private String cookie = "";
+	private static String baseURI = "http://localhost:8080";
+	private static String restBaseURI = "http://localhost:8080/api/";
+	private static String authentication = ""; //For admin/admin is: Basic YWRtaW46YWRtaW4=
+	private static String cookie = "";
 	
 	/**
 	 * USER_METHOD prepared method needs 1 parameters to work. 
@@ -60,10 +61,10 @@ public class ProxyAPI {
 	 * @param filter
 	 */
 	private static String APPLICATION_LIST_METHOD = "application/list?page=%s&size=%s&sortBy=%s&sortOrder=%s&filter=%s";
-
+	
 	@GET
 	@Path("/")
-	public void connect(@QueryParam("user") String user, @QueryParam("pass") String pass) {
+	public String connect(@QueryParam("user") String user, @QueryParam("pass") String pass) {
 		try {
 			authentication = "Basic " + ConnectionUtils.getAuthString(user, pass);
 			
@@ -72,11 +73,19 @@ public class ProxyAPI {
 			urlConnection.setRequestProperty("Authorization", authentication);
 
 			cookie = urlConnection.getHeaderField("Set-Cookie");
+			
+			if(LogsUtil.DEBUG_ENABLED){
+				System.out.println("CONNECTION:: ");
+				System.out.println("URL: " + baseURI);
+				System.out.println("Authorization: " + authentication);
+				System.out.println("Cookie: " + cookie);
+			}
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return cookie;
 	}
 
 	@POST
@@ -149,11 +158,19 @@ public class ProxyAPI {
 	 */
 	private URLConnection createRESTConnection(String method)
 			throws MalformedURLException, IOException {
+		//Build the URLConection
 		URL url = new URL(restBaseURI + method);
 		URLConnection urlConnection = url.openConnection();
 		urlConnection.setRequestProperty("Authorization", authentication);
 		urlConnection.setRequestProperty("Cookie", cookie);
+		if(LogsUtil.DEBUG_ENABLED){
+			System.out.println("REST CALL:: ");
+			System.out.println("URL: " + restBaseURI + method);
+			System.out.println("Authorization: " + authentication);
+			System.out.println("Cookie: " + cookie);
+		}
 		return urlConnection;
 	}
+
 
 }

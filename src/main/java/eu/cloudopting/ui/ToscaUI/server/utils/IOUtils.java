@@ -1,4 +1,4 @@
-package eu.cloudopting.ui.ToscaUI.utils;
+package eu.cloudopting.ui.ToscaUI.server.utils;
 
 import java.io.IOException;
 import java.nio.charset.Charset;

@@ -15,13 +15,15 @@ import org.cruxframework.crux.core.shared.rest.annotation.PathParam;
 /**
  * 
  * @author xeviscc
+ * 
+ * This interface is not used.
  *
  */
 @TargetEndPoint("http://localhost:8080")
 @Path("api")
 //@CorsSupport(allowOrigin={"localhost", "127.0.0.1"}, maxAge=15)
 @UseJsonP
-public interface IApi extends RestProxy {
+public interface _IApi extends RestProxy {
 	
 	@GET
 	@Path("account")

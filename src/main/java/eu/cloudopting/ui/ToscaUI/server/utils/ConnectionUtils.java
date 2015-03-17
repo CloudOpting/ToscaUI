@@ -1,4 +1,4 @@
-package eu.cloudopting.ui.ToscaUI.utils;
+package eu.cloudopting.ui.ToscaUI.server.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,8 +15,6 @@ import org.apache.commons.codec.binary.Base64;
  *
  */
 public class ConnectionUtils {
-
-	private static boolean DEBUG_ENABLED = true;
 
 	/**
 	 * Get the authorization string for basic authentication.
@@ -50,7 +48,7 @@ public class ConnectionUtils {
 			sb.append(charArray, 0, numCharsRead);
 		}
 		
-		if(DEBUG_ENABLED) {
+		if(LogsUtil.DEBUG_ENABLED) {
 			System.out.println(sb.toString());
 		}
 		

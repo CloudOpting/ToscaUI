@@ -31,7 +31,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import eu.cloudopting.ui.ToscaUI.server.model.SLA;
-import eu.cloudopting.ui.ToscaUI.utils.UniversalNamespaceResolver;
+import eu.cloudopting.ui.ToscaUI.server.utils.UniversalNamespaceResolver;
 
 /**
  * 

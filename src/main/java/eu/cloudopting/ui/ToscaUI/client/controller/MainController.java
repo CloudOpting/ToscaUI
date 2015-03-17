@@ -21,7 +21,6 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentC
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.TextBox;
 
-import eu.cloudopting.ui.ToscaUI.client.remote.IApi;
 import eu.cloudopting.ui.ToscaUI.client.remote.IProxyAPIService;
 import eu.cloudopting.ui.ToscaUI.client.remote.IUserInfo;
 
@@ -31,9 +30,6 @@ public class MainController
 
 	@Inject
 	public MainView mainView;
-
-	@Inject
-	public IApi api;
 
 	@Inject
 	public IProxyAPIService connectApi;
@@ -115,50 +111,12 @@ public class MainController
 		mainView.langKey().setValue("");
 		mainView.activationKey().setValue("");
 	}
-	//	@Expose   
-	//	public void login()
-	//	{
-	//		api.login("admin", new Callback<String>() {
-	//
-	//			@Override
-	//			public void onSuccess(String result) {
-	//				FlatMessageBox.show("login SUCCESS: " + result, MessageType.INFO);
-	//			}
-	//
-	//			@Override
-	//			public void onError(Exception e) {
-	//				FlatMessageBox.show("login ERROR: " + e.getMessage(), MessageType.INFO);
-	//			}
-	//		});
-	//	}  
-	//
-	//	@Expose   
-	//	public void getAccount()
-	//	{
-	//		//TODO: Change nulls
-	//		api.getAccount(null, null, new Callback<String>() {
-	//
-	//			@Override
-	//			public void onSuccess(String result) {
-	//				FlatMessageBox.show("getAccount SUCCESS: " + result, MessageType.INFO);
-	//			}
-	//
-	//			@Override
-	//			public void onError(Exception e) {
-	//				FlatMessageBox.show("getAccount ERROR: " + e.getMessage(), MessageType.INFO);
-	//			}
-	//		});
-	//	}  
-
 
 	@Expose   
 	public void changeView()
 	{
-
 		HorizontalSwapContainer views =  (HorizontalSwapContainer) Screen.get("views");
-		//HorizontalSwapContainer
 		views.showView("toscalist");
-
 	}  
 
 	@BindView("main")

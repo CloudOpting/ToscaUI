@@ -10,7 +10,7 @@ import eu.cloudopting.ui.ToscaUI.client.remote.impl.ToscaManager.NodeTemplateTyp
 import eu.cloudopting.ui.ToscaUI.client.remote.impl.ToscaManager.NodeType;
 import eu.cloudopting.ui.ToscaUI.client.remote.impl.ToscaManager.Operation;
 import eu.cloudopting.ui.ToscaUI.server.model.SLA;
-import eu.cloudopting.ui.ToscaUI.utils.IOUtils;
+import eu.cloudopting.ui.ToscaUI.server.utils.IOUtils;
 
 /**
  * 
