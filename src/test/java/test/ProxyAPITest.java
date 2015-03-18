@@ -23,10 +23,10 @@ public class ProxyAPITest {
 		String user = "admin";
 		String password = "admin";
 		String xmlFile = StringEscapeUtils.escapeJavaScript(
-				IOUtils.readFile("C:\\Users\\a591584\\Desktop\\CloudOpting\\TOSCA_ClearoExample.xml", Charset.defaultCharset())
+				IOUtils.readFile("src/test/resources/TOSCA_ClearoExample.xml", Charset.defaultCharset())
 				);
 		String toscaTemplate = StringEscapeUtils.escapeJavaScript(
-				IOUtils.readFile("C:\\Users\\a591584\\Desktop\\CloudOpting\\TOSCA_ClearoExample.xml", Charset.defaultCharset())
+				IOUtils.readFile("src/test/resources/TOSCA_ClearoExample.xml", Charset.defaultCharset())
 				);
 		int idXmlFile = RandomUtils.nextInt();
 		int idFile = RandomUtils.nextInt();

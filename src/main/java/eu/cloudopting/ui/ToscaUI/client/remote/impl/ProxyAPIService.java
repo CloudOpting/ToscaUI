@@ -24,7 +24,7 @@ import eu.cloudopting.ui.ToscaUI.server.utils.LogsUtil;
  */
 @RestService("proxyAPIService")
 @Path("proxyAPIService")
-public class ProxyAPIService {//implements RequestAware {
+public class ProxyAPIService {
 	
 	private static String baseURI = "http://localhost:8080";
 	private static String restBaseURI = "http://localhost:8080/api/";
@@ -109,7 +109,7 @@ public class ProxyAPIService {//implements RequestAware {
 	@Path("applcation/{id}")
 	public String application(@PathParam("id") String id) throws MalformedURLException, IOException {
 		String jsonObject = "{"
-				+ "tosca: " + IOUtils.readFile("C:\\Users\\a591584\\Desktop\\CloudOpting\\TOSCA_ClearoExample.xml", Charset.defaultCharset())
+				+ "tosca: " + IOUtils.readFile("src/test/resources/TOSCA_ClearoExample.xml", Charset.defaultCharset())
 				+ "}";
 
 		return jsonObject;

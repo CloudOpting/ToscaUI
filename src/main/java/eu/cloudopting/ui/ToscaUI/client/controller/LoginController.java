@@ -11,6 +11,12 @@ import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox.MessageType;
 import org.cruxframework.crux.widgets.client.swapcontainer.HorizontalSwapContainer;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.TextBox;
 
 import eu.cloudopting.ui.ToscaUI.client.remote.IProxyAPIService;
@@ -21,22 +27,29 @@ import eu.cloudopting.ui.ToscaUI.client.remote.IProxyAPIService;
  *
  */
 @Controller("loginController")
-public class LoginController 
+public class LoginController implements KeyPressHandler
 {
 	@Inject
 	public LoginView loginView;
 
 	@Inject
 	public IProxyAPIService connectApi;
-
+	
 	@Expose
 	public void onLoad() {
-//		if(connected) {
-//			HorizontalSwapContainer views =  (HorizontalSwapContainer) Screen.get("views");
-//			//HorizontalSwapContainer
-//			views.showView("main");
-//		}
+		//Set custom style to the password text box.
 		loginView.passwordTextBox().setStyleName("gwt-TextBox");
+
+		//Add handler for Enter key pressed.
+		loginView.passwordTextBox().addKeyPressHandler(this);
+		loginView.nameTextBox().addKeyPressHandler(this);
+		
+		//Set focus to the name text box
+		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+	        public void execute () {
+	        	loginView.nameTextBox().setFocus(true);
+	        }
+	   });
 	}
 
 	@Expose   
@@ -68,6 +81,16 @@ public class LoginController
 	{
 		TextBox nameTextBox();
 		TextBox passwordTextBox();
+		Button okButton();
 	}
-
+	
+    @Override
+    public void onKeyPress(KeyPressEvent event_)
+    {
+        if (KeyCodes.KEY_ENTER == event_.getNativeEvent().getKeyCode())
+        {
+        	login();
+        }
+    }
+	
 }

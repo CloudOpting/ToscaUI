@@ -3,6 +3,8 @@ package eu.cloudopting.ui.ToscaUI.client.remote.impl;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -21,6 +23,7 @@ import javax.xml.xpath.XPathFactory;
 
 import org.apache.xml.dtm.ref.DTMNodeList;
 import org.cruxframework.crux.core.server.rest.annotation.RestService;
+import org.cruxframework.crux.core.shared.rest.annotation.DefaultValue;
 import org.cruxframework.crux.core.shared.rest.annotation.GET;
 import org.cruxframework.crux.core.shared.rest.annotation.POST;
 import org.cruxframework.crux.core.shared.rest.annotation.Path;
@@ -42,13 +45,14 @@ import eu.cloudopting.ui.ToscaUI.server.utils.UniversalNamespaceResolver;
 @Path("toscaManager")
 public class ToscaManager {
 
+	private Document documentOriginal;
 	private Document document;
 	private static XPath xpath;
 
 	/**
 	 * [VMhost, DockerContainer, Apache, ApacheVirtualHost]
 	 */
-	public enum NodeType {
+	public enum NodeTypeName {
 		VMhost,
 		DockerContainer,
 		Apache,
@@ -66,50 +70,369 @@ public class ToscaManager {
 	/**
 	 * [Install, Deploy]
 	 */
-	public enum Operation {
+	public enum OperationName {
 		Install,
 		Deploy
 	}
 
 	//** PREPARED QUERIES **//
 
-	/**
-	 * GET_DOCUMENTATION_FROM_OPERATION prepared query needs 4 parameters to work. 
-	 * 
-	 * @param DefinitionId 
-	 * @param NodeTypeName {@link NodeType}
-	 * @param InterfaceName
-	 * @param OperationName {@link Operation}
+	/*
+	 * NodeType TAG access queries
 	 */
-	private static String GET_DOCUMENTATION_FROM_OPERATION = "/Definitions[@id=\"%s\"]"
+	
+	/**
+	 * LIST_INPUT_PARAMETERS_TYPES prepared query needs some parameters to work. 
+	 * 
+	 * @param String definitionId 
+	 * @param {@link NodeTypeName} nodeTypeName
+	 * @param String interfaceName
+	 * @param {@link OperationName} operationName
+	 */
+	private static String LIST_INPUT_PARAMETERS_TYPES = "/Definitions[@id=\"%s\"]"
+			+ "/NodeType[@name=\"%s\"]"
+			+ "/Interfaces"
+			+ "/Interface[@name=\"%s\"]"
+			+ "/Operation[@name=\"%s\"]"
+			+ "/InputParameters"
+			+ "/InputParameter"
+			+ "/@type";
+	
+	/**
+	 * GET_INPUT_PARAMETERS_TYPE prepared query needs some parameters to work. 
+	 * 
+	 * @param String definitionId 
+	 * @param {@link NodeTypeName} nodeTypeName
+	 * @param String interfaceName
+	 * @param {@link OperationName} operationName
+	 * @param String inputParameterType
+	 */
+	private static String GET_INPUT_PARAMETERS_BYTYPE = "/Definitions[@id=\"%s\"]"
+			+ "/NodeType[@name=\"%s\"]"
+			+ "/Interfaces"
+			+ "/Interface[@name=\"%s\"]"
+			+ "/Operation[@name=\"%s\"]"
+			+ "/InputParameters"
+			+ "/InputParameter[@type=\"%s\"]";
+	
+	/**
+	 * LIST_INPUT_PARAMETERS_NAMES prepared query needs some parameters to work. 
+	 * 
+	 * @param String definitionId 
+	 * @param {@link NodeTypeName} nodeTypeName
+	 * @param String interfaceName
+	 * @param {@link OperationName} operationName
+	 */
+	private static String LIST_INPUT_PARAMETERS_NAMES = "/Definitions[@id=\"%s\"]"
+			+ "/NodeType[@name=\"%s\"]"
+			+ "/Interfaces"
+			+ "/Interface[@name=\"%s\"]"
+			+ "/Operation[@name=\"%s\"]"
+			+ "/InputParameters"
+			+ "/InputParameter"
+			+ "/@name";
+
+	/**
+	 * GET_INPUT_PARAMETERS_NAME prepared query needs some parameters to work. 
+	 * 
+	 * @param String definitionId 
+	 * @param {@link NodeTypeName} nodeTypeName
+	 * @param String interfaceName
+	 * @param {@link OperationName} operationName
+	 * @param String inputParameterName
+	 */
+	private static String GET_INPUT_PARAMETERS_BYNAME = "/Definitions[@id=\"%s\"]"
+			+ "/NodeType[@name=\"%s\"]"
+			+ "/Interfaces"
+			+ "/Interface[@name=\"%s\"]"
+			+ "/Operation[@name=\"%s\"]"
+			+ "/InputParameters"
+			+ "/InputParameter[@name=\"%s\"]";
+	
+	/**
+	 * GET_PROPERTIES_DEFINITION_ELEMENT prepared query needs some parameters to work. 
+	 * 
+	 * @param String definitionId 
+	 * @param {@link NodeTypeName} nodeTypeName
+	 */
+	private static String GET_PROPERTIES_DEFINITION_ELEMENT = "/Definitions[@id=\"%s\"]"
+			+ "/NodeType[@name=\"%s\"]"
+			+ "/PropertiesDefinition"
+			+ "/@element";
+	//@element extracted is referenced in /Definitions/ServiceTemplate/TopologyTemplate/NodeTemplate/Properties/<element value>
+	
+	/**
+	 * GET_PROPERTIES_DEFINITION_TYPE prepared query needs some parameters to work. 
+	 * 
+	 * @param String definitionId 
+	 * @param {@link NodeTypeName} nodeTypeName
+	 */
+	private static String GET_PROPERTIES_DEFINITION_TYPE = "/Definitions[@id=\"%s\"]"
+			+ "/NodeType[@name=\"%s\"]"
+			+ "/PropertiesDefinition"
+			+ "/@type";
+	//TODO: This type does not has any reference on the TOSCA xml file. 
+
+	/**
+	 * LIST_NODETYPE_NAMES prepared query needs some parameters to work. 
+	 * 
+	 * @param String definitionId 
+	 */
+	private static String LIST_NODETYPE_NAMES = "/Definitions[@id=\"%s\"]"
+			+ "/NodeType"
+			+ "/@name";
+	
+	/**
+	 * GET_NODETYPE_NAME prepared query needs some parameters to work. 
+	 * 
+	 * @param String definitionId 
+	 * @param {@link NodeTypeName} nodeTypeName
+	 */
+	private static String GET_NODETYPE_BYNAME = "/Definitions[@id=\"%s\"]"
+			+ "/NodeType[@name=\"%s\"]";
+	//TODO: Is this XPath needed? 
+	
+	/**
+	 * Gets the documentation of an NodeType.
+	 * 
+	 * GET_NODETYPE_DOCUMENTATION prepared query needs some parameters to work. 
+	 * 
+	 * @param String definitionId 
+	 * @param {@link NodeTypeName} nodeTypeName
+	 */
+	private static String GET_NODETYPE_DOCUMENTATION = "/Definitions[@id=\"%s\"]"
+			+ "/NodeType[@name=\"%s\"]"
+			+ "/documentation";
+	
+	/**
+	 * Gets the documentation of an Operation.
+	 * 
+	 * GET_OPERATION_DOCUMENTATION prepared query needs some parameters to work. 
+	 * 
+	 * @param String definitionId 
+	 * @param {@link NodeTypeName} nodeTypeName
+	 * @param String interfaceName
+	 * @param {@link OperationName} operationName
+	 */
+	private static String GET_OPERATION_DOCUMENTATION = "/Definitions[@id=\"%s\"]"
 			+ "/NodeType[@name=\"%s\"]"
 			+ "/Interfaces"
 			+ "/Interface[@name=\"%s\"]"
 			+ "/Operation[@name=\"%s\"]"
 			+ "/documentation";
+	
+	/**
+	 * Gets a list of parameters types.
+	 * 
+	 * LIST_INPUT_PARAMETER_TYPE prepared query needs some parameters to work. 
+	 * 
+	 * @param String definitionId 
+	 * @param {@link NodeTypeName} nodeTypeName
+	 * @param String interfaceName
+	 * @param {@link OperationName} operationName
+	 */
+	private static String LIST_INPUT_PARAMETER_TYPE = "/Definitions[@id=\"%s\"]"
+			+ "/NodeType[@name=\"%s\"]"
+			+ "/Interfaces"
+			+ "/Interface[@name=\"%s\"]"
+			+ "/Operation[@name=\"%s\"]"
+			+ "/InputParameters"
+			+ "/InputParameter"
+			+ "/@type";
+	
+	/**
+	 * Gets a list of parameters element.
+	 * 
+	 * LIST_INPUT_PARAMETER_TYPE prepared query needs some parameters to work. 
+	 * 
+	 * @param String definitionId 
+	 * @param {@link NodeTypeName} nodeTypeName
+	 * @param String interfaceName
+	 * @param {@link OperationName} operationName
+	 */
+	private static String LIST_INPUT_PARAMETER_ELEMENT = "/Definitions[@id=\"%s\"]"
+			+ "/NodeType[@name=\"%s\"]"
+			+ "/Interfaces"
+			+ "/Interface[@name=\"%s\"]"
+			+ "/Operation[@name=\"%s\"]"
+			+ "/InputParameters"
+			+ "/InputParameter"
+			+ "/@element";
+	
+	/**
+	 * Gets the Parameter for a specific id.
+	 * 
+	 * GET_INPUT_PARAMETER prepared query needs some parameters to work. 
+	 * 
+	 * @param String definitionId 
+	 * @param {@link NodeTypeName} nodeTypeName
+	 * @param String interfaceName
+	 * @param {@link OperationName} operationName
+	 * @param String inputParameterId
+	 */
+	private static String GET_INPUT_PARAMETER_BYTYPE = "/Definitions[@id=\"%s\"]"
+			+ "/NodeType[@name=\"%s\"]"
+			+ "/Interfaces"
+			+ "/Interface[@name=\"%s\"]"
+			+ "/Operation[@name=\"%s\"]"
+			+ "/InputParameters"
+			+ "/InputParameter[@type=\"%s\"]";
+	
+	/*
+	 * NodeTypeImplementation TAG access queries
+	 */
+	
+	/**
+	 * LIST_NODETYPE_IMPLEMENTATION_NAME prepared query needs some parameters to work. 
+	 * 
+	 * @param String definitionId 
+	 */
+	private static String LIST_NODETYPE_IMPLEMENTATION_NAME = "/Definitions[@id=\"%s\"]"
+			+ "/NodeTypeImplementation"
+			+ "/@name";
+	
+	/**
+	 * GET_NODETYPE_IMPLEMENTATION_NAME prepared query needs some parameters to work. 
+	 * 
+	 * @param String definitionId 
+	 * @param String name
+	 */
+	private static String GET_NODETYPE_IMPLEMENTATION_NAME = "/Definitions[@id=\"%s\"]"
+			+ "/NodeTypeImplementation[@name=\"%s\"]";
+	
+	/**
+	 * LIST_NODETYPE_IMPLEMENTATION_NODETYPE prepared query needs some parameters to work. 
+	 * 
+	 * @param String definitionId 
+	 */
+	private static String LIST_NODETYPE_IMPLEMENTATION_NODETYPE = "/Definitions[@id=\"%s\"]"
+			+ "/NodeTypeImplementation"
+			+ "/@nodeType";
+	
+	/**
+	 * GET_NODETYPE_IMPLEMENTATION_NODETYPE prepared query needs some parameters to work. 
+	 * 
+	 * @param String definitionId 
+	 * @param String nodeType
+	 */
+	private static String GET_NODETYPE_IMPLEMENTATION_BYNODETYPE = "/Definitions[@id=\"%s\"]"
+			+ "/NodeTypeImplementation[@nodeType=\"%s\"]";
+	//TODO: Check if its a nodeTypeName.
+	
+	/**
+	 * LIST_NODETYPE_IMPLEMENTATION_ARTIFACT_TYPES prepared query needs some parameters to work. 
+	 * 
+	 * @param String definitionId 
+	 * @param String nodeType
+	 */
+	private static String LIST_NODETYPE_IMPLEMENTATION_ARTIFACT_TYPES = "/Definitions[@id=\"%s\"]"
+			+ "/NodeTypeImplementation[@nodeType=\"%s\"]"
+			+ "/ImplementationArtifacts"
+			+ "/ImplementationArtifact"
+			+ "/@artifactType";
+	
+	/**
+	 * GET_NODETYPE_IMPLEMENTATION_ARTIFACT_TYPE prepared query needs some parameters to work. 
+	 * 
+	 * @param String definitionId 
+	 * @param String nodeType
+	 * @param String artifactType
+	 */
+	private static String GET_NODETYPE_IMPLEMENTATION_ARTIFACT_BYTYPE = "/Definitions[@id=\"%s\"]"
+			+ "/NodeTypeImplementation[@nodeType=\"%s\"]"
+			+ "/ImplementationArtifacts"
+			+ "/ImplementationArtifact[@artifactType=\"%s\"]";
+	
+	/**
+	 * LIST_NODETYPE_IMPLEMENTATION_ARTIFACT_REFS prepared query needs some parameters to work. 
+	 * 
+	 * @param String definitionId 
+	 * @param String nodeType
+	 */
+	private static String LIST_NODETYPE_IMPLEMENTATION_ARTIFACT_REFS = "/Definitions[@id=\"%s\"]"
+			+ "/NodeTypeImplementation[@nodeType=\"%s\"]"
+			+ "/ImplementationArtifacts"
+			+ "/ImplementationArtifact"
+			+ "/@artifactRef";
+	
+	/**
+	 * GET_NODETYPE_IMPLEMENTATION_ARTIFACT_REF prepared query needs some parameters to work. 
+	 * 
+	 * @param String definitionId 
+	 * @param String nodeType
+	 * @param String artifactRef
+	 */
+	private static String GET_NODETYPE_IMPLEMENTATION_ARTIFACT_BYREF = "/Definitions[@id=\"%s\"]"
+			+ "/NodeTypeImplementation[@nodeType=\"%s\"]"
+			+ "/ImplementationArtifacts"
+			+ "/ImplementationArtifact[@artifactRef=\"%s\"]";
+
+	/*
+	 * ArtifactType TAG access queries
+	 */
+	
+	/**
+	 * GET_ARTIFACT_TYPE prepared query needs some parameters to work. 
+	 * 
+	 * @param String definitionId 
+	 * @param String name
+	 */
+	private static String GET_ARTIFACT_TYPE_BYNAME = "/Definitions[@id=\"%s\"]"
+			+ "/ArtifactType[@name=\"%s\"]";
+	
+	/*
+	 * ArtifactTemplate TAG access queries
+	 */
+	
+	/**
+	 * GET_ARTIFACT_TEMPLATE_BYID prepared query needs some parameters to work. 
+	 * 
+	 * @param String definitionId 
+	 * @param String id
+	 */
+	private static String GET_ARTIFACT_TEMPLATE_BYID = "/Definitions[@id=\"%s\"]"
+			+ "/ArtifactTemplate[@id=\"%s\"]";
+	
+	/**
+	 * GET_ARTIFACT_TEMPLATE_BYTYPE prepared query needs some parameters to work. 
+	 * 
+	 * @param String definitionId 
+	 * @param String type
+	 */
+	private static String GET_ARTIFACT_TEMPLATE_BYTYPE = "/Definitions[@id=\"%s\"]"
+			+ "/ArtifactTemplate[@type=\"%s\"]";
+	
+	
+	/* Queries needed
+		TODO
+	*/
+	/*
+	 * ServiceTemplate TAG access queries
+	 */
 
 	/**
-	 * GET_VHOSTNAME prepared query needs 3 parameters to work. 
+	 * GET_VHOSTNAME prepared query needs 4 parameters to work. 
 	 * 
-	 * @param DefinitionId 
-	 * @param ServiceTemplateId
-	 * @param NodeTemplateType {@link NodeTemplateType}
+	 * @param String definitionId 
+	 * @param String serviceTemplateId
+	 * @param {@link NodeTemplateType} nodeTemplateType 
+	 * @param String nodeTemplateId
 	 */
 	private static String GET_VHOSTNAME = "/Definitions[@id=\"%s\"]"
 			+ "/ServiceTemplate[@id=\"%s\"]"
 			+ "/TopologyTemplate"
-			+ "/NodeTemplate[@type=\"%s\"]"
+			+ "/NodeTemplate[@type=\"%s\"][@id=\"%s\"]"
 			+ "/Properties"
-			+ "/ApacheVirtualHostproperties"
+			+ "/ApacheVirtualHostProperties"
 			+ "/VHostName";
 
 	/**
 	 * GET_SLA prepared query needs 4 parameters to work. 
 	 * 
-	 * @param DefinitionId 
-	 * @param ServiceTemplateId
-	 * @param NodeTemplateType {@link NodeTemplateType}
-	 * @param SLAid
+	 * @param String definitionId 
+	 * @param String serviceTemplateId
+	 * @param {@link NodeTemplateType} nodeTemplateType
+	 * @param String SLAid
 	 */
 	private static String GET_SLA = "/Definitions[@id=\"%s\"]"
 			+ "/ServiceTemplate[@id=\"%s\"]"
@@ -121,45 +444,11 @@ public class ToscaManager {
 			+ "/SLA[@id=\"%s\"]";
 	
 	/**
-	 * GET_INPUT_PARAMETERS_NEEDED prepared query needs 3 parameters to work. 
-	 * 
-	 * @param DefinitionId 
-	 * @param NodeTypeName {@link NodeType}
-	 * @param OperationName {@link Operation}
-	 */
-	private static String GET_INPUT_PARAMETERS_NEEDED = "/Definitions[@id=\"%s\"]"
-			+ "/NodeType[@name=\"%s\"]"
-			+ "/Interfaces"
-			+ "/Interface"
-			+ "/Operation[@name=\"%s\"]"
-			+ "/InputParameters"
-			+ "/InputParameter"
-			+ "/@type";
-	
-	/**
-	 * Gets the Parameter for a specific id.
-	 * 
-	 * GET_INPUT_PARAMETER prepared query needs 4 parameters to work. 
-	 * 
-	 * @param DefinitionId 
-	 * @param NodeTypeName {@link NodeType}
-	 * @param OperationName {@link Operation}
-	 * @param InputParameterId
-	 */
-	private static String GET_INPUT_PARAMETER = "/Definitions[@id=\"%s\"]"
-			+ "/NodeType[@name=\"%s\"]"
-			+ "/Interfaces"
-			+ "/Interface"
-			+ "/Operation[@name=\"%s\"]"
-			+ "/InputParameters"
-			+ "/InputParameter[@type=\"%s\"]";
-	
-	/**
 	 * GET_SLA_AVALIABLE prepared query needs 3 parameters to work. 
 	 * 
-	 * @param DefinitionId 
-	 * @param ServiceTemplate
-	 * @param NodeTemplateType {@link NodeTemplateType}
+	 * @param String definitionId 
+	 * @param String serviceTemplate
+	 * @param {@link NodeTemplateType} nodeTemplateType
 	 */
 	private static String GET_SLA_AVALIABLE = "/Definitions[@id=\"%s\"]"
 			+ "/ServiceTemplate[@id=\"%s\"]"
@@ -171,9 +460,6 @@ public class ToscaManager {
 			+ "/SLA"
 			+ "/@id";
 
-	/* (non-Javadoc)
-	 * @see eu.cloudopting.ui.ToscaUI.client.remote.impl.TEST#setTosca(java.lang.String)
-	 */
 	@POST
 	@Path("/")
 	public void setTosca(@QueryParam("toscaXml") String toscaXml) {
@@ -194,12 +480,9 @@ public class ToscaManager {
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see eu.cloudopting.ui.ToscaUI.client.remote.impl.TEST#getTosca()
-	 */
 	@GET
 	@Path("/")
-	public String getTosca() {
+	public String getTosca(@QueryParam("original") @DefaultValue("false") boolean original) {
 		String result = "";
 		try {
 			
@@ -211,7 +494,11 @@ public class ToscaManager {
 	        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 	 
 	        StringWriter sw = new StringWriter();
-	        transformer.transform(new DOMSource(document), new StreamResult(sw));
+	        if(original){
+	        	transformer.transform(new DOMSource(documentOriginal), new StreamResult(sw));
+	        } else {
+	        	transformer.transform(new DOMSource(document), new StreamResult(sw));
+	        }
 	        
 	        result = sw.toString();
 	        
@@ -225,54 +512,120 @@ public class ToscaManager {
 
 	//** EXPOSED QUERIES **//
 
-	/* (non-Javadoc)
-	 * @see eu.cloudopting.ui.ToscaUI.client.remote.impl.TEST#getDocumentationFromOperation(java.lang.String, eu.cloudopting.ui.ToscaUI.client.remote.impl.ToscaUtil.NodeType, java.lang.String, eu.cloudopting.ui.ToscaUI.client.remote.impl.ToscaUtil.Operation)
-	 */
-	@GET
-	@Path("/getDocumentationFromOperation")
-	public String getDocumentationFromOperation(
-			@QueryParam("definition") String definition, 
-			@QueryParam("nodeType") NodeType nodeType, 
-			@QueryParam("interfaceName") String interfaceName, 
-			@QueryParam("operation") Operation operation) 
-	throws XPathExpressionException
-	{
-		return evaluateSingleValue(String.format(GET_DOCUMENTATION_FROM_OPERATION, definition, nodeType, interfaceName, operation));
+	public List<String> listInputParametersTypes(String definitionId, NodeTypeName nodeTypeName, String interfaceName, OperationName operationName) throws XPathExpressionException {
+		return evaluateMultipleValues(String.format(LIST_INPUT_PARAMETERS_TYPES, definitionId, nodeTypeName, interfaceName, operationName));
 	}
 
-	/* (non-Javadoc)
-	 * @see eu.cloudopting.ui.ToscaUI.client.remote.impl.TEST#getVHostName(java.lang.String, java.lang.String, eu.cloudopting.ui.ToscaUI.client.remote.impl.ToscaUtil.NodeTemplateType)
-	 */
+	public String getInputParametersType(String definitionId, NodeTypeName nodeTypeName, String interfaceName, OperationName operationName, String inputParameterType) throws XPathExpressionException {
+		return evaluateSingleValue(String.format(GET_INPUT_PARAMETERS_BYTYPE, definitionId, nodeTypeName, interfaceName, operationName, inputParameterType));
+	}
+	
+	public String setInputParametersType(String definitionId, NodeTypeName nodeTypeName, String interfaceName, OperationName operationName, String inputParameterType, String value) throws XPathExpressionException, IOException {
+		return insertSingleValue(String.format(GET_INPUT_PARAMETERS_BYTYPE, definitionId, nodeTypeName, interfaceName, operationName, inputParameterType), value);
+	}
+
+	public List<String> listInputParametersNames(String definitionId, NodeTypeName nodeTypeName, String interfaceName, OperationName operationName) throws XPathExpressionException {
+		return evaluateMultipleValues(String.format(LIST_INPUT_PARAMETERS_NAMES, definitionId, nodeTypeName, interfaceName, operationName));
+	}
+
+	public String getInputParameterName(String definitionId, NodeTypeName nodeTypeName, String interfaceName, OperationName operationName, String inputParameterType) throws XPathExpressionException {
+		return evaluateSingleValue(String.format(GET_INPUT_PARAMETERS_BYNAME, definitionId, nodeTypeName, interfaceName, operationName, inputParameterType));
+	}
+
+	public String getPropertiesDefinitionElement(String definitionId, NodeTypeName nodeTypeName) throws XPathExpressionException {
+		return evaluateSingleValue(String.format(GET_PROPERTIES_DEFINITION_ELEMENT, definitionId, nodeTypeName));
+	}
+
+	public String getPropertiesDefinitionType(String definitionId, NodeTypeName nodeTypeName) throws XPathExpressionException {
+		return evaluateSingleValue(String.format(GET_PROPERTIES_DEFINITION_TYPE, definitionId, nodeTypeName));
+	}
+
+	public List<String> listNodetypeNames(String definitionId) throws XPathExpressionException {
+		return evaluateMultipleValues(String.format(LIST_NODETYPE_NAMES, definitionId));
+	}
+
+	public String getNodetypeName(String definitionId, NodeTypeName nodeTypeName) throws XPathExpressionException {
+		return evaluateSingleValue(String.format(GET_NODETYPE_BYNAME, definitionId, nodeTypeName));
+	}
+
+	public String getNodetypeDocumentation(String definitionId, NodeTypeName nodeTypeName) throws XPathExpressionException {
+		return evaluateSingleValue(String.format(GET_NODETYPE_DOCUMENTATION, definitionId, nodeTypeName));
+	}
+
+	public String getOperationDocumentation(String definitionId, NodeTypeName nodeTypeName, String interfaceName, OperationName operationName) throws XPathExpressionException {
+		return evaluateSingleValue(String.format(GET_OPERATION_DOCUMENTATION, definitionId, nodeTypeName, interfaceName, operationName));
+	}
+
+	public List<String> listInputParameterType(String definitionId, NodeTypeName nodeTypeName, String interfaceName, OperationName operationName) throws XPathExpressionException {
+		return evaluateMultipleValues(String.format(LIST_INPUT_PARAMETER_TYPE, definitionId, nodeTypeName, interfaceName, operationName));
+	}
+
+	public List<String> listInputParameterElement(String definitionId, NodeTypeName nodeTypeName, String interfaceName, OperationName operationName) throws XPathExpressionException {
+		return evaluateMultipleValues(String.format(LIST_INPUT_PARAMETER_ELEMENT, definitionId, nodeTypeName, interfaceName, operationName));
+	}
+
+	public String getInputParameter(String definitionId, NodeTypeName nodeTypeName, String interfaceName, OperationName operationName, String inputParameterType) throws XPathExpressionException {
+		return evaluateSingleValue(String.format(GET_INPUT_PARAMETER_BYTYPE, definitionId, nodeTypeName, interfaceName, operationName, inputParameterType));
+	}
+
+	public String setInputParameter(String definitionId, NodeTypeName nodeTypeName, String interfaceName, OperationName operationName, String inputParameterType, String value) throws XPathExpressionException, IOException {
+		return insertSingleValue(String.format(GET_INPUT_PARAMETER_BYTYPE, definitionId, nodeTypeName, interfaceName, operationName, inputParameterType), value);
+	}
+	
+	
+	
+
+//	@GET
+//	@Path("/getDocumentationFromOperation")
+//	public String getDocumentationFromOperation(
+//			@QueryParam("definition") String definition, 
+//			@QueryParam("nodeType") NodeTypeName nodeType, 
+//			@QueryParam("interfaceName") String interfaceName, 
+//			@QueryParam("operation") OperationName operation) 
+//	throws XPathExpressionException
+//	{
+//		return evaluateSingleValue(String.format(GET_OPERATION_DOCUMENTATION, definition, nodeType, interfaceName, operation));
+//	}
+
+//	@GET
+//	@Path("/getInputParametersType")
+//	public String getInputParametersType(
+//			@QueryParam("definitionId") String definitionId, 
+//			@QueryParam("interfaceName") String interfaceName,
+//			@QueryParam("nodeTypeName") NodeTypeName nodeTypeName, 
+//			@QueryParam("operationName") OperationName operationName,
+//			@QueryParam("inputParameterType") String inputParameterType) 
+//	throws XPathExpressionException 
+//	{
+//		return evaluateSingleValue(String.format(GET_INPUT_PARAMETERS_BYTYPE, definitionId, nodeTypeName, interfaceName, operationName, inputParameterType));
+//	}
+	
 	@GET
 	@Path("/getVHostName")
 	public String getVHostName(
 			@QueryParam("definition") String definition, 
 			@QueryParam("serviceTemplate") String serviceTemplate, 
-			@QueryParam("nodeTemplateType") NodeTemplateType nodeTemplateType) 
+			@QueryParam("nodeTemplateType") NodeTemplateType nodeTemplateType,
+			@QueryParam("nodeTemplateId") String nodeTemplateId) 
 	throws XPathExpressionException 
 	{
-		String result = evaluateSingleValue(String.format(GET_VHOSTNAME, definition, serviceTemplate, nodeTemplateType));
+		String result = evaluateSingleValue(String.format(GET_VHOSTNAME, definition, serviceTemplate, nodeTemplateType, nodeTemplateId));
 		return result;
 	}
 	
-	/* (non-Javadoc)
-	 * @see eu.cloudopting.ui.ToscaUI.client.remote.impl.TEST#setVHostName(java.lang.String, java.lang.String, java.lang.String, eu.cloudopting.ui.ToscaUI.client.remote.impl.ToscaUtil.NodeTemplateType)
-	 */
 	@POST
 	@Path("/setVHostName")
 	public void setVHostName(
 			@QueryParam("vHostName") String vHostName,
 			@QueryParam("definition") String definition, 
 			@QueryParam("serviceTemplate") String serviceTemplate, 
-			@QueryParam("nodeTemplateType") NodeTemplateType nodeTemplateType) 
-	throws XPathExpressionException 
+			@QueryParam("nodeTemplateType") NodeTemplateType nodeTemplateType,
+			@QueryParam("nodeTemplateId") String nodeTemplateId) 
+	throws XPathExpressionException, IOException 
 	{
-		insertSingleValue(String.format(GET_VHOSTNAME, definition, serviceTemplate, nodeTemplateType), vHostName);
+		insertSingleValue(String.format(GET_VHOSTNAME, definition, serviceTemplate, nodeTemplateType, nodeTemplateId), vHostName);
 	}
 
-	/* (non-Javadoc)
-	 * @see eu.cloudopting.ui.ToscaUI.client.remote.impl.TEST#getSLA(java.lang.String, java.lang.String, eu.cloudopting.ui.ToscaUI.client.remote.impl.ToscaUtil.NodeTemplateType, java.lang.String)
-	 */
 	@GET
 	@Path("/getSLA")
 	public SLA getSLA(
@@ -285,21 +638,18 @@ public class ToscaManager {
 		SLA sla = new SLA();
 		String expression = String.format(GET_SLA, definition, serviceTemplate, nodeTemplateType, slaID);
 
-		sla.numCpus = evaluateSingleValue(expression + "/NumCpus");
-		sla.memory = evaluateSingleValue(expression + "/Memory");
-		sla.price = evaluateSingleValue(expression + "/Price");
-		sla.disk = evaluateSingleValue(expression + "/Disk");
-		sla.chosen = evaluateSingleValue(expression + "/Chosen");
+		sla.setNumCpus(evaluateSingleValue(expression + "/NumCpus"));
+		sla.setMemory(evaluateSingleValue(expression + "/Memory"));
+		sla.setPrice(evaluateSingleValue(expression + "/Price"));
+		sla.setDisk(evaluateSingleValue(expression + "/Disk"));
+		sla.setChosen(evaluateSingleValue(expression + "/Chosen"));
 
 		return sla;
 	}
 
-	/* (non-Javadoc)
-	 * @see eu.cloudopting.ui.ToscaUI.client.remote.impl.TEST#getSlaAvaliable(java.lang.String, java.lang.String, eu.cloudopting.ui.ToscaUI.client.remote.impl.ToscaUtil.NodeTemplateType)
-	 */
 	@GET
 	@Path("/getSlaAvaliable")
-	public String getSlaAvaliable(
+	public List getSlaAvaliable(
 			@QueryParam("definition") String definition, 
 			@QueryParam("serviceTemplate") String serviceTemplate, 
 			@QueryParam("nodeTemplateType") NodeTemplateType nodeTemplateType) 
@@ -308,50 +658,32 @@ public class ToscaManager {
 		return evaluateMultipleValues(String.format(GET_SLA_AVALIABLE, definition, serviceTemplate, nodeTemplateType));
 	}
 	
-	/* (non-Javadoc)
-	 * @see eu.cloudopting.ui.ToscaUI.client.remote.impl.TEST#getInputParametersNeeded(java.lang.String, eu.cloudopting.ui.ToscaUI.client.remote.impl.ToscaUtil.NodeType, eu.cloudopting.ui.ToscaUI.client.remote.impl.ToscaUtil.Operation)
-	 */
-	@GET
-	@Path("/getInputParametersNeeded")
-	public String getInputParametersNeeded(
-			@QueryParam("definition") String definition, 
-			@QueryParam("nodeType") NodeType nodeType, 
-			@QueryParam("operation") Operation operation) 
-	throws XPathExpressionException 
-	{
-		return evaluateSingleValue(String.format(GET_INPUT_PARAMETERS_NEEDED, definition, nodeType, operation));
-	}
 
-	/* (non-Javadoc)
-	 * @see eu.cloudopting.ui.ToscaUI.client.remote.impl.TEST#getInputParameter(java.lang.String, eu.cloudopting.ui.ToscaUI.client.remote.impl.ToscaUtil.NodeType, eu.cloudopting.ui.ToscaUI.client.remote.impl.ToscaUtil.Operation, java.lang.String)
-	 */
-	@GET
-	@Path("/getInputParameter")
-	public String getInputParameter(
-			@QueryParam("definition") String definition, 
-			@QueryParam("nodeType") NodeType nodeType, 
-			@QueryParam("operation") Operation operation,
-			@QueryParam("inputParameterId") String inputParameterId) 
-	throws XPathExpressionException 
-	{
-		return evaluateSingleValue(String.format(GET_INPUT_PARAMETER, definition, nodeType, operation, inputParameterId));
-	}
+
+//	@GET
+//	@Path("/getInputParameter")
+//	public String getInputParameter(
+//			@QueryParam("definition") String definition, 
+//			@QueryParam("nodeType") NodeTypeName nodeType, 
+//			@QueryParam("operation") OperationName operation,
+//			@QueryParam("inputParameterId") String inputParameterId) 
+//	throws XPathExpressionException 
+//	{
+//		return evaluateSingleValue(String.format(GET_INPUT_PARAMETER_BYTYPE, definition, nodeType, operation, inputParameterId));
+//	}
 	
-	/* (non-Javadoc)
-	 * @see eu.cloudopting.ui.ToscaUI.client.remote.impl.TEST#setInputParameter(java.lang.String, eu.cloudopting.ui.ToscaUI.client.remote.impl.ToscaUtil.NodeType, eu.cloudopting.ui.ToscaUI.client.remote.impl.ToscaUtil.Operation, java.lang.String, java.lang.String)
-	 */
-	@POST
-	@Path("/setInputParameter")
-	public void setInputParameter(
-			@QueryParam("definition") String definition, 
-			@QueryParam("nodeType") NodeType nodeType, 
-			@QueryParam("operation") Operation operation,
-			@QueryParam("inputParameterId") String inputParameterId,
-			@QueryParam("value") String value) 
-	throws XPathExpressionException 
-	{
-		insertSingleValue(String.format(GET_INPUT_PARAMETER, definition, nodeType, operation, inputParameterId), value);
-	}
+//	@POST
+//	@Path("/setInputParameter")
+//	public void setInputParameter(
+//			@QueryParam("definition") String definition, 
+//			@QueryParam("nodeType") NodeTypeName nodeType, 
+//			@QueryParam("operation") OperationName operation,
+//			@QueryParam("inputParameterId") String inputParameterId,
+//			@QueryParam("value") String value) 
+//	throws XPathExpressionException, IOException 
+//	{
+//		insertSingleValue(String.format(GET_INPUT_PARAMETER_BYTYPE, definition, nodeType, operation, inputParameterId), value);
+//	}
 
 	
 	/*
@@ -365,11 +697,16 @@ public class ToscaManager {
 	 * @param value Value that has to be inserted.
 	 * @throws XPathExpressionException
 	 */
-	private void insertSingleValue(String expression, String value) throws XPathExpressionException {
+	private String insertSingleValue(String expression, String value) throws XPathExpressionException, IOException {
 		if(value != null) {
 			Node node = (Node) xpath.evaluate(expression, document, XPathConstants.NODE);
-			node.setTextContent(value);
+			if(node!=null){
+				node.setTextContent(value);
+			} else {
+				throw new IOException("The value could not be inserted, Node not found."); 
+			}
 		}
+		return evaluateSingleValue(expression);
 	}
 
 	/**
@@ -395,15 +732,15 @@ public class ToscaManager {
 	 * @return String with the results of the evaluation separated by comma (,)
 	 * @throws XPathExpressionException
 	 */
-	private String evaluateMultipleValues(String expression) throws XPathExpressionException {
+	private List<String> evaluateMultipleValues(String expression) throws XPathExpressionException {
 		System.out.println(expression);
 		DTMNodeList nodeList = (DTMNodeList) xpath.evaluate(expression, document, XPathConstants.NODESET);
-		String result = "";
+		List<String> result = new ArrayList<String>();
 		for(int i = 0; i < nodeList.getLength(); i++) {
-			result += nodeList.item(i).getNodeValue() + ",";
+			result.add( nodeList.item(i).getNodeValue() );
 		}
-		System.out.println(result.trim());
-		return result.trim();
+		System.out.println(result);
+		return result;
 	}
 	
 	/**
@@ -411,6 +748,7 @@ public class ToscaManager {
 	 * @param node
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private String nodeToString(Node node) {
 		StringWriter sw = new StringWriter();
 		try { 

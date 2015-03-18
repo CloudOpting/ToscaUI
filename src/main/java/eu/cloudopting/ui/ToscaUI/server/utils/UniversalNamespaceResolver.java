@@ -34,11 +34,6 @@ public class UniversalNamespaceResolver implements NamespaceContext {
      */
     public UniversalNamespaceResolver(Document document, boolean toplevelOnly) {
         examineNode(document.getFirstChild(), toplevelOnly);
-        System.out.println("The list of the cached namespaces:");
-        for (String key : prefix2Uri.keySet()) {
-            System.out
-                    .println("prefix " + key + ": uri " + prefix2Uri.get(key));
-        }
     }
 
     /**
@@ -126,43 +121,3 @@ public class UniversalNamespaceResolver implements NamespaceContext {
     }
 
 }
-
-/**
- * HARDCODED RESOLVER
- */
-//public class UniversalNamespaceResolver implements NamespaceContext {
-//
-//    /**
-//     * This method returns the uri for all prefixes needed. Wherever possible
-//     * it uses XMLConstants.
-//     * 
-//     * @param prefix
-//     * @return uri
-//     */
-//    public String getNamespaceURI(String prefix) {
-//        if (prefix == null) {
-//            throw new IllegalArgumentException("No prefix provided!");
-//        } else if (prefix.equals(XMLConstants.DEFAULT_NS_PREFIX)) {
-//            return "http://docs.oasis-open.org/tosca/ns/2011/12";
-//        } else if (prefix.equals("xml")) {
-//            return "http://www.w3.org/XML/1998/namespace";
-//        } else if (prefix.equals("xsi")) {
-//            return "http://www.w3.org/2001/XMLSchema-instance";
-//        } else if (prefix.equals("co")) {
-//            return "http://docs.oasis-open.org/tosca/ns/2011/12/CloudOptingTypes";
-//        } else {
-//            return XMLConstants.NULL_NS_URI;
-//        }
-//    }
-//
-//    public String getPrefix(String namespaceURI) {
-//        // Not needed in this context.
-//        return null;
-//    }
-//
-//    public Iterator getPrefixes(String namespaceURI) {
-//        // Not needed in this context.
-//        return null;
-//    }
-//	
-//}

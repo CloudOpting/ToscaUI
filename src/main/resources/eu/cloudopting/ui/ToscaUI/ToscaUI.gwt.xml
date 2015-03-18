@@ -7,7 +7,7 @@
 	<inherits name='org.cruxframework.crux.smartfaces.CruxSmartFaces' />
 	<inherits name='org.cruxframework.crux.smartfaces.themes.Default'/>
 	
-	<inherits name='eu.cloudopting.ui.ToscaUI.server.ModelModuel'/>
+	<inherits name='eu.cloudopting.ui.ToscaUI.server.ModelModule'/>
 
 	<!-- ******* To enable superdevmode ******* -->
     
@@ -19,8 +19,8 @@
     <!-- ******* Compilations options ******* -->
     
     <!-- Define your browser -->
-    <!-- <set-property name="user.agent" value="safari" /> -->
-    <set-property name="user.agent" value="gecko1_8" />
+    <set-property name="user.agent" value="safari" />
+<!--     <set-property name="user.agent" value="gecko1_8" /> -->
     <!-- <set-property name="user.agent" value="opera" /> -->
     <!-- <set-property name="user.agent" value="ie9"/> -->
     <!-- <set-property name="user.agent" value="ie10"/> -->
