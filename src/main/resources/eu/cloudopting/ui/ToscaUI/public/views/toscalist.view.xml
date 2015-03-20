@@ -4,21 +4,23 @@
 	useController="toscaListController" onLoad="toscaListController.onModuleLoad">
 
 	<center>
-		<crux:styledPanel id="panel">
-			<crux:formDisplay id="form" style="display:block; margin: 50px">
-				<crux:entry label="What is your name?">
-					<gwt:textBox id="nameTextBox" value="name" />
-				</crux:entry>
-				<crux:entry>
-					<crux:button id="sayOK" text="sayOK"
-						onSelect="toscaListController.sayOK" />
-				</crux:entry>
-				<crux:entry>
-					<crux:button id="changeView" text="Back"
-						onSelect="toscaListController.changeView" />
-				</crux:entry>
-			</crux:formDisplay>
+		<div class="fixedWidth">
+			<crux:styledPanel id="panel">
+				<crux:formDisplay id="form" style="display:block; margin: 50px">
+					<crux:entry label="What is your name?">
+						<gwt:textBox id="nameTextBox" value="name" />
+					</crux:entry>
+					<crux:entry>
+						<crux:button id="sayOK" text="sayOK"
+							onSelect="toscaListController.sayOK" />
+					</crux:entry>
+					<crux:entry>
+						<crux:button id="changeView" text="Back"
+							onSelect="toscaListController.changeView" />
+					</crux:entry>
+				</crux:formDisplay>
 
-		</crux:styledPanel>
+			</crux:styledPanel>
+		</div>
 	</center>
 </v:view>

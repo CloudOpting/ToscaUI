@@ -1,5 +1,8 @@
 package eu.cloudopting.ui.ToscaUI.client.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.ioc.Inject;
@@ -9,6 +12,9 @@ import org.cruxframework.crux.core.client.screen.views.WidgetAccessor;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox.MessageType;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
@@ -32,6 +38,30 @@ public class SubscribeServiceTaylorFormController
 		 */
 //		subscribeServiceTaylorFormView.serviceParametersPanel().add(label, "label");
 //		subscribeServiceTaylorFormView.serviceParametersPanel().add(listBox, "listbox");
+		
+		//GET VALUES FROM THE DATABASE
+		
+		//MOCK VARIABLES AND LISTS.
+
+		List<String> listItems = new ArrayList<String>(); 
+		listItems.add("item");
+		listItems.add("item2");
+		listItems.add("item3");
+		
+		List<String> listOSs = new ArrayList<String>(); 
+		listOSs.add("operting1");
+		listOSs.add("operting2");
+		listOSs.add("operting3");
+		
+		List<String> listCSSs = new ArrayList<String>(); 
+		listCSSs.add("css1");
+		listCSSs.add("css2");
+		listCSSs.add("css3");
+
+		List<String> listCPUs = new ArrayList<String>(); 
+		listCPUs.add("1");
+		listCPUs.add("2");
+		listCPUs.add("4");
 
 		/*
 		 * Alternative
@@ -40,101 +70,38 @@ public class SubscribeServiceTaylorFormController
 		HTMLPanel panel = (HTMLPanel)View.of(this).getWidget("serviceParametersPanel");
 		panel.setTitle("Service Parameters");
 		panel.setStyleName("serviceParametersPanel");
-		//Get the parameters to request.
-
-		//Create the widgets with parameters.
-		Label cloudNodeL = new Label();
-		cloudNodeL.setText("Cloud Node");		
-		ListBox listBox = new ListBox();
-		listBox.addItem("item");
-		listBox.addItem("item2");
-		listBox.addItem("item3");
 		
-		//Add widget to the panel.
-		panel.add(cloudNodeL);
-		panel.add(listBox);
-
-		//Create the widgets with parameters.
-		Label urlDomainL = new Label();
-		urlDomainL.setText("URL/Domain:");
-		TextBox urlDomainTB = new TextBox();
+		addLabelListBoxPair(panel, "Cloud Node:", listItems, "taylor-Label", "taylor-ListBox");
+		addLabelTextBoxPair(panel, "URL/Domain:", "taylor-Label", "taylor-TextBox");
 		
-		//Add widget to the panel.
-		panel.add(urlDomainL);
-		panel.add(urlDomainTB);
-		
-		HTMLPanel newPanel = new HTMLPanel("Service Flavour");
+		//Create a new panel 
+		HTMLPanel newPanel = new HTMLPanel("");;//new HTMLPanel("Service Flavour");
 		newPanel.setStyleName("serviceFlavour");
-		
 		panel.add(newPanel);
-		
-		//Create the widgets with parameters.
-		Label operatinSystemL = new Label();
-		operatinSystemL.setText("Operating System");
-		ListBox operatinSystemLB = new ListBox();
-		operatinSystemLB.addItem("operting1");
-		operatinSystemLB.addItem("operting2");
-		operatinSystemLB.addItem("operting3");
 
-		//Add widget to the panel.
-		newPanel.add(operatinSystemL);
-		newPanel.add(operatinSystemLB);
-		
-		//Create the widgets with parameters.
-		Label cssSkinL = new Label();
-		cssSkinL.setText("CSS Skin");
-		ListBox cssSkinLB = new ListBox();
-		cssSkinLB.addItem("css1");
-		cssSkinLB.addItem("css2");
-		cssSkinLB.addItem("css3");
+		addLabelListBoxPair(newPanel, "Operating System:", listOSs, "taylor-Label", "taylor-ListBox");
+		addLabelListBoxPair(newPanel, "CSS Skin:", listCSSs, "taylor-Label", "taylor-ListBox");
+		addLabelListBoxPair(newPanel, "Number CPU's:", listCPUs, "taylor-Label", "taylor-ListBox");
+		addLabelTextBoxPair(newPanel, "Bandwith:", "taylor-Label", "taylor-TextBox");
+		addLabelTextBoxPair(newPanel, "Disk Space:", "taylor-Label", "taylor-TextBox");
+		addLabelTextBoxPair(newPanel, "Memory RAM:", "taylor-Label", "taylor-TextBox");
 
-		//Add widget to the panel.
-		newPanel.add(cssSkinL);
-		newPanel.add(cssSkinLB);
+		//Create the button
+		Button subscribeServiceB = new Button();
+		subscribeServiceB.setText("Subscribe Service");
+		subscribeServiceB.setStyleName("crux-Button");
+		subscribeServiceB.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				
+				FlatMessageBox.show("Subscribe Service DONE!!", MessageType.SUCCESS);
+				
+			}
+		});		
 		
-		//Create the widgets with parameters.
-		Label numberCPUsL = new Label();
-		numberCPUsL.setText("Number CPU's");
-		ListBox numberCPUsLB = new ListBox();
-		numberCPUsLB.addItem("1");
-		numberCPUsLB.addItem("2");
-		numberCPUsLB.addItem("4");
-		
-		//Add widget to the panel.
-		newPanel.add(numberCPUsL);
-		newPanel.add(numberCPUsLB);
-		
-		//Create the widgets with parameters.
-		Label bandwithL = new Label();
-		bandwithL.setText("Bandwith");
-		TextBox bandwithTB = new TextBox();
-		
-		//Add widget to the panel.
-		newPanel.add(bandwithL);
-		newPanel.add(bandwithTB);
-		
-		//Create the widgets with parameters.
-		Label diskSpaceL = new Label();
-		diskSpaceL.setText("Disk Space");
-		TextBox diskSpaceTB = new TextBox();
-		
-		//Add widget to the panel.
-		newPanel.add(diskSpaceL);
-		newPanel.add(diskSpaceTB);
-
-		//Create the widgets with parameters.
-		Label memoryRAML = new Label();
-		memoryRAML.setText("Memory RAM");
-		TextBox memoryRAMTB = new TextBox();
-		
-		//Add widget to the panel.
-		newPanel.add(memoryRAML);
-		newPanel.add(memoryRAMTB);
-
-		//Add widgets to the view.
-		
-		
+		panel.add(subscribeServiceB);
 	}
+
 
 	@Expose
 	public void subscribeService()
@@ -152,4 +119,40 @@ public class SubscribeServiceTaylorFormController
 		//		Table tableServiceFlavourBox();
 
 	}
+	
+	/*
+	 * PRIVATE METHODS
+	 *
+	 */
+	private void addLabelTextBoxPair(HTMLPanel panel, String labelText, 
+			String labelStyle, String textBoxStyle) {
+		//Create the widgets with parameters.
+		Label label = new Label();
+		label.setText(labelText);
+		label.setStyleName(labelStyle);
+		TextBox textBox = new TextBox();
+		textBox.setStyleName(textBoxStyle);
+		
+		//Add widget to the panel.
+		panel.add(label);
+		panel.add(textBox);
+	}
+
+	private void addLabelListBoxPair(HTMLPanel panel, String labelText, List<String> listItems,
+			String labelStyle, String listBoxStyle) {
+		//Create the widgets with parameters.
+		Label label = new Label();
+		label.setText(labelText);
+		label.setStyleName(labelStyle);
+		ListBox listBox = new ListBox();
+		listBox.setStyleName(listBoxStyle);
+		for(String item : listItems){
+			listBox.addItem(item);
+		}
+		
+		//Add widget to the panel.
+		panel.add(label);
+		panel.add(listBox);
+	}
+
 }

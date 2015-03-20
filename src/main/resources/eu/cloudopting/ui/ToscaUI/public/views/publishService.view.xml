@@ -3,53 +3,40 @@
 	xmlns:gwt="http://www.cruxframework.org/crux/gwt" xmlns:faces="http://www.cruxframework.org/crux/smart-faces"
 	useController="publishServiceController" onLoad="publishServiceController.onLoad">
 
-	<!-- <center> -->
-	<gwt:HTMLPanel id="panel">
-		<crux:formDisplay id="form" style="display:block; margin: 50px">
-			<crux:entry label="Service Name">
-				<gwt:textBox id="serviceName" value="" />
-			</crux:entry>
-			<crux:entry label="Service Description">
-				<crux:textArea id="serviceDescription" height="243px"
-					width="630px" />
-			</crux:entry>
-		</crux:formDisplay>
-		<table>
-			<tbody>
-				<tr>
-					<crux:fileUploader id="fileUploader" multiple="true" title="Tosca file"
-						fileInputText="Choose Tosca Template Upload" autoUploadFiles="true"
-						url="/upload-endpoint" />
-				</tr>
-			</tbody>
-			<tbody>
-				<tr>
-					<gwt:label id="labelContentLibrary" text="Content Library"
-						style="font-size: 20px;" />
-				</tr>
-				<tr>
-					<crux:singleSelect id="singleSelect"
-						visibleItemCount="6" width="200px" onSelection="publishServiceController.itemSelected">
+	<center>
+		<div class="fixedWidth">
+			<gwt:HTMLPanel id="panel">
+				<crux:formDisplay id="form" style="display:block; margin: 50px">
+					<crux:entry label="Service Name">
+						<gwt:textBox id="serviceName" value="" />
+					</crux:entry>
+					<crux:entry label="Service Description">
+						<crux:textArea id="serviceDescription" height="243px"
+							width="630px" />
+					</crux:entry>
+				</crux:formDisplay>
+				<crux:fileUploader id="fileUploader" multiple="true"
+					title="Tosca file" fileInputText="Choose Tosca Template Upload"
+					autoUploadFiles="true" url="/upload-endpoint" />
+				<gwt:label id="labelContentLibrary" text="Content Library"/>
+				<crux:singleSelect id="singleSelect"
+					visibleItemCount="6" width="200px" onSelection="publishServiceController.itemSelected">
+					<crux:item label="Item One" key="itemOne"></crux:item>
+					<crux:item label="Item Two" key="itemTwo"></crux:item>
+					<crux:item label="Item Three" key="itemThree"></crux:item>
+					<crux:item label="Item Four" key="itemFour"></crux:item>
+				</crux:singleSelect>
 
-						<crux:item label="Item One" key="itemOne"></crux:item>
-						<crux:item label="Item Two" key="itemTwo"></crux:item>
-						<crux:item label="Item Three" key="itemThree"></crux:item>
-						<crux:item label="Item Four" key="itemFour"></crux:item>
-					</crux:singleSelect>
-
-					<crux:button id="addItem" text="Add Item"
-						onSelect="publishServiceController.saveConfiguration" />
-					<crux:button id="deleteItem" text="Delete Item"
-						onSelect="publishServiceController.deleteItem" />
-				</tr>
-			</tbody>
-		</table>
-		<hr />
-		<crux:button id="saveConfiguration" text="Save Configuration"
-			onSelect="publishServiceController.saveConfiguration" />
-		<crux:button id="publishService" text="Publish Service"
-			onSelect="publishServiceController.publishService" />
-	</gwt:HTMLPanel>
-
-	<!-- </center> -->
+				<crux:button id="addItem" text="Add Item"
+					onSelect="publishServiceController.saveConfiguration" />
+				<crux:button id="deleteItem" text="Delete Item"
+					onSelect="publishServiceController.deleteItem" />
+				<hr />
+				<crux:button id="saveConfiguration" text="Save Configuration"
+					onSelect="publishServiceController.saveConfiguration" />
+				<crux:button id="publishService" text="Publish Service"
+					onSelect="publishServiceController.publishService" />
+			</gwt:HTMLPanel>
+		</div>
+	</center>
 </v:view>

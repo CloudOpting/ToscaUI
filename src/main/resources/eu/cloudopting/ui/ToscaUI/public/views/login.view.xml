@@ -2,24 +2,25 @@
 	xmlns:core="http://www.cruxframework.org/crux" xmlns:crux="http://www.cruxframework.org/crux/widgets"
 	xmlns:gwt="http://www.cruxframework.org/crux/gwt" xmlns:faces="http://www.cruxframework.org/crux/smart-faces"
 	useController="loginController" onLoad="loginController.onLoad">
-	
-	<link rel="stylesheet" href="css/main.css" type="text/css"/>
+
+	<link rel="stylesheet" href="css/main.css" type="text/css" />
 
 	<center>
-
-		<crux:styledPanel id="panel">
-			<crux:formDisplay id="form" style="display:block; margin: 50px">
-				<crux:entry label="Name">
-					<gwt:textBox id="nameTextBox"/>
-				</crux:entry>
-				<crux:entry label="Password">
-					<gwt:passwordTextBox id="passwordTextBox"/>
-				</crux:entry>
-				<crux:entry>
-					<crux:button id="okButton" text="login" onSelect="loginController.login" />
-				</crux:entry>
-			</crux:formDisplay>
-		</crux:styledPanel>
-
+		<div class="fixedWidth">
+			<crux:styledPanel id="panel">
+				<crux:formDisplay id="form" style="display:block; margin: 50px">
+					<crux:entry label="Name">
+						<gwt:textBox id="nameTextBox" />
+					</crux:entry>
+					<crux:entry label="Password">
+						<gwt:passwordTextBox id="passwordTextBox" />
+					</crux:entry>
+					<crux:entry>
+						<crux:button id="okButton" text="login"
+							onSelect="loginController.login" />
+					</crux:entry>
+				</crux:formDisplay>
+			</crux:styledPanel>
+		</div>
 	</center>
 </v:view>

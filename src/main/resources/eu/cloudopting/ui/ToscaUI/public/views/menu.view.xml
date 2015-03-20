@@ -4,18 +4,21 @@
 	useController="menuController" onLoad="menuController.onLoad">
 
 	<center>
-		<crux:styledPanel id="panel">
-			<gwt:HTMLPanel id="innerPanel">
-				<crux:topMenuDisposal id="menu" defaultView="main">
-					<crux:menuEntry targetView="main" label="Main"/>
-					<crux:menuEntry targetView="publishService" label="Publish Service"/>
-					<crux:menuEntry targetView="serviceCatalogList" label="Service Catalog List"/>
-					<crux:menuEntry targetView="toscalist" label="Other"/>
-					<crux:menuEntry targetView="login" label="Login"/>
-					<crux:menuEntry targetView="subscribeServiceTaylorForm" label="Subscribe Service - Taylor Form"/>
-				</crux:topMenuDisposal>
-			</gwt:HTMLPanel>
-
-		</crux:styledPanel>
+		<div class="fixedWidth">
+			<crux:styledPanel id="panel">
+				<gwt:HTMLPanel id="innerPanel">
+					<crux:topMenuDisposal id="menu" defaultView="main">
+						<crux:menuEntry targetView="main" label="Testing Page" />
+						<crux:menuEntry targetView="publishService" label="Publish Service" />
+						<crux:menuEntry targetView="serviceCatalogList"
+							label="Service Catalog List" />
+<!-- 						<crux:menuEntry targetView="toscalist" label="Other" /> -->
+<!-- 						<crux:menuEntry targetView="login" label="Login" /> -->
+						<crux:menuEntry targetView="subscribeServiceTaylorForm"
+							label="Subscribe Service - Taylor Form" />
+					</crux:topMenuDisposal>
+				</gwt:HTMLPanel>
+			</crux:styledPanel>
+		</div>
 	</center>
 </v:view>
