@@ -38,7 +38,7 @@ public class LoginController implements KeyPressHandler
 	@Expose
 	public void onLoad() {
 		//Set custom style to the password text box.
-		loginView.passwordTextBox().setStyleName("gwt-TextBox");
+//		loginView.passwordTextBox().setStyleName("gwt-TextBox");
 
 		//Add handler for Enter key pressed.
 		loginView.passwordTextBox().addKeyPressHandler(this);

@@ -63,9 +63,9 @@ public class ToscaManagerTest {
 //		System.out.println("Customized: \n" +  toscaManager.getTosca(false) );
 	}
 
-	public static void main(String[] args) throws Exception {
-
-
+	public static void main(String[] args) throws Exception
+	{
+//		init();
 		toscaManager.getOperationDocumentation(definitionId, NodeTypeName.VMhost, interfaceName, OperationName.Install);
 //				toscaUtil.getOperationDocumentation(definition, NodeType.Apache, interfaceName, Operation.Install);
 //				toscaUtil.getOperationDocumentation(definition, NodeType.DockerContainer, interfaceName, Operation.Install);
@@ -92,8 +92,14 @@ public class ToscaManagerTest {
 //				toscaUtil.getSLA(definition, serviceTemplate, NodeTemplate.ApacheVirtualHost, slaID);
 //				toscaUtil.getSLA(definition, serviceTemplate, NodeTemplate.DockerContainer, slaID);
 		System.out.println(sla);
-
+		
+		////
+		
+		
+		
 	}
+	
+	
 	
 	@Test
 	public void testListInputParametersTypes() throws XPathExpressionException {
@@ -103,8 +109,11 @@ public class ToscaManagerTest {
 	}
 
 	@Test
-	public void testGetInputParametersType() throws XPathExpressionException {
+	public void testGetInputParametersType() throws XPathExpressionException, IOException {
+		String value = "TESTING_STRING";
+		toscaManager.setInputParametersType(definitionId, nodeTypeName, interfaceName, operationName, inputParameterType, value);
 		String s = toscaManager.getInputParametersType(definitionId, nodeTypeName, interfaceName, operationName, inputParameterType);
+		assertEquals(value, s);
 		System.out.println("String: " + s);
 	}
 	
@@ -180,8 +189,11 @@ public class ToscaManagerTest {
 	}
 	
 	@Test
-	public void testGetInputParameter() throws XPathExpressionException {
+	public void testGetInputParameter() throws XPathExpressionException, IOException {
+		String value = "TESTING_STRING";
+		toscaManager.setInputParameter(definitionId, nodeTypeName, interfaceName, operationName, inputParameterType, value);
 		String s = toscaManager.getInputParameter(definitionId, nodeTypeName, interfaceName, operationName, inputParameterType);
+		assertEquals(value, s);
 		System.out.println("String: " + s);
 	}
 	

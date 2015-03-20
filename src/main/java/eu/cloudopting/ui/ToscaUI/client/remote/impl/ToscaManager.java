@@ -34,6 +34,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import eu.cloudopting.ui.ToscaUI.server.model.SLA;
+import eu.cloudopting.ui.ToscaUI.server.utils.LogsUtil;
 import eu.cloudopting.ui.ToscaUI.server.utils.UniversalNamespaceResolver;
 
 /**
@@ -649,7 +650,7 @@ public class ToscaManager {
 
 	@GET
 	@Path("/getSlaAvaliable")
-	public List getSlaAvaliable(
+	public List<String> getSlaAvaliable(
 			@QueryParam("definition") String definition, 
 			@QueryParam("serviceTemplate") String serviceTemplate, 
 			@QueryParam("nodeTemplateType") NodeTemplateType nodeTemplateType) 
@@ -722,7 +723,9 @@ public class ToscaManager {
 //			Node node = (Node) xpath.evaluate(expression, document, XPathConstants.NODE);
 //			result = nodeToString(node);
 //		}
-		System.out.println(result.trim());
+		if(LogsUtil.DEBUG_ENABLED){
+			System.out.println(result.trim());
+		}
 		return result.trim();
 	}
 
@@ -739,7 +742,9 @@ public class ToscaManager {
 		for(int i = 0; i < nodeList.getLength(); i++) {
 			result.add( nodeList.item(i).getNodeValue() );
 		}
-		System.out.println(result);
+		if(LogsUtil.DEBUG_ENABLED){
+			System.out.println(result);
+		}
 		return result;
 	}
 	
