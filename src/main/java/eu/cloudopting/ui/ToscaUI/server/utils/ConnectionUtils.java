@@ -80,9 +80,8 @@ public class ConnectionUtils {
 	 */
 	public static void setPayload(URLConnection urlConnection, String payload)
 			throws UnsupportedEncodingException, IOException {
-		//urlConnection.setDoInput(true);
 		urlConnection.setDoOutput(true);
-		//urlConnection.setRequestProperty("Accept", "application/json");
+		urlConnection.setRequestProperty("Accept", "application/json");
 		urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
 
 		OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream(), "UTF-8");

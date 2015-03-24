@@ -1,7 +1,9 @@
 package eu.cloudopting.ui.ToscaUI.client.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Expose;
@@ -12,6 +14,8 @@ import org.cruxframework.crux.core.client.screen.views.WidgetAccessor;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox.MessageType;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
@@ -28,65 +32,65 @@ import com.google.gwt.user.client.ui.TextBox;
 @Controller("subscribeServiceTaylorFormController")
 public class SubscribeServiceTaylorFormController 
 {
+	private final Map<String, String> map = new HashMap<String, String>();
+	
 	@Inject
 	public SubscribeServiceTaylorFormView subscribeServiceTaylorFormView;
 
 	@Expose
 	public void onLoad() {
-		/*
-		 * Not working. Why?
-		 */
-//		subscribeServiceTaylorFormView.serviceParametersPanel().add(label, "label");
-//		subscribeServiceTaylorFormView.serviceParametersPanel().add(listBox, "listbox");
 		
 		//GET VALUES FROM THE DATABASE
 		
-		//MOCK VARIABLES AND LISTS.
+		/*
+		 * INIT MOCK VARIABLES AND LISTS.
+		 */
 
 		List<String> listItems = new ArrayList<String>(); 
-		listItems.add("item");
-		listItems.add("item2");
-		listItems.add("item3");
+		listItems.add(0, "Turin");
+		listItems.add(1, "Barcelona");
+		listItems.add(2, "Bucharest");
 		
 		List<String> listOSs = new ArrayList<String>(); 
-		listOSs.add("operting1");
-		listOSs.add("operting2");
-		listOSs.add("operting3");
+		listOSs.add(0, "Ubuntu 14.04");
+		listOSs.add(1, "CentOS 7");
+		listOSs.add(2, "CoreOS 1.6");
 		
 		List<String> listCSSs = new ArrayList<String>(); 
-		listCSSs.add("css1");
-		listCSSs.add("css2");
-		listCSSs.add("css3");
+		listCSSs.add(0, "BlueSky");
+		listCSSs.add(1, "Lemonade");
+		listCSSs.add(2, "Violette");		
 
 		List<String> listCPUs = new ArrayList<String>(); 
-		listCPUs.add("1");
-		listCPUs.add("2");
-		listCPUs.add("4");
-
+		listCPUs.add(0, "1");
+		listCPUs.add(1, "2");
+		listCPUs.add(2, "4");
+		
 		/*
-		 * Alternative
+		 * END MOCK VARIABLES AND LISTS.
 		 */
+
 		//Get access to the panel
 		HTMLPanel panel = (HTMLPanel)View.of(this).getWidget("serviceParametersPanel");
 		panel.setTitle("Service Parameters");
 		panel.setStyleName("serviceParametersPanel");
 		
-		addLabelListBoxPair(panel, "Cloud Node:", listItems, "taylor-Label", "taylor-ListBox");
-		addLabelTextBoxPair(panel, "URL/Domain:", "taylor-Label", "taylor-TextBox");
+		addLabelListBoxPair(panel, "Cloud Node:", listItems, "taylor-Label", "taylor-ListBox", "cloudNode");
+		addLabelTextBoxPair(panel, "URL/Domain:", "taylor-Label", "taylor-TextBox", "urlDomain");
 		
 		//Create a new panel 
-		HTMLPanel newPanel = new HTMLPanel("");;//new HTMLPanel("Service Flavour");
+		HTMLPanel newPanel = new HTMLPanel("");//new HTMLPanel("Service Flavour");
 		newPanel.setStyleName("serviceFlavour");
 		panel.add(newPanel);
 
-		addLabelListBoxPair(newPanel, "Operating System:", listOSs, "taylor-Label", "taylor-ListBox");
-		addLabelListBoxPair(newPanel, "CSS Skin:", listCSSs, "taylor-Label", "taylor-ListBox");
-		addLabelListBoxPair(newPanel, "Number CPU's:", listCPUs, "taylor-Label", "taylor-ListBox");
-		addLabelTextBoxPair(newPanel, "Bandwith:", "taylor-Label", "taylor-TextBox");
-		addLabelTextBoxPair(newPanel, "Disk Space:", "taylor-Label", "taylor-TextBox");
-		addLabelTextBoxPair(newPanel, "Memory RAM:", "taylor-Label", "taylor-TextBox");
+		addLabelListBoxPair(newPanel, "Operating System:", listOSs, "taylor-Label", "taylor-ListBox", "operatingSystem");
+		addLabelListBoxPair(newPanel, "CSS Skin:", listCSSs, "taylor-Label", "taylor-ListBox", "cssSkin");
+		addLabelListBoxPair(newPanel, "Number CPU's:", listCPUs, "taylor-Label", "taylor-ListBox", "numberCPUs");
+		addLabelTextBoxPair(newPanel, "Bandwith:", "taylor-Label", "taylor-TextBox", "bandwith");
+		addLabelTextBoxPair(newPanel, "Disk Space:", "taylor-Label", "taylor-TextBox", "diskSpace");
+		addLabelTextBoxPair(newPanel, "Memory RAM:", "taylor-Label", "taylor-TextBox", "memoryRAM");
 
-		//Create the button
+		//Create the button to submit the results.
 		Button subscribeServiceB = new Button();
 		subscribeServiceB.setText("Subscribe Service");
 		subscribeServiceB.setStyleName("crux-Button");
@@ -94,7 +98,7 @@ public class SubscribeServiceTaylorFormController
 			@Override
 			public void onClick(ClickEvent event) {
 				
-				FlatMessageBox.show("Subscribe Service DONE!!", MessageType.SUCCESS);
+				FlatMessageBox.show("Subscribe Service DONE!! " + map, MessageType.SUCCESS);
 				
 			}
 		});		
@@ -106,18 +110,14 @@ public class SubscribeServiceTaylorFormController
 	@Expose
 	public void subscribeService()
 	{
+		
 		FlatMessageBox.show("Subscribe!!!", MessageType.INFO);
 	}
 
 	@BindView("subscribeServiceTaylorFormView")
 	public static interface SubscribeServiceTaylorFormView extends WidgetAccessor
 	{
-		//		DivElement serviceParametersBox();
-		//		DivElement serviceFlavourBox();
 		HTMLPanel serviceParametersPanel();
-		//		Table tableServiceParametersBox();
-		//		Table tableServiceFlavourBox();
-
 	}
 	
 	/*
@@ -125,26 +125,35 @@ public class SubscribeServiceTaylorFormController
 	 *
 	 */
 	private void addLabelTextBoxPair(HTMLPanel panel, String labelText, 
-			String labelStyle, String textBoxStyle) {
+			String labelStyle, String textBoxStyle, final String id) {
 		//Create the widgets with parameters.
 		Label label = new Label();
 		label.setText(labelText);
 		label.setStyleName(labelStyle);
-		TextBox textBox = new TextBox();
+		final TextBox textBox = new TextBox();
 		textBox.setStyleName(textBoxStyle);
 		
 		//Add widget to the panel.
 		panel.add(label);
 		panel.add(textBox);
+		
+		//Add handler
+		map.put(id, "");
+		textBox.addChangeHandler(new ChangeHandler() {
+			@Override
+			public void onChange(ChangeEvent event) {
+				map.put(id, textBox.getValue());
+			}
+		});
 	}
 
 	private void addLabelListBoxPair(HTMLPanel panel, String labelText, List<String> listItems,
-			String labelStyle, String listBoxStyle) {
+			String labelStyle, String listBoxStyle, final String id) {
 		//Create the widgets with parameters.
 		Label label = new Label();
 		label.setText(labelText);
 		label.setStyleName(labelStyle);
-		ListBox listBox = new ListBox();
+		final ListBox listBox = new ListBox();
 		listBox.setStyleName(listBoxStyle);
 		for(String item : listItems){
 			listBox.addItem(item);
@@ -153,6 +162,15 @@ public class SubscribeServiceTaylorFormController
 		//Add widget to the panel.
 		panel.add(label);
 		panel.add(listBox);
+		
+		//Add handler
+		map.put(id, listBox.getItemText(0));
+		listBox.addChangeHandler(new ChangeHandler() {
+			@Override
+			public void onChange(ChangeEvent event) {
+				map.put(id, listBox.getItemText(listBox.getSelectedIndex()));
+			}
+		});
 	}
 
 }
