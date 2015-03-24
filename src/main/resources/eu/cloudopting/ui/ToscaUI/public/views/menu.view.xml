@@ -16,6 +16,8 @@
 <!-- 						<crux:menuEntry targetView="login" label="Login" /> -->
 						<crux:menuEntry targetView="subscribeServiceTaylorForm"
 							label="Subscribe Service - Taylor Form" />
+						<crux:menuEntry targetView="serviceSubscriberOperate"
+							label="Service Subscriber. Operate" />							
 					</crux:topMenuDisposal>
 				</gwt:HTMLPanel>
 			</crux:styledPanel>
