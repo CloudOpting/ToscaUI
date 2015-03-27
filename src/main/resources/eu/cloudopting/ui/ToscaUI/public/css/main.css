@@ -48,7 +48,6 @@
 /* 	box-shadow: 0 1px 3px rgba(90, 90, 90, 0.2); */
 /* 	padding: 15px; */
 /* } */
-
 .gwt-PasswordTextBox {
 	background: #fff;
 	color: #444;
@@ -60,58 +59,139 @@
 }
 
 .serviceParametersPanel {
-	padding: 10px; 
-	position: relative;	
+	padding: 20px;
+	margin-top: 30px;
+	margin-bottom: 30px;
+	position: relative;
 	width: 850px;
 	border: 1px solid #E0E0E0;
 }
 
 .serviceFlavour {
-	padding: 10px;
-	margin: 10px;
-	position: relative;	
+	padding: 20px;
+	margin-top: 30px;
+	margin-bottom: 30px;
+	position: relative;
 	width: 800px;
 	border: 1px solid #E0E0E0;
 }
 
-.serviceParametersPanel
-.taylor-ListBox {
-  position: relative;
-  background: #f8f8f8;
-  color: #444;
-  padding: 8px 8px;
-  border-radius: 1px;
-  border: 1px solid #92aec8;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  margin-bottom: 10px;
-  width: 20%;
+.serviceParametersPanel .taylor-ListBox, .followKPIs .taylor-ListBox {
+	position: relative;
+	background: #f8f8f8;
+	color: #444;
+	padding: 8px 8px;
+	border-radius: 1px;
+	border: 1px solid #92aec8;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	margin-bottom: 10px;
+	width: 20%;
 }
 
-.serviceParametersPanel
-.taylor-Label {
+.serviceParametersPanel .taylor-Label, .followKPIs .taylor-Label {
+	position: relative;
+	display: inline-block;
+	color: #1c5994;
+	text-shadow: 0 1px #fff;
+	margin: 20px;
+	width: 20%;
+	text-align: right;
+}
+
+.serviceParametersPanel .taylor-TextBox, .followKPIs .taylor-TextBox {
+	position: relative;
+	background: #fff;
+	color: #444;
+	padding: 8px 8px;
+	border-radius: 1px;
+	border: 1px solid #92aec8;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.14) inset;
+	margin-bottom: 10px;
+	width: 20%;
+	vertical-align: bottom;
+}
+
+.fixedWidth {
+	width: 850px;
+}
+
+.manageOperations, .followKPIs {
+	border: 1px solid #92aec8;
+	padding: 10px;
+	margin: 15px;
+}
+
+.common_class_to_inherit, .manageOperations .mo_text, .followKPIs .mo_text {
+	text-align: center;
+	margin-top: -22px;
+	height: 20px;
+	line-height: 20px;
+	font-size: 15px;
+	color: #1c5994;
+	background-color: white;
+	padding-right: 10px;
+	padding-left: 10px;
+	position: absolute;
+	font-weight: bold;
+}
+
+.serviceFlavour .mo_text, .serviceParametersPanel .mo_text {
+	text-align: center;
+	margin-top: -35px;
+	height: 20px;
+	line-height: 20px;
+	font-size: 15px;
+	color: #1c5994;
+	background-color: white;
+	padding-right: 10px;
+	padding-left: 10px;
+	position: absolute;
+	font-weight: bold;
+
+	
+}
+
+.manageOperations .taylor-Label-Big {
   position: relative;
   display: inline-block;
   color: #1c5994;
   text-shadow: 0 1px #fff;
   margin: 20px;
-  width: 20%;
-  text-align: right;
+  width: 60%;
+  text-align: left;
 }
 
-.serviceParametersPanel
-.taylor-TextBox {
-  position: relative;
-  background: #fff;
-  color: #444;
-  padding: 8px 8px;
-  border-radius: 1px;
-  border: 1px solid #92aec8;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.14) inset;
-  margin-bottom: 10px;
-  width: 20%;
-  vertical-align: bottom; 
+.manageOperations .taylor-Button {
+	width: 20%;
+	margin-top: 10px;
 }
 
-.fixedWidth {
+.header-Label {
+	font-size: 38px;
+	color: #1c5994;
+	margin-bottom: 30px;
+	
+}
+
+.innerPanel {
+	padding: 30px;
+	position: relative;
 	width: 850px;
+}
+
+.innerPanel-TextBox {
+	position: relative;
+	background: #fff;
+	color: #444;
+	padding: 8px 8px;
+	border-radius: 1px;
+	border: 1px solid #92aec8;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.14) inset;
+	margin-bottom: 10px;
+	width: 60%;
+	vertical-align: bottom;
+}
+
+.innerPanel-Button {
+	width: 20%;
 }

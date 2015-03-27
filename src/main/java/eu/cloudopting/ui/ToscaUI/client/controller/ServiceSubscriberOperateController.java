@@ -8,14 +8,9 @@ import org.cruxframework.crux.core.client.screen.views.View;
 import org.cruxframework.crux.core.client.screen.views.WidgetAccessor;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox.MessageType;
-import org.cruxframework.crux.widgets.client.styledpanel.StyledPanel;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.TextBox;
 
 /**
  * 
@@ -23,7 +18,7 @@ import com.google.gwt.user.client.ui.TextBox;
  *
  */
 @Controller("serviceSubscriberOperateController")
-public class ServiceSubscriberOperateController 
+public class ServiceSubscriberOperateController extends AbstractController
 {
 	@Inject
 	public ServiceSubscriberOperateView serviceSubscriberOperateView;
@@ -33,40 +28,46 @@ public class ServiceSubscriberOperateController
 		
 		//GET VALUES FROM THE DATABASE
 		
+		String name = "Clearò";
 		
 		/*
 		 * END MOCK VARIABLES AND LISTS.
 		 */
 
 		//Get access to the panel
-		HTMLPanel panel = (HTMLPanel)View.of(this).getWidget("serviceParametersPanel");
-		panel.setTitle("Manage Clearo");
-		panel.setStyleName("serviceParametersPanel");
+		HTMLPanel panel = (HTMLPanel)View.of(this).getWidget("mainPanel");
+//		panel.setTitle("Manage "+name);
+//		panel.setStyleName("serviceParametersPanel");
 
+		HTMLPanel innerPanel = new HTMLPanel("");
+		innerPanel.setStyleName("innerPanel");
+		panel.add(innerPanel);
+		
 		Label label = new Label();
-		label.setText("Manage Clearo");
-		panel.add(label);
+		label.setText("Manage "+name);
+		label.setStyleName("header-Label");
+		innerPanel.add(label);
 		
-		Label label2 = new Label();
-		label2.setText("Manage Clearo Operations");
-		panel.add(label2);
+//		Label label2 = new Label();
+//		label2.setText("Manage Clearo Operations");
+//		panel.add(label2);
 		
 		//Create a new panel 
-		HTMLPanel manageOperations = new HTMLPanel("");
+		HTMLPanel manageOperations = new HTMLPanel("<span class=\"mo_text\">Manage "+name+" Operations</span>");
 		manageOperations.setStyleName("manageOperations");
-		panel.add(manageOperations);
+		innerPanel.add(manageOperations);
 		
-		addLabelButtonPair(manageOperations, "Handle resource request:", "taylor-Label-Big", "taylor-Button", "cloudNode", "Update Clearo");
-		addLabelButtonPair(manageOperations, "Decomission Clearo INstance:", "taylor-Label-Big", "taylor-Button", "urlDomain", "Decomission");
+		addLabelButtonPair(manageOperations, "Handle resource request:", "taylor-Label-Big", "crux-Button taylor-Button", "cloudNode", "Update "+name);
+		addLabelButtonPair(manageOperations, "Decomission "+name+" Instance:", "taylor-Label-Big", "crux-Button taylor-Button", "urlDomain", "Decomission");
 		
-		Label label3 = new Label();
-		label3.setText("Follow Clearo KPI's");
-		panel.add(label3);
+//		Label label3 = new Label();
+//		label3.setText("Follow Clearo KPI's");
+//		panel.add(label3);
 		
 		//Create a new panel 
-		HTMLPanel followKPIs = new HTMLPanel("");
+		HTMLPanel followKPIs = new HTMLPanel("<span class=\"mo_text\">Follow "+name+" KPI's</span>");
 		followKPIs.setStyleName("followKPIs");
-		panel.add(followKPIs);
+		innerPanel.add(followKPIs);
 
 		addLabelTextBoxPair(followKPIs, "CPU Usage:", "taylor-Label", "taylor-TextBox", "numberCPUs", "2");
 		addLabelTextBoxPair(followKPIs, "Bandwith Usage:", "taylor-Label", "taylor-TextBox", "bandwith", "200Gb/month");
@@ -75,7 +76,7 @@ public class ServiceSubscriberOperateController
 
 		Label label4 = new Label();
 		label4.setText("Check your Terms and Conditions");
-		panel.add(label4);
+		innerPanel.add(label4);
 	}
 
 
@@ -89,51 +90,7 @@ public class ServiceSubscriberOperateController
 	@BindView("serviceSubscriberOperateView")
 	public static interface ServiceSubscriberOperateView extends WidgetAccessor
 	{
-		HTMLPanel serviceParametersPanel();
+		HTMLPanel mainPanel();
 	}
 	
-	/*
-	 * PRIVATE METHODS
-	 *
-	 */
-	private void addLabelTextBoxPair(HTMLPanel panel, String labelText, 
-			String labelStyle, String textBoxStyle, final String id, String value) {
-		//Create the widgets with parameters.
-		Label label = new Label();
-		label.setText(labelText);
-		label.setStyleName(labelStyle);
-		final TextBox textBox = new TextBox();
-		textBox.setStyleName(textBoxStyle);
-		textBox.setValue(value);
-		textBox.setEnabled(false);
-		
-		//Add widget to the panel.
-		panel.add(label);
-		panel.add(textBox);
-	}
-
-	
-	private void addLabelButtonPair(HTMLPanel panel, String labelText, 
-			String labelStyle, String listButtonStyle, final String id, String buttonText) {
-		//Create the widgets with parameters.
-		Label label = new Label();
-		label.setText(labelText);
-		label.setStyleName(labelStyle);
-		final Button button = new Button();
-		button.setStyleName(listButtonStyle);
-		button.setText(buttonText);
-		
-		//Add widget to the panel.
-		panel.add(label);
-		panel.add(button);
-		
-		//Add handler
-		button.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				FlatMessageBox.show("Button", MessageType.INFO);
-			}
-		});
-	}
-
 }
