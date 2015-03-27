@@ -5,7 +5,7 @@
 
 	<center>
 		<div class="fixedWidth">
-			<gwt:HTMLPanel id="serviceParametersPanel"></gwt:HTMLPanel>
+			<gwt:HTMLPanel id="mainPanel"></gwt:HTMLPanel>
 		</div>
 	</center>
 </v:view>
