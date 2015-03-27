@@ -1,0 +1,27 @@
+<v:view xmlns="http://www.w3.org/1999/xhtml" xmlns:v="http://www.cruxframework.org/view"
+	xmlns:core="http://www.cruxframework.org/crux" xmlns:crux="http://www.cruxframework.org/crux/widgets"
+	xmlns:gwt="http://www.cruxframework.org/crux/gwt" xmlns:faces="http://www.cruxframework.org/crux/smart-faces"
+	useController="instancesServiceCatalogController" onLoad="instancesServiceCatalogController.onLoad"
+	useDataSource="rowDataSource"
+	>
+	<!-- 	 -->
+
+	<center>
+		<div class="fixedWidth">
+			<gwt:HTMLPanel id="mainPanel">
+				<crux:adaptiveGrid id="grid" width="100%" dataSource="rowDataSource" styleName="grid">
+					<crux:largeColumns>
+						<crux:dataColumn key="instance" label="Name" width="250px"/>
+						<crux:dataColumn key="status" label="Status" width="150px"/>
+						<crux:widgetColumn key="actions" label="Edit Instance" width="100px">
+							<faces:button id="btnOK" text="GO" onSelect="instancesServiceCatalogController.go"/>
+						</crux:widgetColumn>
+					</crux:largeColumns>
+					<crux:smallColumns>
+						<crux:dataColumn key="id" label="ID" width="100px" />
+					</crux:smallColumns>
+				</crux:adaptiveGrid>
+			</gwt:HTMLPanel>
+		</div>
+	</center>
+</v:view>

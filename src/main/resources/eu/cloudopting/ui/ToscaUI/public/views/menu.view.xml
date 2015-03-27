@@ -12,12 +12,14 @@
 						<crux:menuEntry targetView="publishService" label="Publish Service" />
 						<crux:menuEntry targetView="serviceCatalogList"
 							label="Service Catalog List" />
-<!-- 						<crux:menuEntry targetView="toscalist" label="Other" /> -->
-<!-- 						<crux:menuEntry targetView="login" label="Login" /> -->
+						<!-- <crux:menuEntry targetView="toscalist" label="Other" /> -->
+						<!-- <crux:menuEntry targetView="login" label="Login" /> -->
 						<crux:menuEntry targetView="subscribeServiceTaylorForm"
 							label="Subscribe Service - Taylor Form" />
 						<crux:menuEntry targetView="serviceSubscriberOperate"
-							label="Service Subscriber. Operate" />							
+							label="Service Subscriber. Operate" />
+						<crux:menuEntry targetView="instancesServiceCatalog"
+							label="Instances Service Catalog" />
 					</crux:topMenuDisposal>
 				</gwt:HTMLPanel>
 			</crux:styledPanel>
