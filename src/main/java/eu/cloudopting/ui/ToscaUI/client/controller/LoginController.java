@@ -27,7 +27,7 @@ import eu.cloudopting.ui.ToscaUI.client.remote.IProxyAPIService;
  *
  */
 @Controller("loginController")
-public class LoginController implements KeyPressHandler
+public class LoginController  extends AbstractController implements KeyPressHandler
 {
 	@Inject
 	public LoginView loginView;

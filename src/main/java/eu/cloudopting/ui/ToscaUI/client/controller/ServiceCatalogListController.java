@@ -3,18 +3,13 @@ package eu.cloudopting.ui.ToscaUI.client.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.event.DocumentEvent.EventType;
-
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.ioc.Inject;
 import org.cruxframework.crux.core.client.screen.views.BindView;
 import org.cruxframework.crux.core.client.screen.views.WidgetAccessor;
-import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox;
-import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox.MessageType;
 import org.cruxframework.crux.widgets.client.dialogcontainer.DialogViewContainer;
 import org.cruxframework.crux.widgets.client.storyboard.Storyboard;
-import org.jgroups.Event;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -27,7 +22,7 @@ import eu.cloudopting.ui.ToscaUI.server.model.StoryboardItem;
  *
  */
 @Controller("serviceCatalogListController")
-public class ServiceCatalogListController 
+public class ServiceCatalogListController extends AbstractController
 {
 	@Inject
 	public ServiceCatalogList serviceCatalogList;

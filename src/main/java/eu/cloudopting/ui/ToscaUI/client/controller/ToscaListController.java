@@ -13,7 +13,8 @@ import com.google.gwt.user.client.Window;
  *
  */
 @Controller("toscaListController")
-public class ToscaListController {
+public class ToscaListController extends AbstractController
+{
 
 	@Expose
 	public void onModuleLoad() {

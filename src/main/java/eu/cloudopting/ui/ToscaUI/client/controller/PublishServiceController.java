@@ -15,7 +15,7 @@ import org.cruxframework.crux.widgets.client.uploader.FileUploader;
  *
  */
 @Controller("publishServiceController")
-public class PublishServiceController 
+public class PublishServiceController extends AbstractController
 {
 	@Inject
 	public PublishServiceView publishServiceView;

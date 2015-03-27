@@ -25,7 +25,7 @@ import eu.cloudopting.ui.ToscaUI.client.remote.IProxyAPIService;
 import eu.cloudopting.ui.ToscaUI.client.remote.IUserInfo;
 
 @Controller("mainController")
-public class MainController 
+public class MainController extends AbstractController
 {
 
 	@Inject

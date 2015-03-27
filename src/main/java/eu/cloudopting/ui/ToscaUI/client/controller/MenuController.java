@@ -15,7 +15,7 @@ import com.google.gwt.user.client.ui.HTML;
  *
  */
 @Controller("menuController")
-public class MenuController 
+public class MenuController extends AbstractController
 {
 	@Inject
 	public MenuView menuView;
