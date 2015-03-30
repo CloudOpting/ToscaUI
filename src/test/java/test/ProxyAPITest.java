@@ -177,7 +177,7 @@ public class ProxyAPITest {
 		//CONNECT
 		c.connect(user, password);
 		//CREATE THE APPLICATION
-		c.applicationCreate(lastJSON);
+		c.applicationCreate(createNewApplicationJson);
 
 	}
 	
