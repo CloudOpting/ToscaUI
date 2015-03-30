@@ -12,7 +12,7 @@ import org.cruxframework.crux.core.client.rest.RestProxy.TargetRestService;
 @TargetRestService("proxyAPIService")
 public interface IProxyAPIService extends RestProxy {
 	
-	void connect(String user, String pass, Callback<String> callback);
+	void connect(String user, String pass, Callback<Boolean> callback);
 	
 	void applicationCreate(String json, Callback<String> callback);
 	

@@ -34,11 +34,11 @@ public class ConnectionUtils {
 	 * @return
 	 * @throws IOException
 	 */
-	public static String getBodyContent(URLConnection urlConnection)
+	public static String getStringFromInputStream(InputStream is)
 			throws IOException {
-		if(urlConnection==null) return "";
-
-		InputStream is = urlConnection.getInputStream();
+//		if(urlConnection==null) return "";
+//
+//		InputStream is = urlConnection.getInputStream();
 		InputStreamReader isr = new InputStreamReader(is);
 
 		int numCharsRead;

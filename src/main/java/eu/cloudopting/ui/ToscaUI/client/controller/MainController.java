@@ -67,11 +67,12 @@ public class MainController extends AbstractController
 		final Callback<String> callback = new Callback<String>() {
 			@Override
 			public void onSuccess(String json) {
-				userInfo.getLastModifiedBy(json, callbackUserInfo);
+				if(json==null || json.isEmpty()) FlatMessageBox.show("The user [" + mainView.nameTextBox().getValue() + "] does not exist!!", MessageType.WARN);
+				else userInfo.getLastModifiedBy(json, callbackUserInfo);
 			}
 			@Override
 			public void onError(Exception e) {
-				FlatMessageBox.show("The user [" + mainView.nameTextBox().getValue() + "] does not exist!!", MessageType.INFO);
+				FlatMessageBox.show("The user [" + mainView.nameTextBox().getValue() + "] does not exist!!", MessageType.ERROR);
 			}
 		};
 

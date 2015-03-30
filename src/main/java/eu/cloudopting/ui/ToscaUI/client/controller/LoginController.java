@@ -55,9 +55,9 @@ public class LoginController  extends AbstractController implements KeyPressHand
 	@Expose   
 	public void login()
 	{
-		Callback<String> callback = new Callback<String>() {
+		Callback<Boolean> callback = new Callback<Boolean>() {
 			@Override
-			public void onSuccess(String result) {
+			public void onSuccess(Boolean result) {
 				if(result!=null) {
 					HorizontalSwapContainer views =  (HorizontalSwapContainer) Screen.get("views");
 					//HorizontalSwapContainer
