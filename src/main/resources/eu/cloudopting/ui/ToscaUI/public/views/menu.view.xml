@@ -20,6 +20,8 @@
 							label="Service Subscriber. Operate" />
 						<crux:menuEntry targetView="instancesServiceCatalog"
 							label="Instances Service Catalog" />
+						<crux:menuEntry targetView="serviceAddDeployForm"
+							label="Service Add Deploy Form" />							
 					</crux:topMenuDisposal>
 				</gwt:HTMLPanel>
 			</crux:styledPanel>

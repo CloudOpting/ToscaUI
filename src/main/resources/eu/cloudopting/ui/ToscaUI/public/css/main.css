@@ -58,7 +58,7 @@
 	margin-bottom: 10px;
 }
 
-.serviceParametersPanel {
+.serviceParametersPanel, .serviceDeploy, .serviceParameters {
 	padding: 20px;
 	margin-top: 30px;
 	margin-bottom: 30px;
@@ -76,7 +76,29 @@
 	border: 1px solid #E0E0E0;
 }
 
-.serviceParametersPanel .taylor-ListBox, .followKPIs .taylor-ListBox {
+
+.leftPanel {
+/* 	padding: 20px; */
+	margin-top: 30px;
+	margin-bottom: 30px;
+	position: relative;
+	width: 50%;
+	display: inline-block;
+}
+
+.rightPanel {
+	padding: 20px;
+	margin-top: 30px;
+	margin-bottom: 30px;
+	position: relative;
+	width: 50%;
+	border: 1px solid #E0E0E0;
+	display: inline-block;
+	vertical-align: top;
+}
+
+/*.serviceParametersPanel .taylor-ListBox, .followKPIs*/ 
+.taylor-ListBox {
 	position: relative;
 	background: #f8f8f8;
 	color: #444;
@@ -88,7 +110,8 @@
 	width: 20%;
 }
 
-.serviceParametersPanel .taylor-Label, .followKPIs .taylor-Label {
+/*.serviceParametersPanel .taylor-Label, .followKPIs*/ 
+.taylor-Label {
 	position: relative;
 	display: inline-block;
 	color: #1c5994;
@@ -98,7 +121,8 @@
 	text-align: right;
 }
 
-.serviceParametersPanel .taylor-TextBox, .followKPIs .taylor-TextBox {
+/*.serviceParametersPanel .taylor-TextBox, .followKPIs*/ 
+.taylor-TextBox {
 	position: relative;
 	background: #fff;
 	color: #444;
@@ -108,6 +132,41 @@
 	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.14) inset;
 	margin-bottom: 10px;
 	width: 20%;
+	vertical-align: bottom;
+}
+
+.leftPanel .taylor-ListBox, .rightPanel .taylor-ListBox{
+	position: relative;
+	background: #f8f8f8;
+	color: #444;
+	padding: 8px 8px;
+	border-radius: 1px;
+	border: 1px solid #92aec8;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	margin-bottom: 10px;
+	width: 40%;
+}
+
+.leftPanel .taylor-Label, .rightPanel .taylor-Label {
+	position: relative;
+	display: inline-block;
+	color: #1c5994;
+	text-shadow: 0 1px #fff;
+	margin: 20px;
+	width: 40%;
+	text-align: right;
+}
+
+.leftPanel .taylor-TextBox, .rightPanel .taylor-TextBox {
+	position: relative;
+	background: #fff;
+	color: #444;
+	padding: 8px 8px;
+	border-radius: 1px;
+	border: 1px solid #92aec8;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.14) inset;
+	margin-bottom: 10px;
+	width: 40%;
 	vertical-align: bottom;
 }
 
@@ -121,7 +180,7 @@
 	margin: 15px;
 }
 
-.common_class_to_inherit, .manageOperations .mo_text, .followKPIs .mo_text {
+.manageOperations .mo_text, .followKPIs .mo_text {
 	text-align: center;
 	margin-top: -22px;
 	height: 20px;
@@ -135,7 +194,7 @@
 	font-weight: bold;
 }
 
-.serviceFlavour .mo_text, .serviceParametersPanel .mo_text {
+.serviceFlavour .mo_text, .serviceParametersPanel .mo_text, .serviceDeploy .mo_text, .serviceParameters .mo_text, .rightPanel .mo_text{
 	text-align: center;
 	margin-top: -35px;
 	height: 20px;
@@ -147,9 +206,9 @@
 	padding-left: 10px;
 	position: absolute;
 	font-weight: bold;
-
-	
 }
+
+
 
 .manageOperations .taylor-Label-Big {
   position: relative;
@@ -194,4 +253,11 @@
 
 .innerPanel-Button {
 	width: 20%;
+}
+
+.puppet-checkBox {
+	width: 100%;
+	display: block;
+	padding: 10px;
+	text-align: left;
 }
