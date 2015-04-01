@@ -42,7 +42,7 @@ public class ToscaManagerTest {
 	private static String slaID = "BigCity";
 	
 	@Before
-	public void init() throws IOException, JSONException {
+	public static void init() throws IOException, JSONException {
 
 		String jsonTemplate = "{ \"tosca\" : \"" + StringEscapeUtils.escapeJavaScript(
 				IOUtils.readFile(toscaFilePath, Charset.defaultCharset())
@@ -56,6 +56,7 @@ public class ToscaManagerTest {
 		toscaManager.setTosca(toscaFileFromJson);
 	}
 	
+	
 	@After
 	public void finish() {
 		System.out.println("------");
@@ -65,7 +66,7 @@ public class ToscaManagerTest {
 
 	public static void main(String[] args) throws Exception
 	{
-//		init();
+		init();
 		toscaManager.getOperationDocumentation(definitionId, NodeTypeName.VMhost, interfaceName, OperationName.Install);
 //				toscaUtil.getOperationDocumentation(definition, NodeType.Apache, interfaceName, Operation.Install);
 //				toscaUtil.getOperationDocumentation(definition, NodeType.DockerContainer, interfaceName, Operation.Install);
@@ -78,7 +79,7 @@ public class ToscaManagerTest {
 		toscaManager.setVHostName("HOSTNAME_TEST", definitionId, serviceTemplate, NodeTemplateType.ApacheVirtualHost, "ClearoApacheVH");
 		toscaManager.getVHostName(definitionId, serviceTemplate, NodeTemplateType.ApacheVirtualHost, "ClearoApacheVH");
 //		toscaManager.getInputParametersType(definitionId, NodeTypeName.VMhost, OperationName.Install);
-		toscaManager.getSlaAvaliable(definitionId, serviceTemplate, NodeTemplateType.VMhost);
+		toscaManager.listSlaAvaliable(definitionId, serviceTemplate, NodeTemplateType.VMhost);
 		
 		System.out.println("-------------");
 
@@ -96,7 +97,11 @@ public class ToscaManagerTest {
 		////
 		
 		
-		
+		List<String> listParams = toscaManager.listInputParameterType(definitionId, nodeTypeName, interfaceName, operationName);
+		System.out.println(listParams);
+		for (String string : listParams) {
+			toscaManager.listSlaAvaliable(definitionId, string, NodeTemplateType.Apache);
+		}
 	}
 	
 	

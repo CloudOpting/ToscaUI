@@ -2,8 +2,10 @@ package eu.cloudopting.ui.ToscaUI.client.remote.impl;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -17,7 +19,10 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.cruxframework.crux.core.server.rest.annotation.RestService;
+import org.cruxframework.crux.core.server.rest.spi.InternalServerErrorException;
+import org.cruxframework.crux.core.shared.rest.annotation.DefaultValue;
 import org.cruxframework.crux.core.shared.rest.annotation.GET;
 import org.cruxframework.crux.core.shared.rest.annotation.POST;
 import org.cruxframework.crux.core.shared.rest.annotation.Path;
@@ -25,7 +30,9 @@ import org.cruxframework.crux.core.shared.rest.annotation.PathParam;
 import org.cruxframework.crux.core.shared.rest.annotation.QueryParam;
 
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
+import com.google.gwt.i18n.client.Constants.DefaultStringValue;
 
+import eu.cloudopting.ui.ToscaUI.server.model.ApplicationList;
 import eu.cloudopting.ui.ToscaUI.server.utils.ConnectionUtils;
 import eu.cloudopting.ui.ToscaUI.server.utils.IOUtils;
 
@@ -84,6 +91,18 @@ public class ProxyAPIService {
 	 * @param filter
 	 */
 	private static String APPLICATION_LIST_METHOD = "application/list?page=%s&size=%s&sortBy=%s&sortOrder=%s&filter=%s";
+	
+	/**
+	 * APPLICATION_LIST_METHOD prepared method does not need parameters to work. 
+	 * 
+	 */
+	private static String APPLICATION_LIST_UNPAGINATED_METHOD = "application/listunpaginated";
+	
+	@GET
+	@Path("connected")
+	public Boolean connected() {
+		return httpclient!=null;
+	}
 	
 	@GET
 	@Path("/")
@@ -145,25 +164,51 @@ public class ProxyAPIService {
 
 	
 	@GET
-	@Path("applcationlist")
-	public String applicationList(
+	@Path("applcation/list")
+	public ApplicationList applicationList(
 			@QueryParam("page") String page,
 			@QueryParam("size") String size,
 			@QueryParam("sortBy") String sortBy,
 			@QueryParam("sortOrder") String sortOrder,
-			@QueryParam("filter") String filter) throws MalformedURLException, IOException, NotFoundException {
-		return doCallToString(String.format(APPLICATION_LIST_METHOD, page, size, sortBy, sortOrder, filter));
+			@QueryParam("filter") @DefaultValue("") String filter) throws MalformedURLException, IOException, NotFoundException {
+		if(filter==null) {
+			filter ="";
+		} else {
+			filter = URLEncoder.encode(filter, "UTF-8");
+		}
+		String json = doCallToString(String.format(APPLICATION_LIST_METHOD, page, size, sortBy, sortOrder, filter));
+		ObjectMapper mapper = new ObjectMapper();
+		ApplicationList contentList = mapper.readValue(json, ApplicationList.class);
+		return contentList;
+	}
+	
+	@GET
+	@Path("applcation/listunpaginated")
+	public ApplicationList applicationListUnpaginated() throws MalformedURLException, IOException, NotFoundException {
+		String json = doCallToString(APPLICATION_LIST_UNPAGINATED_METHOD);
+		ObjectMapper mapper = new ObjectMapper();
+		ApplicationList contentList = mapper.readValue(json, ApplicationList.class);
+		return contentList;
 	}
 
 	@GET
 	@Path("applcation/{id}")
 	public String application(@PathParam("id") String id) throws MalformedURLException, IOException {
-		String jsonObject = "{"
-				+ "tosca: " + IOUtils.readFile("src/test/resources/TOSCA_ClearoExample.xml", Charset.defaultCharset())
-				+ "}";
-
-		return jsonObject;
-		//return doCallToString(String.format(APPLICATION_METHOD, id));
+//		String jsonObject = "{"
+//				+ "tosca: " + IOUtils.readFile("src/test/resources/TOSCA_ClearoExample.xml", Charset.defaultCharset())
+//				+ "}";
+//
+//		return jsonObject;
+		try {
+			return doCallToString(String.format(APPLICATION_METHOD, id));
+		} catch (InternalServerErrorException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "";
 	}
 
 	@GET
@@ -183,22 +228,27 @@ public class ProxyAPIService {
 	 * @throws IOException
 	 * @throws NotFoundException 
 	 */
-	private String doCallToString(String method) throws MalformedURLException, IOException, NotFoundException {
+	private String doCallToString(String method) throws MalformedURLException, NotFoundException, InternalServerErrorException, IOException {
+		System.out.println(restBaseURI+method);
 		//Create the http post
         HttpGet httpget = new HttpGet(restBaseURI+method);
         httpget.setHeader("Content-type", "application/json");
         
         //execute the URL
         CloseableHttpResponse response = httpclient.execute(httpget);
+        String message = "RARE";
         try {
             System.out.println(response.getStatusLine());
-            if(response.getStatusLine().getStatusCode()==404)
-            	throw new NotFoundException();
             HttpEntity entity = response.getEntity();
-            return ConnectionUtils.getStringFromInputStream(entity.getContent());
+            message = ConnectionUtils.getStringFromInputStream(entity.getContent());
+            if(response.getStatusLine().getStatusCode()==404)
+            	throw new NotFoundException(message);
+            if(response.getStatusLine().getStatusCode()==500)
+            	throw new InternalServerErrorException(message);
         } finally {
         	response.close();
         }
+        return message;
         
         
 		//return ConnectionUtils.getBodyContent(createRESTConnection(method));

@@ -37,6 +37,21 @@ public class LoginController  extends AbstractController implements KeyPressHand
 	
 	@Expose
 	public void onLoad() {
+		
+		connectApi.connected(
+				new Callback<Boolean>() {
+					@Override
+					public void onSuccess(Boolean result) {
+						if(result) {
+							((HorizontalSwapContainer) Screen.get("views")).showView("menu");
+						}
+					}
+					@Override
+					public void onError(Exception e) {
+					}
+				});
+		
+		
 		//Set custom style to the password text box.
 //		loginView.passwordTextBox().setStyleName("gwt-TextBox");
 

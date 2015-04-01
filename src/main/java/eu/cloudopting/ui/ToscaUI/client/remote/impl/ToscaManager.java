@@ -244,7 +244,7 @@ public class ToscaManager {
 	/**
 	 * Gets a list of parameters element.
 	 * 
-	 * LIST_INPUT_PARAMETER_TYPE prepared query needs some parameters to work. 
+	 * LIST_INPUT_PARAMETER_ELEMENT prepared query needs some parameters to work. 
 	 * 
 	 * @param String definitionId 
 	 * @param {@link NodeTypeName} nodeTypeName
@@ -445,13 +445,13 @@ public class ToscaManager {
 			+ "/SLA[@id=\"%s\"]";
 	
 	/**
-	 * GET_SLA_AVALIABLE prepared query needs 3 parameters to work. 
+	 * LIST_SLA_AVALIABLE prepared query needs 3 parameters to work. 
 	 * 
 	 * @param String definitionId 
 	 * @param String serviceTemplate
 	 * @param {@link NodeTemplateType} nodeTemplateType
 	 */
-	private static String GET_SLA_AVALIABLE = "/Definitions[@id=\"%s\"]"
+	private static String LIST_SLA_AVALIABLE = "/Definitions[@id=\"%s\"]"
 			+ "/ServiceTemplate[@id=\"%s\"]"
 			+ "/TopologyTemplate"
 			+ "/NodeTemplate[@type=\"%s\"]"
@@ -649,14 +649,14 @@ public class ToscaManager {
 	}
 
 	@GET
-	@Path("/getSlaAvaliable")
-	public List<String> getSlaAvaliable(
-			@QueryParam("definition") String definition, 
+	@Path("/listSlaAvaliable")
+	public List<String> listSlaAvaliable(
+			@QueryParam("definitionId") String definitionId, 
 			@QueryParam("serviceTemplate") String serviceTemplate, 
 			@QueryParam("nodeTemplateType") NodeTemplateType nodeTemplateType) 
 	throws XPathExpressionException 
 	{
-		return evaluateMultipleValues(String.format(GET_SLA_AVALIABLE, definition, serviceTemplate, nodeTemplateType));
+		return evaluateMultipleValues(String.format(LIST_SLA_AVALIABLE, definitionId, serviceTemplate, nodeTemplateType));
 	}
 	
 

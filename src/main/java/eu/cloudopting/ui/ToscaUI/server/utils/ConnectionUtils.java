@@ -48,10 +48,6 @@ public class ConnectionUtils {
 			sb.append(charArray, 0, numCharsRead);
 		}
 		
-		if(LogsUtil.DEBUG_ENABLED) {
-			System.out.println(sb.toString());
-		}
-		
 		return sb.toString();
 	}
 

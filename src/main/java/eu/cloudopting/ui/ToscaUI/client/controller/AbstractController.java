@@ -4,13 +4,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.cruxframework.crux.core.client.event.SelectEvent;
+import org.cruxframework.crux.core.client.event.SelectHandler;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox.MessageType;
 
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -114,7 +121,7 @@ public abstract class AbstractController {
 	}
 	
 	protected void addButtonTextBoxPair(HTMLPanel panel, String buttonText, 
-			String buttonStyle, String textBoxStyle, final String id) {
+			String buttonStyle, String textBoxStyle, final String id, EventHandler buttonHandler) {
 		//Create the widgets with parameters.
 		final Button button = new Button();
 		button.setStyleName(buttonStyle);
@@ -127,12 +134,18 @@ public abstract class AbstractController {
 		panel.add(button);
 		panel.add(textBox);
 		
-		button.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				FlatMessageBox.show(map.get(id), MessageType.INFO);
-			}
-		});
+		//Add the correct handler.
+		if(buttonHandler instanceof ClickHandler){
+			button.addClickHandler((ClickHandler)buttonHandler);	
+		} else if (buttonHandler instanceof KeyDownHandler) {
+			button.addKeyDownHandler((KeyDownHandler)buttonHandler);
+		} else if (buttonHandler instanceof BlurHandler) {
+			button.addBlurHandler((BlurHandler)buttonHandler);
+		} 
+		
+		else {
+			//WHAT DO WE DO? EXCEPTION??
+		}
 		
 		//Add handler
 		map.put(id, "");
