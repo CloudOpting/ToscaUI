@@ -7,8 +7,8 @@
 
 	<center>
 		<div class="fixedWidth">
-			<crux:styledPanel id="panel">
-				<crux:formDisplay id="form" style="display:block; margin: 50px">
+			<gwt:HTMLPanel id="panelScreen">
+				<crux:formDisplay id="form" style="display:block; margin: 50px" >
 					<crux:entry label="Name">
 						<gwt:textBox id="nameTextBox" />
 					</crux:entry>
@@ -20,7 +20,7 @@
 							onSelect="loginController.login" />
 					</crux:entry>
 				</crux:formDisplay>
-			</crux:styledPanel>
+			</gwt:HTMLPanel>
 		</div>
 	</center>
 </v:view>

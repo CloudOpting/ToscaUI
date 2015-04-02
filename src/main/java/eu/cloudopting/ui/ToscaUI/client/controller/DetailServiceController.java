@@ -15,18 +15,16 @@ import org.cruxframework.crux.core.client.screen.views.WidgetAccessor;
 public class DetailServiceController extends AbstractController
 {
 	@Inject
-	public DetailServiceView detailServiceView;
+	public DetailServiceView view;
 	
 	@Expose
 	public void onLoad(){
-		
-//		detailServiceView.productName().setInnerText("HOLA");
 	}
 
 	@BindView("detailServiceView")
 	public static interface DetailServiceView extends WidgetAccessor
 	{
-//		DivElement productName();
+
 	}
 
 }

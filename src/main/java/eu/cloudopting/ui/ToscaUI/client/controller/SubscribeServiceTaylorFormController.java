@@ -26,7 +26,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 public class SubscribeServiceTaylorFormController extends AbstractController
 {
 	@Inject
-	public SubscribeServiceTaylorFormView subscribeServiceTaylorFormView;
+	public SubscribeServiceTaylorFormView view;
 
 	@Expose
 	public void onLoad() {
@@ -61,8 +61,31 @@ public class SubscribeServiceTaylorFormController extends AbstractController
 		 * END MOCK VARIABLES AND LISTS.
 		 */
 
+		buildView(listItems, listOSs, listCSSs, listCPUs);
+	}
+
+	@Expose
+	public void subscribeService()
+	{
+		FlatMessageBox.show("Subscribe!!!", MessageType.INFO);
+	}
+
+	@BindView("subscribeServiceTaylorForm")
+	public static interface SubscribeServiceTaylorFormView extends WidgetAccessor
+	{
+		HTMLPanel panelScreen();
+	}
+
+	/*
+	 * PRIVATE METHODS
+	 */
+	private void buildView(List<String> listItems, List<String> listOSs,
+			List<String> listCSSs, List<String> listCPUs) {
+		
+		setScreenHeader(view.panelScreen(), "Subscribe Service - Taylor Form");		
+		
 		//Get access to the panel
-		HTMLPanel panel = (HTMLPanel)View.of(this).getWidget("mainPanel");
+		HTMLPanel panel = view.panelScreen();
 		
 		//Create a new panel 
 		HTMLPanel innerPanel = new HTMLPanel("<span class=\"mo_text\">Service Parameters</span>");
@@ -91,27 +114,11 @@ public class SubscribeServiceTaylorFormController extends AbstractController
 		subscribeServiceB.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				
 				FlatMessageBox.show("Subscribe Service DONE!! " + getMap(), MessageType.SUCCESS);
-				
 			}
 		});		
 		
 		innerPanel.add(subscribeServiceB);
-	}
-
-
-	@Expose
-	public void subscribeService()
-	{
-		
-		FlatMessageBox.show("Subscribe!!!", MessageType.INFO);
-	}
-
-	@BindView("subscribeServiceTaylorFormView")
-	public static interface SubscribeServiceTaylorFormView extends WidgetAccessor
-	{
-		HTMLPanel mainPanel();
 	}
 
 }

@@ -5,7 +5,7 @@
 
 	<center>
 		<div class="fixedWidth">
-			<gwt:HTMLPanel id="mainPanel"></gwt:HTMLPanel>
+			<gwt:HTMLPanel id="panelScreen"></gwt:HTMLPanel>
 		</div>
 	</center>
 </v:view>

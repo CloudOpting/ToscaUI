@@ -4,18 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.cruxframework.crux.core.client.event.SelectEvent;
-import org.cruxframework.crux.core.client.event.SelectHandler;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox.MessageType;
 
-import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.user.client.ui.Button;
@@ -184,5 +180,12 @@ public abstract class AbstractController {
 		});
 	}
 
+	protected void setScreenHeader(HTMLPanel panel, String title) {
+		Label l = new Label();
+		l.setStyleName("header-ScreenLabel");
+		l.setText(title);
+		panel.add(l);
+		panel.setStyleName("panelScreen");
+	}
 
 }

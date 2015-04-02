@@ -20,11 +20,18 @@
 			largeViewport="user-scalable=no, width=device-width, height=device-height"
 			useResource="xStandardResources,smartFacesResources" height="100%"/>
 			
-		<crux:horizontalSwapViewContainer id="views">
+<!-- 		<crux:horizontalSwapViewContainer id="views"> -->
+<!-- 			<crux:view name="login" active="true"/> -->
+<!-- 			<crux:view name="main" active="false"/> -->
+<!-- 			<crux:view name="toscalist" active="false"/> -->
+<!-- 		</crux:horizontalSwapViewContainer> -->
+		
+		<crux:simpleViewContainer id="loginView">
 			<crux:view name="login" active="true"/>
-			<crux:view name="main" active="false"/>
-			<crux:view name="toscalist" active="false"/>
-		</crux:horizontalSwapViewContainer>
+		</crux:simpleViewContainer>
+
+		<crux:simpleViewContainer id="views" />
+		
 		
 	</body>
 </html>

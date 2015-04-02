@@ -13,11 +13,12 @@ import org.cruxframework.crux.core.client.screen.views.WidgetAccessor;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox.MessageType;
 import org.cruxframework.crux.widgets.client.formdisplay.FormDisplay;
-import org.cruxframework.crux.widgets.client.swapcontainer.HorizontalSwapContainer;
+import org.cruxframework.crux.widgets.client.simplecontainer.SimpleViewContainer;
 
-import com.google.gwt.i18n.client.HasDirection.Direction;
-import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.TextBox;
 
@@ -38,7 +39,22 @@ public class MainController extends AbstractController
 	public IUserInfo userInfo;
 
 	@Expose
-	public void onLoad() {}
+	public void onLoad() {
+		Button button = new Button();
+		button.setText("START REVIEW");
+		button.setStyleName("crux-Button review-Button");
+		
+		button.addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				startReview();
+				
+			}
+		});
+		
+		mainView.buttonPanel().add(button);
+	}
 
 	@Expose   
 	public void getInfoUser()
@@ -79,23 +95,6 @@ public class MainController extends AbstractController
 		connectApi.users(mainView.nameTextBox().getValue(), callback);
 
 	}  
-	@Expose   
-	public void createField()
-	{
-		FormDisplay fd = new FormDisplay();
-		
-		TextBox tb = new TextBox();
-		tb.setValue("TESTING");
-		
-		fd.addEntry("TESTING1", tb, HorizontalAlignmentConstant.startOf(Direction.DEFAULT));
-		fd.addEntry("TESTING2", tb, HorizontalAlignmentConstant.startOf(Direction.DEFAULT));
-		fd.addEntry("TESTING3", tb, HorizontalAlignmentConstant.startOf(Direction.DEFAULT));
-		fd.addEntry("TESTING4", tb, HorizontalAlignmentConstant.startOf(Direction.DEFAULT));
-		fd.addEntry("TESTING5", tb, HorizontalAlignmentConstant.startOf(Direction.DEFAULT));
-		mainView.gwtFormPanel().add(fd);
-		
-	}
-		
 
 	@Expose
 	public void clean() {
@@ -114,17 +113,16 @@ public class MainController extends AbstractController
 	}
 
 	@Expose   
-	public void changeView()
+	public void startReview()
 	{
-		HorizontalSwapContainer views =  (HorizontalSwapContainer) Screen.get("views");
-		views.showView("toscalist");
+		((SimpleViewContainer) Screen.get("views")).showView("publishService");
 	}  
 
 	@BindView("main")
 	public static interface MainView extends WidgetAccessor
 	{
+		HTMLPanel buttonPanel();
 		Panel panel();
-		FormPanel gwtFormPanel(); 
 		FormDisplay form();
 		TextBox nameTextBox();
 		TextBox createdBy();

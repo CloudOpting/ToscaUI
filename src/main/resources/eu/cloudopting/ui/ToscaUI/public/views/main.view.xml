@@ -5,27 +5,18 @@
 
 	<center>
 		<div class="fixedWidth">
+			<gwt:HTMLPanel id="buttonPanel"></gwt:HTMLPanel>
 			<gwt:HTMLPanel id="mainPanel">
-				<gwt:simplePanel id="gwtSimplePanel">
-					<gwt:formPanel id="gwtFormPanel"></gwt:formPanel>
-				</gwt:simplePanel>
-				<crux:styledPanel id="panel">
-
-					<crux:formDisplay id="form" style="display:block; margin: 50px">
-						<crux:entry label="What is your name?">
+				<crux:styledPanel id="panel" visible="false">
+					<crux:formDisplay id="form" style="display:block">
+						<crux:entry label="Name:">
 							<gwt:textBox id="nameTextBox" value="name" />
 						</crux:entry>
 						<crux:entry>
-							<crux:button id="okButton" text="getInfoUser"
-								onSelect="mainController.getInfoUser" />
+							<crux:button id="okButton" text="getInfoUser" onSelect="mainController.getInfoUser" />
 						</crux:entry>
 						<crux:entry>
-							<crux:button id="okButton2" text="cleanInfoUser"
-								onSelect="mainController.clean" />
-						</crux:entry>
-						<crux:entry>
-							<crux:button id="okButton3" text="createField"
-								onSelect="mainController.createField" />
+							<crux:button id="okButton2" text="cleanInfoUser" onSelect="mainController.clean" />
 						</crux:entry>
 						<crux:entry label="createdBy">
 							<gwt:textBox id="createdBy" />
@@ -63,15 +54,7 @@
 						<crux:entry label="activationKey">
 							<gwt:textBox id="activationKey" />
 						</crux:entry>
-						<crux:entry>
-							<crux:button id="changeButton" text="ToscaList"
-								onSelect="mainController.changeView" />
-						</crux:entry>
 					</crux:formDisplay>
-				</crux:styledPanel>
-				<crux:styledPanel id="panelUploader">
-					<crux:fileUploader id="fileUploader" multiple="true"
-						fileInputText="Choose files" autoUploadFiles="true" url="/upload-endpoint" />
 				</crux:styledPanel>
 			</gwt:HTMLPanel>
 		</div>

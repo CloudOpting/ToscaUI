@@ -14,6 +14,7 @@ import org.cruxframework.crux.widgets.client.storyboard.Storyboard;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.HTMLPanel;
 
 import eu.cloudopting.ui.ToscaUI.client.remote.IProxyAPIService;
 import eu.cloudopting.ui.ToscaUI.server.model.Application;
@@ -29,11 +30,11 @@ import eu.cloudopting.ui.ToscaUI.server.model.StoryboardItem;
 public class ServiceCatalogListController extends AbstractController
 {
 	@Inject
-	public ServiceCatalogList serviceCatalogList;
+	public ServiceCatalogListView view;
 
 	@Inject
 	public IProxyAPIService connectApi;
-	
+
 	private Callback<ApplicationList> callbackView = new Callback<ApplicationList>() {
 		@Override
 		public void onSuccess(ApplicationList result) {
@@ -41,45 +42,47 @@ public class ServiceCatalogListController extends AbstractController
 		}
 		@Override
 		public void onError(Exception e) {
-			
+
 		}
 	};
-	
+
 	@Expose
 	public void onLoad() {
 		connectApi.applicationListUnpaginated(callbackView);
 	}
 
 	private void buildView(ApplicationList result) {
+		setScreenHeader(view.panelScreen(), "Service Catalog");
+		
 		List<StoryboardItem> listItem = new ArrayList<StoryboardItem>();
 		for (Application app : result.getContent()) {
 			String name = app.getApplicationName();
 			String desc = app.getApplicationDescription();
 			addItem(listItem, name+ " CHOOSEN", name, desc, "CHOOSE THIS SERVICE");
 		}
-		
-		
-/*
-		
-		addItem(listItem, "Clearo CHOOSEN", "Clearo", "Clearo is a service that allows to...", "CHOOSE THIS SERVICE");
-		addItem(listItem, "FixThis CHOOSEN", "FixThis", "FixThis is a service that allows to...", "CHOOSE THIS SERVICE");
-		addItem(listItem, "Agenda CHOOSEN", "Agenda", "Agenda is a service that allows to...", "CHOOSE THIS SERVICE");
-		addItem(listItem, "Next2Me CHOOSEN", "Next2Me", "Next2Me is a service that allows to...", "CHOOSE THIS SERVICE");
-		addItem(listItem, "MobileID CHOOSEN", "MobileID", "MobileID is a service that allows to...", "CHOOSE THIS SERVICE");
-		addItem(listItem, "ASIA CHOOSEN", "ASIA", "ASIA is a service that allows to...", "CHOOSE THIS SERVICE");
-		addItem(listItem, "MIB (Base Information Database) CHOOSEN", "MIB", "MIB (Base Information Database) is a service that allows to...", "CHOOSE THIS SERVICE");
-		addItem(listItem, "Energy Consumption - Corby CHOOSEN", "Energy Consumption - Corby", "Energy Consumption - Corby is a service that allows to...", "CHOOSE THIS SERVICE");
-		addItem(listItem, "Transportation System - Corby CHOOSEN", "Transportation System - Corby", "Transportation System - Corby is a service that allows to...", "CHOOSE THIS SERVICE");
-		addItem(listItem, "BusPortal - Corby CHOOSEN", "BusPortal - Corby", "BusPortal - Corby is a service that allows to...", "CHOOSE THIS SERVICE");
-//		addItem(listItem, "IndicatorsPortal - Sant Feliu CHOOSEN", "IndicatorsPortal - Sant Feliu", "IndicatorsPortal - Sant Feliu is a service that allows to...", "CHOOSE THIS SERVICE");
-//		addItem(listItem, "SmartCityCloud - Sant Feliu CHOOSEN", "SmartCityCloud - Sant Feliu", "SmartCityCloud - Sant Feliu is a service that allows to...", "CHOOSE THIS SERVICE");
-		addItem(listItem, "Barcelona Open Data CHOOSEN", "Barcelona Open Data", "Barcelona Open Data is a service that allows to...", "CHOOSE THIS SERVICE");
-//		addItem(listItem, "Mobile Services - Interoperability CHOOSEN", "Mobile Services", "Mobile Services - Interoperability is a service that allows to...", "CHOOSE THIS SERVICE"));
-		
-		*/
+
+//		addItem(listItem, "Clearo CHOOSEN", "Clearo", "Clearo is a service that allows to...", "CHOOSE THIS SERVICE");
+//		addItem(listItem, "FixThis CHOOSEN", "FixThis", "FixThis is a service that allows to...", "CHOOSE THIS SERVICE");
+//		addItem(listItem, "Agenda CHOOSEN", "Agenda", "Agenda is a service that allows to...", "CHOOSE THIS SERVICE");
+//		addItem(listItem, "Next2Me CHOOSEN", "Next2Me", "Next2Me is a service that allows to...", "CHOOSE THIS SERVICE");
+//		addItem(listItem, "MobileID CHOOSEN", "MobileID", "MobileID is a service that allows to...", "CHOOSE THIS SERVICE");
+//		addItem(listItem, "ASIA CHOOSEN", "ASIA", "ASIA is a service that allows to...", "CHOOSE THIS SERVICE");
+//		addItem(listItem, "MIB (Base Information Database) CHOOSEN", "MIB", "MIB (Base Information Database) is a service that allows to...", "CHOOSE THIS SERVICE");
+//		addItem(listItem, "Energy Consumption - Corby CHOOSEN", "Energy Consumption - Corby", "Energy Consumption - Corby is a service that allows to...", "CHOOSE THIS SERVICE");
+//		addItem(listItem, "Transportation System - Corby CHOOSEN", "Transportation System - Corby", "Transportation System - Corby is a service that allows to...", "CHOOSE THIS SERVICE");
+//		addItem(listItem, "BusPortal - Corby CHOOSEN", "BusPortal - Corby", "BusPortal - Corby is a service that allows to...", "CHOOSE THIS SERVICE");
+//		//NOT NEEDED ANYNMORE
+//		//addItem(listItem, "IndicatorsPortal - Sant Feliu CHOOSEN", "IndicatorsPortal - Sant Feliu", "IndicatorsPortal - Sant Feliu is a service that allows to...", "CHOOSE THIS SERVICE");
+//		//addItem(listItem, "SmartCityCloud - Sant Feliu CHOOSEN", "SmartCityCloud - Sant Feliu", "SmartCityCloud - Sant Feliu is a service that allows to...", "CHOOSE THIS SERVICE");
+//		addItem(listItem, "Barcelona Open Data CHOOSEN", "Barcelona Open Data", "Barcelona Open Data is a service that allows to...", "CHOOSE THIS SERVICE");
+//		//addItem(listItem, "Mobile Services - Interoperability CHOOSEN", "Mobile Services", "Mobile Services - Interoperability is a service that allows to...", "CHOOSE THIS SERVICE"));
+
 		for(StoryboardItem w : listItem){
-			serviceCatalogList.storyboard().add(w);
+			view.storyboard().add(w);
 		}
+		
+		//Set The Storyboard at the end of the panel.
+		view.panelScreen().add(view.storyboard());
 	}
 
 	private void addItem(List<StoryboardItem> listItem,
@@ -88,28 +91,29 @@ public class ServiceCatalogListController extends AbstractController
 		ClickHandler handler = new ClickHandler(){
 			@Override
 			public void onClick(ClickEvent event) {
-//				openDetail((StoryboardItem) event.getSource());
+				//				openDetail((StoryboardItem) event.getSource());
 				openDetail(clickedMsg);
 			}
 		};
 
 		listItem.add(new StoryboardItem(clickedMsg, name, price, textButton, handler));
 	}
-	
+
 	//TODO: Check the way to make the dialog know how is the parent, and show consistent information
 	@Expose
-//	public void openDetail(StoryboardItem widget)
+	//	public void openDetail(StoryboardItem widget)
 	public void openDetail(String parameter)
 	{
-		serviceCatalogList.dialogViewContainer().loadView("detailService", true);
-		serviceCatalogList.dialogViewContainer().openDialog();
-		serviceCatalogList.dialogViewContainer().center();
+		view.dialogViewContainer().loadView("detailService", true);
+		view.dialogViewContainer().openDialog();
+		view.dialogViewContainer().center();
 	}
 
 	@BindView("serviceCatalogList")
-	public static interface ServiceCatalogList extends WidgetAccessor
+	public static interface ServiceCatalogListView extends WidgetAccessor
 	{
 		Storyboard storyboard();
+		HTMLPanel panelScreen();
 		DialogViewContainer dialogViewContainer();
 	}
 

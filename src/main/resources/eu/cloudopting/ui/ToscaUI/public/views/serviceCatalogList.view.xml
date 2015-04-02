@@ -10,9 +10,12 @@
 			<crux:dialogViewContainer id="dialogViewContainer">
 			</crux:dialogViewContainer>
 
-
-			<crux:storyboard id="storyboard" height="100%" width="100%">
-			</crux:storyboard>
+			<gwt:HTMLPanel id="panelScreen">
+				<crux:storyboard id="storyboard" height="100%"
+					width="100%">
+				</crux:storyboard>
+			</gwt:HTMLPanel>
 		</div>
+
 	</center>
 </v:view>

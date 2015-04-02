@@ -8,7 +8,7 @@
 
 	<center>
 		<div class="fixedWidth">
-			<gwt:HTMLPanel id="mainPanel">
+			<gwt:HTMLPanel id="panelScreen">
 				<crux:adaptiveGrid id="grid" width="100%" dataSource="rowDataSource" styleName="grid">
 					<crux:largeColumns>
 						<crux:dataColumn key="instance" label="Name" width="250px"/>

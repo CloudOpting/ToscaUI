@@ -8,7 +8,7 @@
 			<crux:styledPanel id="panel">
 				<gwt:HTMLPanel id="innerPanel">
 					<crux:topMenuDisposal id="menu" defaultView="main">
-						<crux:menuEntry targetView="main" label="Testing Page" />
+						<crux:menuEntry targetView="main" label="Main" />
 						<crux:menuEntry targetView="publishService" label="Publish Service" />
 						<crux:menuEntry targetView="serviceCatalogList"
 							label="Service Catalog List" />

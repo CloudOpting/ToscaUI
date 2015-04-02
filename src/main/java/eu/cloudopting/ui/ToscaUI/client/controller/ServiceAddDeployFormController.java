@@ -26,7 +26,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 public class ServiceAddDeployFormController extends AbstractController
 {
 	@Inject
-	public ServiceAddDeployFormView serviceAddDeployFormView;
+	public ServiceAddDeployFormView view;
 
 	@Expose
 	public void onLoad() {
@@ -65,15 +65,16 @@ public class ServiceAddDeployFormController extends AbstractController
 	@BindView("serviceAddDeployForm")
 	public static interface ServiceAddDeployFormView extends WidgetAccessor
 	{
-		HTMLPanel mainPanel();
+		HTMLPanel panelScreen();
 	}
 
 	private final void buildView(List<String> listItems, List<String> listOSs,
 			List<String> listCSSs, List<String> listCPUs) {
 
+		setScreenHeader(view.panelScreen(), "Service Add Deploy Form");
 		//Get access to the panel
 //		HTMLPanel panel = (HTMLPanel)View.of(this).getWidget("mainPanel");
-		HTMLPanel panel = serviceAddDeployFormView.mainPanel();
+		HTMLPanel panel = view.panelScreen();
 
 		//Create a new panel 
 		HTMLPanel serviceDeployPanel = new HTMLPanel("<span class=\"mo_text\">Service Deploy</span>");

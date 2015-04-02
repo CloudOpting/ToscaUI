@@ -58,7 +58,7 @@
 	margin-bottom: 10px;
 }
 
-.serviceParametersPanel, .serviceDeploy, .serviceParameters {
+.serviceParametersPanel,.serviceDeploy,.serviceParameters {
 	padding: 20px;
 	margin-top: 30px;
 	margin-bottom: 30px;
@@ -76,9 +76,8 @@
 	border: 1px solid #E0E0E0;
 }
 
-
 .leftPanel {
-/* 	padding: 20px; */
+	/* 	padding: 20px; */
 	margin-top: 30px;
 	margin-bottom: 30px;
 	position: relative;
@@ -97,7 +96,7 @@
 	vertical-align: top;
 }
 
-/*.serviceParametersPanel .taylor-ListBox, .followKPIs*/ 
+/*.serviceParametersPanel .taylor-ListBox, .followKPIs*/
 .taylor-ListBox {
 	position: relative;
 	background: #f8f8f8;
@@ -110,7 +109,7 @@
 	width: 20%;
 }
 
-/*.serviceParametersPanel .taylor-Label, .followKPIs*/ 
+/*.serviceParametersPanel .taylor-Label, .followKPIs*/
 .taylor-Label {
 	position: relative;
 	display: inline-block;
@@ -121,7 +120,7 @@
 	text-align: right;
 }
 
-/*.serviceParametersPanel .taylor-TextBox, .followKPIs*/ 
+/*.serviceParametersPanel .taylor-TextBox, .followKPIs*/
 .taylor-TextBox {
 	position: relative;
 	background: #fff;
@@ -135,7 +134,7 @@
 	vertical-align: bottom;
 }
 
-.leftPanel .taylor-ListBox, .rightPanel .taylor-ListBox{
+.leftPanel .taylor-ListBox,.rightPanel .taylor-ListBox {
 	position: relative;
 	background: #f8f8f8;
 	color: #444;
@@ -147,7 +146,7 @@
 	width: 40%;
 }
 
-.leftPanel .taylor-Label, .rightPanel .taylor-Label {
+.leftPanel .taylor-Label,.rightPanel .taylor-Label {
 	position: relative;
 	display: inline-block;
 	color: #1c5994;
@@ -157,7 +156,7 @@
 	text-align: right;
 }
 
-.leftPanel .taylor-TextBox, .rightPanel .taylor-TextBox {
+.leftPanel .taylor-TextBox,.rightPanel .taylor-TextBox {
 	position: relative;
 	background: #fff;
 	color: #444;
@@ -174,13 +173,13 @@
 	width: 850px;
 }
 
-.manageOperations, .followKPIs {
+.manageOperations,.followKPIs {
 	border: 1px solid #92aec8;
 	padding: 10px;
 	margin: 15px;
 }
 
-.manageOperations .mo_text, .followKPIs .mo_text {
+.manageOperations .mo_text,.followKPIs .mo_text {
 	text-align: center;
 	margin-top: -22px;
 	height: 20px;
@@ -194,7 +193,8 @@
 	font-weight: bold;
 }
 
-.serviceFlavour .mo_text, .serviceParametersPanel .mo_text, .serviceDeploy .mo_text, .serviceParameters .mo_text, .rightPanel .mo_text{
+.serviceFlavour .mo_text,.serviceParametersPanel .mo_text,.serviceDeploy .mo_text,.serviceParameters .mo_text,.rightPanel .mo_text
+	{
 	text-align: center;
 	margin-top: -35px;
 	height: 20px;
@@ -208,16 +208,14 @@
 	font-weight: bold;
 }
 
-
-
 .manageOperations .taylor-Label-Big {
-  position: relative;
-  display: inline-block;
-  color: #1c5994;
-  text-shadow: 0 1px #fff;
-  margin: 20px;
-  width: 60%;
-  text-align: left;
+	position: relative;
+	display: inline-block;
+	color: #1c5994;
+	text-shadow: 0 1px #fff;
+	margin: 20px;
+	width: 60%;
+	text-align: left;
 }
 
 .manageOperations .taylor-Button {
@@ -229,7 +227,6 @@
 	font-size: 38px;
 	color: #1c5994;
 	margin-bottom: 30px;
-	
 }
 
 .innerPanel {
@@ -260,4 +257,25 @@
 	display: block;
 	padding: 10px;
 	text-align: left;
+}
+
+.review-Button {
+	margin: 50px;
+	font-size: xx-large;
+}
+
+.publishService-Form {
+	display:block; 
+	margin: 50px;
+}
+
+.header-ScreenLabel {
+	text-align: left;
+	background-color: #E9E9EF;
+	padding: 5px;
+}
+
+.panelScreen {
+	margin-top: 20px;
+	border: 1px solid #E0E0E0;
 }

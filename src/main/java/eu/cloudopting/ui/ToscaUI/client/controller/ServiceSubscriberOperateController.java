@@ -24,12 +24,16 @@ import eu.cloudopting.ui.ToscaUI.server.model.Application;
 public class ServiceSubscriberOperateController extends AbstractController
 {
 	@Inject
-	public ServiceSubscriberOperateView serviceSubscriberOperateView;
+	public ServiceSubscriberOperateView view;
 	
 	@Inject
 	public IProxyAPIService connectApi;
 	
+	private final static String PAGE_NAME = "Service Subscriber Operate Controller";
 	
+	/*
+	 * CALLBACKS
+	 */
 	private Callback<Application> callbackView = new Callback<Application>() {
 		@Override
 		public void onSuccess(Application result) {
@@ -55,16 +59,22 @@ public class ServiceSubscriberOperateController extends AbstractController
 	@BindView("serviceSubscriberOperate")
 	public static interface ServiceSubscriberOperateView extends WidgetAccessor
 	{
-		HTMLPanel mainPanel();
+		HTMLPanel panelScreen();
 	}
 	
+	/*
+	 * PRIVATE METHODS
+	 */
 	private void buildView(Application application) {
+		
+		setScreenHeader(view.panelScreen(), PAGE_NAME);
+		
 		//String name = "Clearò";
 		String name = application.getApplicationName();
 		
 		HTMLPanel innerPanel = new HTMLPanel("");
 		innerPanel.setStyleName("innerPanel");
-		serviceSubscriberOperateView.mainPanel().add(innerPanel);
+		view.panelScreen().add(innerPanel);
 		
 		Label label = new Label();
 		label.setText("Manage "+name);

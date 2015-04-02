@@ -16,6 +16,7 @@ import org.cruxframework.crux.core.client.screen.views.WidgetAccessor;
 import org.cruxframework.crux.smartfaces.client.dialog.Confirm;
 import org.cruxframework.crux.widgets.client.deviceadaptivegrid.DeviceAdaptiveGrid;
 import org.cruxframework.crux.widgets.client.grid.DataRow;
+import org.cruxframework.crux.widgets.client.simplecontainer.SimpleViewContainer;
 import org.cruxframework.crux.widgets.client.swapcontainer.HorizontalSwapContainer;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -40,17 +41,18 @@ import eu.cloudopting.ui.ToscaUI.server.model.RowDTO;
 public class InstancesServiceCatalogController extends AbstractController
 {
 	@Inject
-	public InstancesServiceCatalogView instancesServiceCatalogView;
+	public InstancesServiceCatalogView view;
 	
 	@Inject
 	public IProxyAPIService connectApi;
 	
-	
+	/*
+	 * CALLBACKS
+	 */
 	private Callback<ApplicationList> callbackView = new Callback<ApplicationList>() {
 		@Override
 		public void onSuccess(ApplicationList result) {
-			buildButtons();
-			buildGrid(result);
+			buildView(result);
 		}
 		@Override
 		public void onError(Exception e) {
@@ -69,35 +71,39 @@ public class InstancesServiceCatalogController extends AbstractController
 		}
 	};
 	
+	/*
+	 * CONSTANTS
+	 */
 	private static String DEFAULT_PAGE = "1";
 	private static String DEFAULT_SIZE = "10";
 	private static String DEFAULT_SORT_BY = "applicationName";
 	private static String DEFAULT_SORT_ORDER = "asc";
 	private static String DEFAULT_FILTER = "";
-	
 
 	@Expose
 	public void onLoad() {
-		//GET VALUES FROM THE DATABASE
+		//get the applications from the database
 		//connectApi.applicationList(DEFAULT_PAGE, DEFAULT_SIZE, DEFAULT_SORT_BY, DEFAULT_SORT_ORDER, DEFAULT_FILTER, callbackView);
-		//FOR THE DEMO
+		//FIXME: FOR THE DEMO WE ARE GOING TO USE AN UNPAGINATED LIST OF APPLICATIONS
 		connectApi.applicationListUnpaginated(callbackView);
 	}
 	
 	@Expose
 	public void go(SelectEvent event){
-		DataRow row = instancesServiceCatalogView.grid().getRow((Widget) event.getSource());
+		DataRow row = view.grid().getRow((Widget) event.getSource());
 		RowDTO dto = (RowDTO) row.getBoundObject();
 		Confirm.show("Question", "Do you want to edit the instance of " + dto.getInstance() +" with ID \"" + dto.getId() + "\"?", new OkHandler() 
 		{
 			@Override
 			public void onOk(OkEvent event) 
 			{					
-				//TODO: Fix location
-				((HorizontalSwapContainer) Screen.get("views")).showView("subscribeServiceTaylorForm");
+				//Change of location
+				//Change full screen
+				((SimpleViewContainer) Screen.get("views")).showView("subscribeServiceTaylorForm");
 				
-//				TopMenuDisposal tmd = (TopMenuDisposal)View.of(this).getWidget("menu");
-//				tmd.loadView("subscribeServiceTaylorForm", true);
+				//Navigate through the top menu. (Not working)
+				//TopMenuDisposal tmd = (TopMenuDisposal)View.of(this).getWidget("menu");
+				//tmd.loadView("subscribeServiceTaylorForm", true);
 			}
 		}, null);
 	}
@@ -105,23 +111,31 @@ public class InstancesServiceCatalogController extends AbstractController
 	@BindView("instancesServiceCatalog")
 	public static interface InstancesServiceCatalogView extends WidgetAccessor
 	{
-		HTMLPanel mainPanel();
+		HTMLPanel panelScreen();
 		DeviceAdaptiveGrid grid();
+	}
+	
+	private void buildView(ApplicationList result) {
+		setScreenHeader(view.panelScreen(), "Instances Service Catalog");
+		buildButtons();
+		buildGrid(result);
 	}
 	
 	private void buildButtons() {
 		//Create a new panel for the buttons 
 		HTMLPanel innerPanel = new HTMLPanel("");
 		innerPanel.setStyleName("innerPanel");
-		instancesServiceCatalogView.mainPanel().add(innerPanel);
+		view.panelScreen().add(innerPanel);
 		
 		final String id = "searchServiceButton";
 		addButtonTextBoxPair(innerPanel, "Search Service", "crux-Button innerPanel-Button", "innerPanel-TextBox", id, 
 			new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					//connectApi.applicationList(DEFAULT_PAGE, DEFAULT_SIZE, DEFAULT_SORT_BY, DEFAULT_SORT_ORDER, getMap().get(id), callbackGrid);
-					//FO THE DEMO
+					//get the applications from the database applying the filter.
+					//String filter = getMap().get(id);
+					//connectApi.applicationList(DEFAULT_PAGE, DEFAULT_SIZE, DEFAULT_SORT_BY, DEFAULT_SORT_ORDER, filter, callbackGrid);
+					//FIXME: FOR THE DEMO WE ARE GOING TO USE AN UNPAGINATED LIST OF APPLICATIONS
 					connectApi.applicationListUnpaginated(callbackGrid);
 				}
 			}
@@ -129,7 +143,7 @@ public class InstancesServiceCatalogController extends AbstractController
 	}
 
 	private void buildGrid(ApplicationList list) {
-		DeviceAdaptiveGrid grid = instancesServiceCatalogView.grid();
+		DeviceAdaptiveGrid grid = view.grid();
 		grid.setStyleName("grid");
 		
 		//Get data source of the grid.
@@ -140,10 +154,9 @@ public class InstancesServiceCatalogController extends AbstractController
 		for (Application app : list.getContent()) {
 			List<Customizations> custList = app.getCustomizationss();
 			for (Customizations customizations : custList) {
-				
-				rowsList.add(new RowDTO("S: " + app.getId().toString(), app.getApplicationName() + " U: " + customizations.getUsername(), customizations.getStatusId().getStatus()));
+				//Add the customization to the list.
+				rowsList.add(new RowDTO(app.getId().toString(), "S: " +  app.getApplicationName() + " U: " + customizations.getUsername(), customizations.getStatusId().getStatus()));
 			}
-				
 		}
 		
 		//Load data to the grid.
@@ -152,10 +165,6 @@ public class InstancesServiceCatalogController extends AbstractController
 		grid.refresh();
 		
 		//This puts the grid in the position we want.
-		instancesServiceCatalogView.mainPanel().add(grid);
+		view.panelScreen().add(grid);
 	}
 }
-
-
-
-
