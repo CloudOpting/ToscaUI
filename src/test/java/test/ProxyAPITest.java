@@ -8,7 +8,6 @@ import java.nio.charset.Charset;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.math.RandomUtils;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.cruxframework.crux.core.server.rest.spi.InternalServerErrorException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,6 +17,7 @@ import org.junit.Test;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 
 import eu.cloudopting.ui.ToscaUI.client.remote.impl.ProxyAPIService;
+import eu.cloudopting.ui.ToscaUI.server.model.Application;
 import eu.cloudopting.ui.ToscaUI.server.model.ApplicationList;
 import eu.cloudopting.ui.ToscaUI.server.utils.IOUtils;
 
@@ -175,13 +175,13 @@ public class ProxyAPITest {
 		//CONNECT
 		c.connect(user, password);
 		//CREATE THE APPLICATION
-		String out = c.applicationCustomization(createNewCustomizationJson);
+		String out = c.customizationCreate(createNewCustomizationJson);
 		
 		System.out.println("End test: " + out);
 
 	}
 	
-	@Test
+//	@Test
 	public void testApplicationList() {
 		
 		//CREATE INSTANCE
@@ -206,6 +206,29 @@ public class ProxyAPITest {
 		} catch (IOException e) {
 			System.out.println(e);
 			fail();
+		}
+		
+	}
+	
+	@Test
+	public void testApplication() {
+		//CREATE INSTANCE
+		ProxyAPIService c = new ProxyAPIService();
+
+		//CONNECT
+		try {
+			c.connect(user, password);
+			Application application = c.application("1");
+			System.out.println(application.getApplicationName());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InternalServerErrorException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 	}

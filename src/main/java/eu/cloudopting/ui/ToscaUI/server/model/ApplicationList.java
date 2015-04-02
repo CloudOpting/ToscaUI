@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class ApplicationList {
 
-	private List<Content> content = new ArrayList<Content>();
+	private List<Application> content = new ArrayList<Application>();
 	private Integer totalPages;
 	private Boolean last;
 	private Integer totalElements;
@@ -23,7 +23,7 @@ public class ApplicationList {
 	 * @return
 	 * The content
 	 */
-	public List<Content> getContent() {
+	public List<Application> getContent() {
 		return content;
 	}
 
@@ -32,7 +32,7 @@ public class ApplicationList {
 	 * @param content
 	 * The content
 	 */
-	public void setContent(List<Content> content) {
+	public void setContent(List<Application> content) {
 		this.content = content;
 	}
 

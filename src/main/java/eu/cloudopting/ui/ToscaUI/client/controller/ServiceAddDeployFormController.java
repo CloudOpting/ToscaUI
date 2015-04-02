@@ -11,7 +11,6 @@ import org.cruxframework.crux.core.client.screen.views.WidgetAccessor;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox.MessageType;
 
-import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
@@ -31,13 +30,7 @@ public class ServiceAddDeployFormController extends AbstractController
 
 	@Expose
 	public void onLoad() {
-
 		//GET VALUES FROM THE DATABASE
-
-		
-		/*
-		 * INIT MOCK VARIABLES AND LISTS.
-		 */
 
 		List<String> listItems = new ArrayList<String>(); 
 		listItems.add(0, "Turin");

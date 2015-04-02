@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Content {
+public class Application {
 
 	private Integer id;
 	private List<Object> applicationMedias = new ArrayList<Object>();
-	private List<Object> customizationss = new ArrayList<Object>();
+	private List<Customizations> customizationss = new ArrayList<Customizations>();
 	private StatusId statusId;
 	private UserId userId;
 	private String applicationName;
@@ -59,7 +59,7 @@ public class Content {
 	 * @return
 	 * The customizationss
 	 */
-	public List<Object> getCustomizationss() {
+	public List<Customizations> getCustomizationss() {
 		return customizationss;
 	}
 
@@ -68,7 +68,7 @@ public class Content {
 	 * @param customizationss
 	 * The customizationss
 	 */
-	public void setCustomizationss(List<Object> customizationss) {
+	public void setCustomizationss(List<Customizations> customizationss) {
 		this.customizationss = customizationss;
 	}
 
@@ -189,11 +189,3 @@ public class Content {
 	}
 
 }
-
-
-
-
-
-
-
-

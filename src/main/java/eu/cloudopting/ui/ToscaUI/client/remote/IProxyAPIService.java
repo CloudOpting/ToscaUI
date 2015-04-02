@@ -4,6 +4,7 @@ import org.cruxframework.crux.core.client.rest.Callback;
 import org.cruxframework.crux.core.client.rest.RestProxy;
 import org.cruxframework.crux.core.client.rest.RestProxy.TargetRestService;
 
+import eu.cloudopting.ui.ToscaUI.server.model.Application;
 import eu.cloudopting.ui.ToscaUI.server.model.ApplicationList;
 
 /**
@@ -30,7 +31,7 @@ public interface IProxyAPIService extends RestProxy {
 	
 	void applicationListUnpaginated(Callback<ApplicationList> callback);
 		
-	void application(String id, Callback<String> callback);
+	void application(String id, Callback<Application> callback);
 	
 	void users(String user, Callback<String> callback);
 	

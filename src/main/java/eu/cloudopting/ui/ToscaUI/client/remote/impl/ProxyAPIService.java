@@ -3,9 +3,7 @@ package eu.cloudopting.ui.ToscaUI.client.remote.impl;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -30,11 +28,10 @@ import org.cruxframework.crux.core.shared.rest.annotation.PathParam;
 import org.cruxframework.crux.core.shared.rest.annotation.QueryParam;
 
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
-import com.google.gwt.i18n.client.Constants.DefaultStringValue;
 
+import eu.cloudopting.ui.ToscaUI.server.model.Application;
 import eu.cloudopting.ui.ToscaUI.server.model.ApplicationList;
 import eu.cloudopting.ui.ToscaUI.server.utils.ConnectionUtils;
-import eu.cloudopting.ui.ToscaUI.server.utils.IOUtils;
 
 /**
  * 
@@ -158,7 +155,7 @@ public class ProxyAPIService {
 
 	@POST
 	@Path("customization/create")
-	public String applicationCustomization(@QueryParam("json") String json) throws MalformedURLException, IOException {
+	public String customizationCreate(@QueryParam("json") String json) throws MalformedURLException, IOException {
 		return doCallToStringAndPayload(APPLICATION_CUSTOMIZATION_METHOD, json);
 	}
 
@@ -193,22 +190,11 @@ public class ProxyAPIService {
 
 	@GET
 	@Path("applcation/{id}")
-	public String application(@PathParam("id") String id) throws MalformedURLException, IOException {
-//		String jsonObject = "{"
-//				+ "tosca: " + IOUtils.readFile("src/test/resources/TOSCA_ClearoExample.xml", Charset.defaultCharset())
-//				+ "}";
-//
-//		return jsonObject;
-		try {
-			return doCallToString(String.format(APPLICATION_METHOD, id));
-		} catch (InternalServerErrorException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return "";
+	public Application application(@PathParam("id") String id) throws MalformedURLException, IOException, InternalServerErrorException, NotFoundException {
+		String json = doCallToString(String.format(APPLICATION_METHOD, id));
+		ObjectMapper mapper = new ObjectMapper();
+		Application application = mapper.readValue(json, Application.class);
+		return application;
 	}
 
 	@GET

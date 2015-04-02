@@ -34,10 +34,10 @@ public class LoginController  extends AbstractController implements KeyPressHand
 
 	@Inject
 	public IProxyAPIService connectApi;
-	
+
 	@Expose
 	public void onLoad() {
-		
+
 		connectApi.connected(
 				new Callback<Boolean>() {
 					@Override
@@ -50,21 +50,17 @@ public class LoginController  extends AbstractController implements KeyPressHand
 					public void onError(Exception e) {
 					}
 				});
-		
-		
-		//Set custom style to the password text box.
-//		loginView.passwordTextBox().setStyleName("gwt-TextBox");
 
 		//Add handler for Enter key pressed.
 		loginView.passwordTextBox().addKeyPressHandler(this);
 		loginView.nameTextBox().addKeyPressHandler(this);
-		
+
 		//Set focus to the name text box
 		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-	        public void execute () {
-	        	loginView.nameTextBox().setFocus(true);
-	        }
-	   });
+			public void execute () {
+				loginView.nameTextBox().setFocus(true);
+			}
+		});
 	}
 
 	@Expose   
@@ -88,7 +84,7 @@ public class LoginController  extends AbstractController implements KeyPressHand
 		};
 
 		connectApi.connect(loginView.nameTextBox().getValue(), loginView.passwordTextBox().getValue(), callback);
-		
+
 	}  
 
 	@BindView("login")
@@ -98,14 +94,14 @@ public class LoginController  extends AbstractController implements KeyPressHand
 		TextBox passwordTextBox();
 		Button okButton();
 	}
-	
-    @Override
-    public void onKeyPress(KeyPressEvent event_)
-    {
-        if (KeyCodes.KEY_ENTER == event_.getNativeEvent().getKeyCode())
-        {
-        	login();
-        }
-    }
-	
+
+	@Override
+	public void onKeyPress(KeyPressEvent event_)
+	{
+		if (KeyCodes.KEY_ENTER == event_.getNativeEvent().getKeyCode())
+		{
+			login();
+		}
+	}
+
 }

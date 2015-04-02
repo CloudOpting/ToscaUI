@@ -6,6 +6,7 @@ import java.util.List;
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.ioc.Inject;
+import org.cruxframework.crux.core.client.rest.Callback;
 import org.cruxframework.crux.core.client.screen.views.BindView;
 import org.cruxframework.crux.core.client.screen.views.WidgetAccessor;
 import org.cruxframework.crux.widgets.client.dialogcontainer.DialogViewContainer;
@@ -14,6 +15,9 @@ import org.cruxframework.crux.widgets.client.storyboard.Storyboard;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 
+import eu.cloudopting.ui.ToscaUI.client.remote.IProxyAPIService;
+import eu.cloudopting.ui.ToscaUI.server.model.Application;
+import eu.cloudopting.ui.ToscaUI.server.model.ApplicationList;
 import eu.cloudopting.ui.ToscaUI.server.model.StoryboardItem;
 
 /**
@@ -27,14 +31,35 @@ public class ServiceCatalogListController extends AbstractController
 	@Inject
 	public ServiceCatalogList serviceCatalogList;
 
+	@Inject
+	public IProxyAPIService connectApi;
+	
+	private Callback<ApplicationList> callbackView = new Callback<ApplicationList>() {
+		@Override
+		public void onSuccess(ApplicationList result) {
+			buildView(result);
+		}
+		@Override
+		public void onError(Exception e) {
+			
+		}
+	};
+	
 	@Expose
 	public void onLoad() {
-		loadItems();
+		connectApi.applicationListUnpaginated(callbackView);
 	}
 
-	private void loadItems() {
+	private void buildView(ApplicationList result) {
 		List<StoryboardItem> listItem = new ArrayList<StoryboardItem>();
-
+		for (Application app : result.getContent()) {
+			String name = app.getApplicationName();
+			String desc = app.getApplicationDescription();
+			addItem(listItem, name+ " CHOOSEN", name, desc, "CHOOSE THIS SERVICE");
+		}
+		
+		
+/*
 		
 		addItem(listItem, "Clearo CHOOSEN", "Clearo", "Clearo is a service that allows to...", "CHOOSE THIS SERVICE");
 		addItem(listItem, "FixThis CHOOSEN", "FixThis", "FixThis is a service that allows to...", "CHOOSE THIS SERVICE");
@@ -46,12 +71,12 @@ public class ServiceCatalogListController extends AbstractController
 		addItem(listItem, "Energy Consumption - Corby CHOOSEN", "Energy Consumption - Corby", "Energy Consumption - Corby is a service that allows to...", "CHOOSE THIS SERVICE");
 		addItem(listItem, "Transportation System - Corby CHOOSEN", "Transportation System - Corby", "Transportation System - Corby is a service that allows to...", "CHOOSE THIS SERVICE");
 		addItem(listItem, "BusPortal - Corby CHOOSEN", "BusPortal - Corby", "BusPortal - Corby is a service that allows to...", "CHOOSE THIS SERVICE");
-		addItem(listItem, "IndicatorsPortal - Sant Feliu CHOOSEN", "IndicatorsPortal - Sant Feliu", "IndicatorsPortal - Sant Feliu is a service that allows to...", "CHOOSE THIS SERVICE");
-		addItem(listItem, "SmartCityCloud - Sant Feliu CHOOSEN", "SmartCityCloud - Sant Feliu", "SmartCityCloud - Sant Feliu is a service that allows to...", "CHOOSE THIS SERVICE");
+//		addItem(listItem, "IndicatorsPortal - Sant Feliu CHOOSEN", "IndicatorsPortal - Sant Feliu", "IndicatorsPortal - Sant Feliu is a service that allows to...", "CHOOSE THIS SERVICE");
+//		addItem(listItem, "SmartCityCloud - Sant Feliu CHOOSEN", "SmartCityCloud - Sant Feliu", "SmartCityCloud - Sant Feliu is a service that allows to...", "CHOOSE THIS SERVICE");
 		addItem(listItem, "Barcelona Open Data CHOOSEN", "Barcelona Open Data", "Barcelona Open Data is a service that allows to...", "CHOOSE THIS SERVICE");
 //		addItem(listItem, "Mobile Services - Interoperability CHOOSEN", "Mobile Services", "Mobile Services - Interoperability is a service that allows to...", "CHOOSE THIS SERVICE"));
 		
-		
+		*/
 		for(StoryboardItem w : listItem){
 			serviceCatalogList.storyboard().add(w);
 		}
