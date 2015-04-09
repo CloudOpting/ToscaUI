@@ -17,6 +17,8 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTMLPanel;
 
+import eu.cloudopting.ui.ToscaUI.client.remote.IProxyAPIService;
+
 /**
  * 
  * @author xeviscc
@@ -25,8 +27,17 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 @Controller("serviceAddDeployFormController")
 public class ServiceAddDeployFormController extends AbstractController
 {
+	
 	@Inject
 	public ServiceAddDeployFormView view;
+	
+	@Inject
+	public IProxyAPIService api;
+	
+	/*
+	 * CONSTANTS
+	 */
+	private static final String PAGE_NAME = "Service Add Deploy Form";
 
 	@Expose
 	public void onLoad() {
@@ -55,7 +66,6 @@ public class ServiceAddDeployFormController extends AbstractController
 		buildView(listItems, listOSs, listCSSs, listCPUs);
 	}
 
-
 	@Expose
 	public void subscribeService()
 	{
@@ -71,11 +81,74 @@ public class ServiceAddDeployFormController extends AbstractController
 	private final void buildView(List<String> listItems, List<String> listOSs,
 			List<String> listCSSs, List<String> listCPUs) {
 
-		setScreenHeader(view.panelScreen(), "Service Add Deploy Form");
+		setScreenHeader(view.panelScreen(), PAGE_NAME);
 		//Get access to the panel
-//		HTMLPanel panel = (HTMLPanel)View.of(this).getWidget("mainPanel");
 		HTMLPanel panel = view.panelScreen();
 
+		buildServiceDeployPanel(panel);
+
+		buildServiceParametersPanel(listItems, listOSs, listCSSs, listCPUs,
+				panel);
+	}
+
+	/*
+	 * PRIVATE METHODS
+	 */
+	private void buildServiceParametersPanel(List<String> listItems,
+			List<String> listOSs, List<String> listCSSs, List<String> listCPUs,
+			HTMLPanel panel) {
+		//Create a new panel 
+		HTMLPanel serviceParametersPanel = new HTMLPanel("<span class=\"mo_text\">Service Parameters</span>");
+		serviceParametersPanel.setStyleName("serviceParameters");
+		panel.add(serviceParametersPanel);
+
+		//Create the left panel.
+		HTMLPanel leftPanel = new HTMLPanel("");
+		leftPanel.setStyleName("leftPanel");
+		serviceParametersPanel.add(leftPanel);
+
+		addLabelListBoxPair(leftPanel, "Cloud Node:", listItems, "taylor-Label", "taylor-ListBox", "cloudNode");
+		addLabelListBoxPair(leftPanel, "Operating System:", listOSs, "taylor-Label", "taylor-ListBox", "operatingSystem");
+		addLabelListBoxPair(leftPanel, "Number CPU's:", listCPUs, "taylor-Label", "taylor-ListBox", "numberCPUs");
+		addLabelTextBoxPair(leftPanel, "Disk Space:", "taylor-Label", "taylor-TextBox", "diskSpace");
+		addLabelTextBoxPair(leftPanel, "Memory RAM:", "taylor-Label", "taylor-TextBox", "memoryRAM");
+		addLabelTextBoxPair(leftPanel, "Bandwith:", "taylor-Label", "taylor-TextBox", "bandwith");		
+		addLabelTextBoxPair(leftPanel, "URL/Domain:", "taylor-Label", "taylor-TextBox", "urlDomain");
+		addLabelListBoxPair(leftPanel, "CSS Skin:", listCSSs, "taylor-Label", "taylor-ListBox", "cssSkin");
+
+		buildPuppetFilesPanel(serviceParametersPanel);
+
+		buildBottomButtons(serviceParametersPanel);
+	}
+
+	private void buildBottomButtons(HTMLPanel panel) {
+		//Create the button to save the results.
+		Button saveTemplateB = new Button();
+		saveTemplateB.setText("Save Template");
+		saveTemplateB.setStyleName("crux-Button");
+		saveTemplateB.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				FlatMessageBox.show("Template Saved correctly!! ", MessageType.SUCCESS);
+			}
+		});		
+		panel.add(saveTemplateB);
+
+		//Create the button to uplad a new template.
+		Button uploadTemplateB = new Button();
+		uploadTemplateB.setText("Upload Template");
+		uploadTemplateB.setStyleName("crux-Button");
+		uploadTemplateB.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				FlatMessageBox.show("Template Uploaded correctly!! ", MessageType.SUCCESS);
+			}
+		});	
+
+		panel.add(uploadTemplateB);
+	}
+
+	private void buildServiceDeployPanel(HTMLPanel panel) {
 		//Create a new panel 
 		HTMLPanel serviceDeployPanel = new HTMLPanel("<span class=\"mo_text\">Service Deploy</span>");
 		serviceDeployPanel.setStyleName("serviceDeploy");
@@ -88,9 +161,7 @@ public class ServiceAddDeployFormController extends AbstractController
 		deployServiceB.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-
 				FlatMessageBox.show("Serice Deployed correctly!! ", MessageType.SUCCESS);
-
 			}
 		});		
 		serviceDeployPanel.add(deployServiceB);
@@ -102,49 +173,28 @@ public class ServiceAddDeployFormController extends AbstractController
 		testServiceB.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-
 				FlatMessageBox.show("Go to test!! ", MessageType.INFO);
-
 			}
 		});		
 		serviceDeployPanel.add(testServiceB);
+	}
 
-		//Create a new panel 
-		HTMLPanel newPanel = new HTMLPanel("<span class=\"mo_text\">Service Parameters</span>");
-		newPanel.setStyleName("serviceParameters");
-		panel.add(newPanel);
-
-		//Create the left panel.
-		HTMLPanel leftPanel = new HTMLPanel("");
-		leftPanel.setStyleName("leftPanel");
-		newPanel.add(leftPanel);
-
-		addLabelListBoxPair(leftPanel, "Cloud Node:", listItems, "taylor-Label", "taylor-ListBox", "cloudNode");
-		addLabelListBoxPair(leftPanel, "Operating System:", listOSs, "taylor-Label", "taylor-ListBox", "operatingSystem");
-		addLabelListBoxPair(leftPanel, "Number CPU's:", listCPUs, "taylor-Label", "taylor-ListBox", "numberCPUs");
-		addLabelTextBoxPair(leftPanel, "Disk Space:", "taylor-Label", "taylor-TextBox", "diskSpace");
-		addLabelTextBoxPair(leftPanel, "Memory RAM:", "taylor-Label", "taylor-TextBox", "memoryRAM");
-		addLabelTextBoxPair(leftPanel, "Bandwith:", "taylor-Label", "taylor-TextBox", "bandwith");		
-		addLabelTextBoxPair(leftPanel, "URL/Domain:", "taylor-Label", "taylor-TextBox", "urlDomain");
-		addLabelListBoxPair(leftPanel, "CSS Skin:", listCSSs, "taylor-Label", "taylor-ListBox", "cssSkin");
-
+	private void buildPuppetFilesPanel(HTMLPanel panel) {
 		//Create the right panel
 		HTMLPanel rightPanel = new HTMLPanel("<span class=\"mo_text\">Puppet Files</span>");
 		rightPanel.setStyleName("rightPanel");
-		newPanel.add(rightPanel);
+		panel.add(rightPanel);
 
 		//Create the button to save the results.
 		final String id = "uploadPuppet";
-
 		addButtonTextBoxPair(rightPanel, "Upload Puppet", "crux-Button", "taylor-TextBox", id, 
 			new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					FlatMessageBox.show("UPLOAD PUPPET: " + getContext().get(id), MessageType.INFO);
+					FlatMessageBox.show("Puppet file uploaded", MessageType.INFO);
 				}
 			}
 		);
-
 
 		CheckBox cb1 = new CheckBox("Puppet File 1");
 		cb1.setStyleName("puppet-checkBox");
@@ -163,44 +213,9 @@ public class ServiceAddDeployFormController extends AbstractController
 		removePuppetB.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-
 				FlatMessageBox.show("Puppet removed!! ", MessageType.ERROR);
-
 			}
 		});		
 		rightPanel.add(removePuppetB);
-
-
-		//Create the button to save the results.
-		Button saveTemplateB = new Button();
-		saveTemplateB.setText("Save Template");
-		saveTemplateB.setStyleName("crux-Button");
-		saveTemplateB.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-
-				FlatMessageBox.show("Template Saved correctly!! " + getContext(), MessageType.SUCCESS);
-
-			}
-		});		
-		newPanel.add(saveTemplateB);
-
-		//Create the button to uplad a new template.
-		Button uploadTemplateB = new Button();
-		uploadTemplateB.setText("Upload Template");
-		uploadTemplateB.setStyleName("crux-Button");
-		uploadTemplateB.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-
-				FlatMessageBox.show("Template Uploaded correctly!! " + getContext(), MessageType.SUCCESS);
-
-			}
-		});	
-
-
-		newPanel.add(uploadTemplateB);
 	}
-
-
 }

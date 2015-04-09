@@ -19,6 +19,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.HTMLPanel;
 
 import eu.cloudopting.ui.ToscaUI.client.remote.IProxyAPIService;
+import eu.cloudopting.ui.ToscaUI.client.utils.ViewConstants;
 import eu.cloudopting.ui.ToscaUI.server.model.Application;
 import eu.cloudopting.ui.ToscaUI.server.model.ApplicationList;
 import eu.cloudopting.ui.ToscaUI.server.model.StoryboardItem;
@@ -32,6 +33,8 @@ import eu.cloudopting.ui.ToscaUI.server.model.StoryboardItemView;
 @Controller("serviceCatalogListController")
 public class ServiceCatalogListController extends AbstractController
 {
+	private static final String PAGE_NAME = "Service Catalog";
+
 	@Inject
 	public ServiceCatalogListView view;
 
@@ -44,10 +47,12 @@ public class ServiceCatalogListController extends AbstractController
 	private Callback<ApplicationList> callbackView = new Callback<ApplicationList>() {
 		@Override
 		public void onSuccess(ApplicationList result) {
+			setAppliactionsToContext(result);
 			buildView(result);
 			RETRY_COUNT = 0;
 			hideProgress();
 		}
+
 		@Override
 		public void onError(Exception e) {
 			if(RETRY_COUNT<RETRY_MAX) {
@@ -67,14 +72,33 @@ public class ServiceCatalogListController extends AbstractController
 		api.applicationListUnpaginated(callbackView);
 	}
 
+	@Expose
+	public void openDetail()
+	{
+		view.dialogViewContainer().loadView("detailService", true);
+		view.dialogViewContainer().openDialog();
+		view.dialogViewContainer().center();
+	}
+
+	@BindView("serviceCatalogList")
+	public static interface ServiceCatalogListView extends WidgetAccessor
+	{
+		Storyboard storyboard();
+		HTMLPanel panelScreen();
+		DialogViewContainer dialogViewContainer();
+	}
+	
+	/*
+	 * PRIVATE METHODS
+	 */
 	private void buildView(ApplicationList result) {
-		setScreenHeader(view.panelScreen(), "Service Catalog");
+		setScreenHeader(view.panelScreen(), PAGE_NAME);
 		
 		List<StoryboardItemView> listItem = new ArrayList<StoryboardItemView>();
 		for (Application app : result.getContent()) {
 			String name = app.getApplicationName();
 			String desc = app.getApplicationDescription();
-			addItem(listItem, name+ " CHOOSEN", app.getId(), name, desc, "CHOOSE THIS SERVICE");
+			addItem(listItem, name + " CHOOSEN", app.getId(), name, desc, "CHOOSE THIS SERVICE");
 		}
 
 		for(StoryboardItemView w : listItem){
@@ -94,7 +118,7 @@ public class ServiceCatalogListController extends AbstractController
 		ClickHandler handler = new ClickHandler(){
 			@Override
 			public void onClick(ClickEvent event) {
-				getContext().put("storyBoardItem", storyboardItem);
+				getContext().put(ViewConstants.INT_APPLICATION_ID_CURRENT_INSTANCE, storyboardItem.getId());
 				openDetail();
 			}
 		};
@@ -102,20 +126,9 @@ public class ServiceCatalogListController extends AbstractController
 		listItem.add(new StoryboardItemView(storyboardItem, handler));
 	}
 
-	@Expose
-	public void openDetail()
-	{
-		view.dialogViewContainer().loadView("detailService", true);
-		view.dialogViewContainer().openDialog();
-		view.dialogViewContainer().center();
+	private void setAppliactionsToContext(ApplicationList result) {
+		for (Application app : result.getContent()) {
+			getContext().put(ViewConstants.APPLICATION_INSTANCE + app.getId(), app);
+		}
 	}
-
-	@BindView("serviceCatalogList")
-	public static interface ServiceCatalogListView extends WidgetAccessor
-	{
-		Storyboard storyboard();
-		HTMLPanel panelScreen();
-		DialogViewContainer dialogViewContainer();
-	}
-
 }

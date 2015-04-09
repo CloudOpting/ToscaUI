@@ -5,10 +5,13 @@ import java.util.List;
 
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Expose;
+import org.cruxframework.crux.core.client.event.OkEvent;
+import org.cruxframework.crux.core.client.event.OkHandler;
 import org.cruxframework.crux.core.client.ioc.Inject;
 import org.cruxframework.crux.core.client.rest.Callback;
 import org.cruxframework.crux.core.client.screen.views.BindView;
 import org.cruxframework.crux.core.client.screen.views.WidgetAccessor;
+import org.cruxframework.crux.smartfaces.client.dialog.Confirm;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox.MessageType;
 
@@ -23,9 +26,10 @@ import com.google.gwt.user.client.ui.TextBox;
 
 import eu.cloudopting.ui.ToscaUI.client.remote.IProxyAPIService;
 import eu.cloudopting.ui.ToscaUI.client.remote.IToscaManagerService;
+import eu.cloudopting.ui.ToscaUI.client.utils.Navigate;
+import eu.cloudopting.ui.ToscaUI.client.utils.ViewConstants;
 import eu.cloudopting.ui.ToscaUI.server.model.Application;
 import eu.cloudopting.ui.ToscaUI.server.model.SLA;
-import eu.cloudopting.ui.ToscaUI.server.model.StoryboardItem;
 import eu.cloudopting.ui.ToscaUI.server.model.SubscribeServicesView;
 
 /**
@@ -36,6 +40,8 @@ import eu.cloudopting.ui.ToscaUI.server.model.SubscribeServicesView;
 @Controller("subscribeServiceTaylorFormController")
 public class SubscribeServiceTaylorFormController extends AbstractController
 {
+	
+
 	@Inject
 	public SubscribeServiceTaylorFormView view;
 
@@ -44,6 +50,12 @@ public class SubscribeServiceTaylorFormController extends AbstractController
 	
 	@Inject
 	public IToscaManagerService toscaManager;
+	
+	/*
+	 * CONSTANTS
+	 */
+	private static final String PAGE_NAME = "Subscribe Service - Taylor Form";
+	private static final String SLA_SELECTED = "slaSelected"; 
 	
 	/*
 	 * CALLBACKS
@@ -70,13 +82,13 @@ public class SubscribeServiceTaylorFormController extends AbstractController
 			listCSSs.add(1, "Lemonade");
 			listCSSs.add(2, "Violette");		
 
+			//Tosca file only have SLA at the moment.
 			List<String> listSLAId = new ArrayList<String>();
 			for (SLA sla : ssl.getListSLAs()) {
 				getContext().put(sla.getId(), sla);
 				listSLAId.add(sla.getId());
 			}
 			buildView(listLocations, listOSs, listCSSs, listSLAId);
-//			}
 		}
 		@Override
 		public void onError(Exception e) {
@@ -88,8 +100,9 @@ public class SubscribeServiceTaylorFormController extends AbstractController
 	private Callback<String> setToscaCallback = new Callback<String>() {
 		@Override
 		public void onSuccess(String result) {
-			StoryboardItem storyBoardItem = (StoryboardItem) getContext().get("storyBoardItem");
-			toscaManager.getSubscribeServiceLists(storyBoardItem.getName(), getSubscribeServiceListsCallback);
+			Integer id = (Integer) getContext().get(ViewConstants.INT_APPLICATION_ID_CURRENT_INSTANCE);
+			Application app = (Application) getContext().get(ViewConstants.APPLICATION_INSTANCE+id);
+			toscaManager.getSubscribeServiceLists(app.getApplicationName(), getSubscribeServiceListsCallback);
 		}
 		@Override
 		public void onError(Exception e) {
@@ -117,15 +130,20 @@ public class SubscribeServiceTaylorFormController extends AbstractController
 	@Expose
 	public void onLoad() {
 		//GET VALUES FROM THE DATABASE
-		StoryboardItem storyBoardItem = (StoryboardItem) getContext().get("storyBoardItem");
-		if(storyBoardItem!=null) {
-			api.application(storyBoardItem.getId().toString(), appCallback);
-		} else {
-			//TODO: Redirect to the catalog.
-			getContext().put("storyBoardItem", new StoryboardItem("", 1, "Clearo", "", ""));
-			api.application("1", appCallback);
-		}
+		Integer id = (Integer) getContext().get(ViewConstants.INT_APPLICATION_ID_CURRENT_INSTANCE);
 		
+		if(id!=null) {
+			api.application(String.valueOf(id), appCallback);
+		} else {
+			Confirm.show("Question", "No Service Selected. Go to Service Catalog List?", new OkHandler() 
+			{
+				@Override
+				public void onOk(OkEvent event) 
+				{			
+					Navigate.to(Navigate.SERVICE_CATALOG_LIST);
+				}
+			}, null);
+		}		
 	}
 
 	@Expose
@@ -145,8 +163,7 @@ public class SubscribeServiceTaylorFormController extends AbstractController
 	 */
 	private void buildView(List<String> listLocations, List<String> listOSs,
 			List<String> listCSSs, List<String> listSLAid) {
-		
-		setScreenHeader(view.panelScreen(), "Subscribe Service - Taylor Form");		
+		setScreenHeader(view.panelScreen(), PAGE_NAME);		
 		
 		//Get access to the panel
 		HTMLPanel panel = view.panelScreen();
@@ -192,7 +209,7 @@ public class SubscribeServiceTaylorFormController extends AbstractController
 			public void onChange(ChangeEvent event) {
 				ListBox lb = (ListBox) event.getSource();
 				SLA sla = (SLA) getContext().get(lb.getItemText(lb.getSelectedIndex()));
-				getContext().put("slaSelected", sla);
+				getContext().put(SLA_SELECTED, sla);
 				
 				((TextBox) getContext().get("numCPUs")).setValue(sla.getNumCpus());
 				((TextBox) getContext().get("bandwith")).setValue(sla.getPrice());
@@ -210,15 +227,17 @@ public class SubscribeServiceTaylorFormController extends AbstractController
 	}
 	
 	private void subsribeService() {
-		
-		
-		final StoryboardItem storyBoardItem = (StoryboardItem) getContext().get("storyBoardItem");
+		final Integer id = (Integer) getContext().get(ViewConstants.INT_APPLICATION_ID_CURRENT_INSTANCE);
+		Application app = (Application) getContext().get(ViewConstants.APPLICATION_INSTANCE+id);
+		SLA sla = (SLA) getContext().get(SLA_SELECTED);
+		String nodeType = "VMhost";
 		
 		final Callback<String> changeViewCallback = new Callback<String>() {
 			@Override
 			public void onSuccess(String result) {
 				FlatMessageBox.show("Subscription Requested", MessageType.SUCCESS);
-//				Navigate.to(Navigate.SERVICE_SUBSCRIBER_OPERATE);
+				//TODO: clean Context
+				//Navigate.to(Navigate.SERVICE_SUBSCRIBER_OPERATE);
 			}
 			@Override
 			public void onError(Exception e) {
@@ -229,7 +248,7 @@ public class SubscribeServiceTaylorFormController extends AbstractController
 		Callback<String> createCustomizationCallback = new Callback<String>() {
 			@Override
 			public void onSuccess(String result) {
-				api.customizationCreate(storyBoardItem.getId().toString(), result, changeViewCallback);
+				api.customizationCreate(String.valueOf(id), result, changeViewCallback);
 			}
 			@Override
 			public void onError(Exception e) {
@@ -237,7 +256,6 @@ public class SubscribeServiceTaylorFormController extends AbstractController
 			}
 		};
 
-
-		toscaManager.setSLA(storyBoardItem.getName(), "VMhost", (SLA) getContext().get("slaSelected"), createCustomizationCallback);
+		toscaManager.setSLA(app.getApplicationName(), nodeType, sla, createCustomizationCallback);
 	}
 }

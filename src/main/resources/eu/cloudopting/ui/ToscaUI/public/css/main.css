@@ -278,6 +278,7 @@
 .panelScreen {
 	margin-top: 20px;
 	border: 1px solid #E0E0E0;
+	margin-bottom: 20px;
 }
 
 .panelVerticalButton{

@@ -11,7 +11,8 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 
 import eu.cloudopting.ui.ToscaUI.client.utils.Navigate;
-import eu.cloudopting.ui.ToscaUI.server.model.StoryboardItem;
+import eu.cloudopting.ui.ToscaUI.client.utils.ViewConstants;
+import eu.cloudopting.ui.ToscaUI.server.model.Application;
 
 /**
  * 
@@ -26,21 +27,17 @@ public class DetailServiceController extends AbstractController
 	
 	@Expose
 	public void onLoad(){
-		
-//		String id = (String) getContext().get(ViewConstants.CURRENT_INSTANCE);
-//		Application app = (Application) getContext().get(ViewConstants.CURRENT_INSTANCE + id);
-//		view.productName().setText("Service: " + app.getApplicationName() );
-//		view.productDescription().setText( app.getApplicationDescription() + " " + view.productDescription().getText());
-
-		StoryboardItem storyBoardItem = (StoryboardItem) getContext().get("storyBoardItem");
-		view.productName().setText("Service: " + storyBoardItem.getName() );
-		view.productDescription().setText( storyBoardItem.getDescription() + " " + view.productDescription().getText());
+		Integer id = (Integer) getContext().get(ViewConstants.INT_APPLICATION_ID_CURRENT_INSTANCE);
+		Application app = (Application) getContext().get(ViewConstants.APPLICATION_INSTANCE + id);
+		view.productName().setText("Service: " + app.getApplicationName() );
+		view.productDescription().setText( app.getApplicationDescription() + " " + view.productDescription().getText());
 	}
 	
 	@Expose
 	public void subscribe() {
-		//Move to [Subscribe Service - Taylor Form]
+		//Close myself
 		((DialogViewContainer) view.getBoundCruxView().getContainer()).closeDialog();
+		//Navigate
 		Navigate.to(Navigate.SUBSCIRBE_SERVICE_TAYLOR_FORM);		
 	}
 
@@ -51,5 +48,4 @@ public class DetailServiceController extends AbstractController
 		HTML productName();
 		HTML productDescription();
 	}
-
 }

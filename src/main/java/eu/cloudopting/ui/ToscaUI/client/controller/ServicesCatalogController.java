@@ -39,6 +39,8 @@ import eu.cloudopting.ui.ToscaUI.server.model.RowDTO;
 @Controller("servicesCatalogController")
 public class ServicesCatalogController extends AbstractController
 {
+	private static final String PAGE_NAME = "Services Catalog";
+
 	@Inject
 	public ServicesCatalogView view;
 	
@@ -141,7 +143,7 @@ public class ServicesCatalogController extends AbstractController
 	}
 	
 	private void buildView(ApplicationList result) {
-		setScreenHeader(view.panelScreen(), "Services Catalog");
+		setScreenHeader(view.panelScreen(), PAGE_NAME);
 		buildButtons();
 		buildGrid(result);
 	}

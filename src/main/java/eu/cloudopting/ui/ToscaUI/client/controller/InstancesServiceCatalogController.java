@@ -40,13 +40,19 @@ import eu.cloudopting.ui.ToscaUI.server.model.RowDTO;
 @Controller("instancesServiceCatalogController")
 public class InstancesServiceCatalogController extends AbstractController
 {
+
 	@Inject
 	public InstancesServiceCatalogView view;
 	
 	@Inject
 	public IProxyAPIService api;
 	
-	private final static Integer RETRY_MAX = 3;
+	/*
+	 * CONSTANTS
+	 */
+	private static final String PAGE_NAME = "Instances Service Catalog";
+	private static final Integer RETRY_MAX = 3;
+	
 	private Integer RETRY_COUNT = 0;
 	
 	/*
@@ -141,7 +147,7 @@ public class InstancesServiceCatalogController extends AbstractController
 	}
 	
 	private void buildView(ApplicationList result) {
-		setScreenHeader(view.panelScreen(), "Instances Service Catalog");
+		setScreenHeader(view.panelScreen(), PAGE_NAME);
 		buildButtons();
 		buildGrid(result);
 	}
