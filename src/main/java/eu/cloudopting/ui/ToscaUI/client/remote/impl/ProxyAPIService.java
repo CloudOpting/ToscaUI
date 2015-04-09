@@ -1,9 +1,17 @@
 package eu.cloudopting.ui.ToscaUI.client.remote.impl;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpEntity;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -21,6 +29,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.cruxframework.crux.core.server.rest.annotation.RestService;
 import org.cruxframework.crux.core.server.rest.spi.InternalServerErrorException;
 import org.cruxframework.crux.core.shared.rest.annotation.DefaultValue;
+import org.cruxframework.crux.core.shared.rest.annotation.FormParam;
 import org.cruxframework.crux.core.shared.rest.annotation.GET;
 import org.cruxframework.crux.core.shared.rest.annotation.POST;
 import org.cruxframework.crux.core.shared.rest.annotation.Path;
@@ -32,6 +41,7 @@ import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import eu.cloudopting.ui.ToscaUI.server.model.Application;
 import eu.cloudopting.ui.ToscaUI.server.model.ApplicationList;
 import eu.cloudopting.ui.ToscaUI.server.utils.ConnectionUtils;
+import eu.cloudopting.ui.ToscaUI.server.utils.IOUtils;
 
 /**
  * 
@@ -42,7 +52,7 @@ import eu.cloudopting.ui.ToscaUI.server.utils.ConnectionUtils;
 @Path("proxyAPIService")
 public class ProxyAPIService {
 	
-	private static String baseURI = "http://localhost:8080";
+//	private static String baseURI = "http://localhost:8080";
 	private static String restBaseURI = "http://localhost:8080/api/";
 //	private static String authentication = ""; //For admin/admin is: Basic YWRtaW46YWRtaW4=
 //	private CredentialsProvider provider;
@@ -110,7 +120,18 @@ public class ProxyAPIService {
 			provider.setCredentials(AuthScope.ANY, credentials);
 			httpclient = HttpClientBuilder.create().setDefaultCredentialsProvider(provider).build();
 			
-			if(httpclient!=null) return true;
+			Application a = null;
+			try {
+				a = application("1");
+			} catch (InternalServerErrorException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			if(a!=null) return true;
 			else return false;
 
 //			//create a httpget to test the credentials
@@ -147,18 +168,76 @@ public class ProxyAPIService {
 //		return cookie;
 	}
 
+//	@POST
+//	@Path("application/create")
+//	public String applicationCreate(@QueryParam("json") String json) throws MalformedURLException, IOException {
+//		return doCallToStringAndPayload(APPLICATION_CREATE_METHOD, json);
+//	}
+	
 	@POST
 	@Path("application/create")
-	public String applicationCreate(@QueryParam("json") String json) throws MalformedURLException, IOException {
+	public String applicationCreate(@QueryParam("name") String name, 
+			@QueryParam("description") String description, 
+			@QueryParam("fileName") String fileName) throws MalformedURLException, IOException {
+		String json = createJsonCreate(name, description, fileName);		
 		return doCallToStringAndPayload(APPLICATION_CREATE_METHOD, json);
+	}
+	
+	public String createJsonCreate(String name, String description,
+			String fileName) {
+
+		String createNewApplicationJson = "";
+		try {
+			String xmlFile = IOUtils.readFile("src/test/resources/TOSCA_ClearoExample.xml", Charset.defaultCharset());
+			xmlFile = xmlFile.replaceAll("Clearo", name);
+
+			createNewApplicationJson = "{\n" +
+					"\t\"statusId\": {\n" +
+					"\t\t\"id\": 1\n" +
+					"\t},\n" +
+					"\t\"userId\": {\n" +
+					"\t\t\"id\": 3\n" +
+					"\t},\n" +
+					"\t\"applicationName\": \"" + name + "\",\n" +
+					"\t\"applicationDescription\": \"" + description + "\",\n" +
+					"\t\"applicationToscaTemplate\": \"" + Base64.encodeBase64String(xmlFile.getBytes()) +  "\",\n" +
+					"\t\"applicationVersion\": \"1\"\n" +
+					"}";
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return createNewApplicationJson;
 	}
 
 	@POST
 	@Path("customization/create")
-	public String customizationCreate(@QueryParam("json") String json) throws MalformedURLException, IOException {
+	public String customizationCreate(@QueryParam("applicationId") String applicationId, 
+			@FormParam("xmlFileBase64Encoded") String xmlFileBase64Encoded) throws MalformedURLException, IOException {
+		String json = createJsonCustomization(applicationId, xmlFileBase64Encoded);
 		return doCallToStringAndPayload(APPLICATION_CUSTOMIZATION_METHOD, json);
 	}
 
+	private String createJsonCustomization(String applicationId, String xmlFileBase64Encoded) {
+
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		Date today = Calendar.getInstance().getTime();
+		String reportDate = df.format(today);
+		
+		//By default the creation is with status "Requested" --> 100;
+	    String createNewCustomizationJson = 
+	    		"{" +
+	            "\"statusId\": { \"id\": 100 }," +
+	            "\"applicationId\": { \"id\": " + applicationId + " }," +
+	            "\"customizationToscaFile\": \"" + xmlFileBase64Encoded + "\"," +
+	            "\"customizationCreation\": \"" + reportDate + "\"," +
+	            "\"customizationActivation\": \"" + reportDate + "\"," +
+	            "\"customizationDecommission\": \"" + reportDate + "\"," +
+	            "\"username\": \"1\"" +
+	            "}";
+			
+		return createNewCustomizationJson;
+	}
 	
 	@GET
 	@Path("applcation/list")
@@ -202,10 +281,34 @@ public class ProxyAPIService {
 	public String users(@PathParam("user") String user) throws MalformedURLException, IOException, NotFoundException {
 		return doCallToString(String.format(USER_METHOD, user));
 	}
+	
+	@GET
+	@Path("file")
+	public String sendFile(@QueryParam("fileName") String fileName) throws IOException{
+	    BufferedReader br = new BufferedReader(new FileReader(fileName));
+	    String everything = "";
+	    try { 
+	        StringBuilder sb = new StringBuilder();
+	        String line = br.readLine();
+	 
+	        while (line != null) {
+	            sb.append(line);
+	            sb.append(System.lineSeparator());
+	            line = br.readLine();
+	        } 
+	        everything = sb.toString();
+	    } finally { 
+	        br.close();
+	    } 
+		//File f = new File(fileName);
+//	    System.out.println("everything: " + everything);
+		return everything;
+	}
 
-
-	//PRIVATE METHODS
-
+	/*
+	* PRIVATE METHODS
+	*/
+	
 	/**
 	 * Does a GET call to a given string, setting the default authentication required.
 	 * @param method
@@ -248,7 +351,6 @@ public class ProxyAPIService {
 	 * @throws IOException
 	 */
 	private String doCallToStringAndPayload(String method, String payload) throws IOException {
-		System.out.println(payload);
 		//Create the http post
         HttpPost httppost = new HttpPost(restBaseURI+method);
         httppost.setHeader("Content-type", "application/json");

@@ -3,8 +3,16 @@ package eu.cloudopting.ui.ToscaUI.client.controller;
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.ioc.Inject;
+import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.core.client.screen.views.BindView;
 import org.cruxframework.crux.core.client.screen.views.WidgetAccessor;
+import org.cruxframework.crux.widgets.client.dialogcontainer.DialogViewContainer;
+import org.cruxframework.crux.widgets.client.simplecontainer.SimpleViewContainer;
+
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HTMLPanel;
+
+import eu.cloudopting.ui.ToscaUI.server.model.StoryboardItem;
 
 /**
  * 
@@ -19,12 +27,24 @@ public class DetailServiceController extends AbstractController
 	
 	@Expose
 	public void onLoad(){
+		StoryboardItem storyBoardItem = (StoryboardItem) getContext().get("storyBoardItem");
+		view.productName().setText("Service: " + storyBoardItem.getName() );
+		view.productDescription().setText( storyBoardItem.getDescription() + " " + view.productDescription().getText());
+	}
+	
+	@Expose
+	public void subscribe() {
+		//Move to [Subscribe Service - Taylor Form]
+		((DialogViewContainer) view.getBoundCruxView().getContainer()).closeDialog();
+		((SimpleViewContainer) Screen.get("views")).showView("subscribeServiceTaylorForm");
 	}
 
-	@BindView("detailServiceView")
+	@BindView("detailService")
 	public static interface DetailServiceView extends WidgetAccessor
 	{
-
+		HTMLPanel panelScreen();
+		HTML productName();
+		HTML productDescription();
 	}
 
 }

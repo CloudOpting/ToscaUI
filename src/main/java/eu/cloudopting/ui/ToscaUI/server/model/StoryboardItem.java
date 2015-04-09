@@ -1,13 +1,6 @@
 package eu.cloudopting.ui.ToscaUI.server.model;
 
-import org.cruxframework.crux.widgets.client.styledpanel.StyledPanel;
-
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Label;
 
 /**
  * 
@@ -16,44 +9,68 @@ import com.google.gwt.user.client.ui.Label;
  */
 public class StoryboardItem extends Composite {
 
-	private FlowPanel image = new FlowPanel();
-	private StyledPanel wrapper = new StyledPanel();
-	private Label labelName = new Label();
-	private Label labelOther = new Label();
-	private Button button = new Button();
-	private String url;
-	private HTMLPanel htmlPanel = new HTMLPanel(url);
+	private String clickedMsg; 
+	private Integer id; 
+	private String name; 
+	private String description; 
+	private String textButton; 
 	
-	public StoryboardItem(final String clickedMsg, String name, String price, String textButton, ClickHandler handler)
-	{
-		initWidget(wrapper);
-		
-		wrapper.add(htmlPanel);
-		
-		htmlPanel.add(image);
-		htmlPanel.add(labelName);
-		htmlPanel.add(labelOther);
-		htmlPanel.add(button);
-		
-		this.addStyleNames();
-		
-		labelName.setText(name);
-		labelOther.setText(price);
-		button.setText(textButton);
-		
-		button.addClickHandler(handler);
-		
-		
+	public StoryboardItem()	{}
+	
+	public void setStoryboardItem(StoryboardItem storyboardItem) {
+		this.id = storyboardItem.getId();
+		this.clickedMsg = storyboardItem.getClickedMsg();
+		this.name = storyboardItem.getName();
+		this.description = storyboardItem.getDescription();
+		this.textButton = storyboardItem.getTextButton();
 	}
 	
-	private void addStyleNames() {
-		wrapper.addStyleName("storeItem");
-		htmlPanel.addStyleName("cf");
-		image.addStyleName("productImage");
-		labelName.removeStyleName("gwt-Label");
-		labelName.addStyleName("productName");
-		labelOther.removeStyleName("gwt-Label");
-		labelOther.addStyleName("productOther");
-		button.addStyleName("productButton");
+	public StoryboardItem(final String clickedMsg, Integer id, String name, String description, String textButton)
+	{
+		this.id = id;
+		this.clickedMsg = clickedMsg;
+		this.name = name;
+		this.description = description;
+		this.textButton = textButton;
+	}
+
+	public String getClickedMsg() {
+		return clickedMsg;
+	}
+
+	public void setClickedMsg(String clickedMsg) {
+		this.clickedMsg = clickedMsg;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getTextButton() {
+		return textButton;
+	}
+
+	public void setTextButton(String textButton) {
+		this.textButton = textButton;
 	}
 }

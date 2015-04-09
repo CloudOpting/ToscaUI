@@ -1,12 +1,17 @@
 package eu.cloudopting.ui.ToscaUI.server.model;
 
+import java.io.Serializable;
+
 /**
  * 
  * @author xeviscc
  *
  */
-public class SLA {
+public class SLA implements Serializable {
 	
+	private static final long serialVersionUID = -5165489227612516594L;
+	
+	private String id;
 	private String numCpus;
 	private String memory;
 	private String price;
@@ -60,5 +65,13 @@ public class SLA {
 				+ ", price " + this.price
 				+ ", disk " + this.disk 
 				+ ", chosen " + this.chosen;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 }

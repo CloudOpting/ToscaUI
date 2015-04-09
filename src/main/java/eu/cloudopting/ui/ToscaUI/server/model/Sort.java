@@ -2,7 +2,6 @@ package eu.cloudopting.ui.ToscaUI.server.model;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.Generated;
 
 public class Sort {
 

@@ -12,17 +12,18 @@
 				<div class="crux-StyledPanel"
 					style="display: table-cell; width: 100%; vertical-align: middle;">
 					<div class="cf" style="margin-left: auto; margin-right: auto;">
-						<div class="productName">Service</div>
+						<gwt:HTML id="productName" class="productName">Service</gwt:HTML>
 						<div class="productImage"></div>
-						<div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+						<gwt:HTML id="productDescription">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
 							do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
 							enim ad minim veniam, quis nostrud exercitation ullamco laboris
 							nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
 							reprehenderit in voluptate velit esse cillum dolore eu fugiat
 							nulla pariatur. Excepteur sint occaecat cupidatat non proident,
 							sunt in culpa qui officia deserunt mollit anim id est laborum.
-						</div>
-						<button type="button" class="gwt-Button productButton">SUBSCRIBE</button>
+						</gwt:HTML>
+<!-- 						<gwt:Button id="button" type="button" class="gwt-Button productButton">SUBSCRIBE</gwt:Button> -->
+						<crux:button id="button" text="SUBSCRIBE" onSelect="detailServiceController.subscribe" />
 					</div>
 				</div>
 			</div>

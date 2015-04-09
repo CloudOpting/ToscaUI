@@ -9,6 +9,9 @@ import org.cruxframework.crux.core.client.ioc.Inject;
 import org.cruxframework.crux.core.client.rest.Callback;
 import org.cruxframework.crux.core.client.screen.views.BindView;
 import org.cruxframework.crux.core.client.screen.views.WidgetAccessor;
+import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox;
+import org.cruxframework.crux.widgets.client.dialog.ProgressBox;
+import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox.MessageType;
 import org.cruxframework.crux.widgets.client.dialogcontainer.DialogViewContainer;
 import org.cruxframework.crux.widgets.client.storyboard.Storyboard;
 
@@ -20,6 +23,7 @@ import eu.cloudopting.ui.ToscaUI.client.remote.IProxyAPIService;
 import eu.cloudopting.ui.ToscaUI.server.model.Application;
 import eu.cloudopting.ui.ToscaUI.server.model.ApplicationList;
 import eu.cloudopting.ui.ToscaUI.server.model.StoryboardItem;
+import eu.cloudopting.ui.ToscaUI.server.model.StoryboardItemView;
 
 /**
  * 
@@ -33,51 +37,49 @@ public class ServiceCatalogListController extends AbstractController
 	public ServiceCatalogListView view;
 
 	@Inject
-	public IProxyAPIService connectApi;
+	public IProxyAPIService api;
+	
+	private final static Integer RETRY_MAX = 3;
+	private Integer RETRY_COUNT = 0;
+	private ProgressBox progress;
 
 	private Callback<ApplicationList> callbackView = new Callback<ApplicationList>() {
 		@Override
 		public void onSuccess(ApplicationList result) {
 			buildView(result);
+			RETRY_COUNT = 0;
+			progress.hide();
 		}
 		@Override
 		public void onError(Exception e) {
-
+			if(RETRY_COUNT<RETRY_MAX) {
+				RETRY_COUNT++;
+				api.applicationListUnpaginated(callbackView);
+			} else {
+				RETRY_COUNT = 0;
+				progress.hide();
+				FlatMessageBox.show("A problem occurred with the network, please try in a few minutes.", MessageType.WARN);
+			}
 		}
 	};
 
 	@Expose
 	public void onLoad() {
-		connectApi.applicationListUnpaginated(callbackView);
+		progress = ProgressBox.show("Retriving data...");
+		api.applicationListUnpaginated(callbackView);
 	}
 
 	private void buildView(ApplicationList result) {
 		setScreenHeader(view.panelScreen(), "Service Catalog");
 		
-		List<StoryboardItem> listItem = new ArrayList<StoryboardItem>();
+		List<StoryboardItemView> listItem = new ArrayList<StoryboardItemView>();
 		for (Application app : result.getContent()) {
 			String name = app.getApplicationName();
 			String desc = app.getApplicationDescription();
-			addItem(listItem, name+ " CHOOSEN", name, desc, "CHOOSE THIS SERVICE");
+			addItem(listItem, name+ " CHOOSEN", app.getId(), name, desc, "CHOOSE THIS SERVICE");
 		}
 
-//		addItem(listItem, "Clearo CHOOSEN", "Clearo", "Clearo is a service that allows to...", "CHOOSE THIS SERVICE");
-//		addItem(listItem, "FixThis CHOOSEN", "FixThis", "FixThis is a service that allows to...", "CHOOSE THIS SERVICE");
-//		addItem(listItem, "Agenda CHOOSEN", "Agenda", "Agenda is a service that allows to...", "CHOOSE THIS SERVICE");
-//		addItem(listItem, "Next2Me CHOOSEN", "Next2Me", "Next2Me is a service that allows to...", "CHOOSE THIS SERVICE");
-//		addItem(listItem, "MobileID CHOOSEN", "MobileID", "MobileID is a service that allows to...", "CHOOSE THIS SERVICE");
-//		addItem(listItem, "ASIA CHOOSEN", "ASIA", "ASIA is a service that allows to...", "CHOOSE THIS SERVICE");
-//		addItem(listItem, "MIB (Base Information Database) CHOOSEN", "MIB", "MIB (Base Information Database) is a service that allows to...", "CHOOSE THIS SERVICE");
-//		addItem(listItem, "Energy Consumption - Corby CHOOSEN", "Energy Consumption - Corby", "Energy Consumption - Corby is a service that allows to...", "CHOOSE THIS SERVICE");
-//		addItem(listItem, "Transportation System - Corby CHOOSEN", "Transportation System - Corby", "Transportation System - Corby is a service that allows to...", "CHOOSE THIS SERVICE");
-//		addItem(listItem, "BusPortal - Corby CHOOSEN", "BusPortal - Corby", "BusPortal - Corby is a service that allows to...", "CHOOSE THIS SERVICE");
-//		//NOT NEEDED ANYNMORE
-//		//addItem(listItem, "IndicatorsPortal - Sant Feliu CHOOSEN", "IndicatorsPortal - Sant Feliu", "IndicatorsPortal - Sant Feliu is a service that allows to...", "CHOOSE THIS SERVICE");
-//		//addItem(listItem, "SmartCityCloud - Sant Feliu CHOOSEN", "SmartCityCloud - Sant Feliu", "SmartCityCloud - Sant Feliu is a service that allows to...", "CHOOSE THIS SERVICE");
-//		addItem(listItem, "Barcelona Open Data CHOOSEN", "Barcelona Open Data", "Barcelona Open Data is a service that allows to...", "CHOOSE THIS SERVICE");
-//		//addItem(listItem, "Mobile Services - Interoperability CHOOSEN", "Mobile Services", "Mobile Services - Interoperability is a service that allows to...", "CHOOSE THIS SERVICE"));
-
-		for(StoryboardItem w : listItem){
+		for(StoryboardItemView w : listItem){
 			view.storyboard().add(w);
 		}
 		
@@ -85,24 +87,25 @@ public class ServiceCatalogListController extends AbstractController
 		view.panelScreen().add(view.storyboard());
 	}
 
-	private void addItem(List<StoryboardItem> listItem,
-			final String clickedMsg, String name, String price,
-			String textButton) {
+	private void addItem(List<StoryboardItemView> listItem,
+			final String clickedMsg, final Integer id, final String name, final String price, 
+			final String textButton) {
+		
+		final StoryboardItem storyboardItem = new StoryboardItem(clickedMsg, id, name, price, textButton);
+		
 		ClickHandler handler = new ClickHandler(){
 			@Override
 			public void onClick(ClickEvent event) {
-				//				openDetail((StoryboardItem) event.getSource());
-				openDetail(clickedMsg);
+				getContext().put("storyBoardItem", storyboardItem);
+				openDetail();
 			}
 		};
-
-		listItem.add(new StoryboardItem(clickedMsg, name, price, textButton, handler));
+		
+		listItem.add(new StoryboardItemView(storyboardItem, handler));
 	}
 
-	//TODO: Check the way to make the dialog know how is the parent, and show consistent information
 	@Expose
-	//	public void openDetail(StoryboardItem widget)
-	public void openDetail(String parameter)
+	public void openDetail()
 	{
 		view.dialogViewContainer().loadView("detailService", true);
 		view.dialogViewContainer().openDialog();

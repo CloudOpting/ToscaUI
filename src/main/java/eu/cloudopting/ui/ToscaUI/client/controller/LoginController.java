@@ -35,28 +35,47 @@ public class LoginController  extends AbstractController implements KeyPressHand
 	public LoginView view;
 
 	@Inject
-	public IProxyAPIService connectApi;
+	public IProxyAPIService api;
 
+	/*
+	 * CALLBACKS
+	 */
+	private Callback<Boolean> callbackLogin = new Callback<Boolean>() {
+		@Override
+		public void onSuccess(Boolean result) {
+			if(result) {
+				((SimpleViewContainer) Screen.get("loginView")).setVisible(false);
+				((SimpleViewContainer) Screen.get("menu")).setVisible(true);
+				((SingleViewContainer) Screen.get("views")).showView("serviceCatalogList");
+			} else {
+				FlatMessageBox.show("Try again!! Authentication ERROR: No SESSION ID recived.", MessageType.INFO);
+			}
+		}
+		@Override
+		public void onError(Exception e) {
+			FlatMessageBox.show("Try again!! Authentication ERROR: " + e.getMessage(), MessageType.INFO);
+		}
+	};
+	
+	private Callback<Boolean> callbackOnload = new Callback<Boolean>() {
+		@Override
+		public void onSuccess(Boolean result) {
+			if(result) {
+				((SimpleViewContainer) Screen.get("loginView")).setVisible(false);
+				((SimpleViewContainer) Screen.get("menu")).setVisible(true);
+				((SingleViewContainer) Screen.get("views")).showView("serviceCatalogList");
+			} else {
+			}
+		}
+		@Override
+		public void onError(Exception e) {
+		}
+	};
+	
 	@Expose
 	public void onLoad() {
-
-		connectApi.connected(
-				new Callback<Boolean>() {
-					@Override
-					public void onSuccess(Boolean result) {
-						if(result) {
-							((SimpleViewContainer) Screen.get("loginView")).setVisible(false);
-							((SimpleViewContainer) Screen.get("views")).showView("menu");
-						} else {
-						}
-					}
-					@Override
-					public void onError(Exception e) {
-					}
-				});
+		api.connected(callbackOnload);
 		
-//		WaitBox.hideAllDialogs();
-
 		//Add handler for Enter key pressed.
 		view.passwordTextBox().addKeyPressHandler(this);
 		view.nameTextBox().addKeyPressHandler(this);
@@ -72,23 +91,7 @@ public class LoginController  extends AbstractController implements KeyPressHand
 	@Expose   
 	public void login()
 	{
-		Callback<Boolean> callback = new Callback<Boolean>() {
-			@Override
-			public void onSuccess(Boolean result) {
-				if(result!=null) {
-					((SingleViewContainer) Screen.get("views")).showView("menu");
-				} else {
-					FlatMessageBox.show("Try again!! Authentication ERROR: No SESSION ID recived.", MessageType.INFO);
-				}
-			}
-			@Override
-			public void onError(Exception e) {
-				FlatMessageBox.show("Try again!! Authentication ERROR: " + e.getMessage(), MessageType.INFO);
-			}
-		};
-
-		connectApi.connect(view.nameTextBox().getValue(), view.passwordTextBox().getValue(), callback);
-
+		api.connect(view.nameTextBox().getValue(), view.passwordTextBox().getValue(), callbackLogin);
 	}  
 
 	@BindView("login")
@@ -108,5 +111,4 @@ public class LoginController  extends AbstractController implements KeyPressHand
 			login();
 		}
 	}
-
 }

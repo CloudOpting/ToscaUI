@@ -140,7 +140,7 @@ public class ServiceAddDeployFormController extends AbstractController
 			new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					FlatMessageBox.show("UPLOAD PUPPET: " + getMap().get(id), MessageType.INFO);
+					FlatMessageBox.show("UPLOAD PUPPET: " + getContext().get(id), MessageType.INFO);
 				}
 			}
 		);
@@ -179,7 +179,7 @@ public class ServiceAddDeployFormController extends AbstractController
 			@Override
 			public void onClick(ClickEvent event) {
 
-				FlatMessageBox.show("Template Saved correctly!! " + getMap(), MessageType.SUCCESS);
+				FlatMessageBox.show("Template Saved correctly!! " + getContext(), MessageType.SUCCESS);
 
 			}
 		});		
@@ -193,7 +193,7 @@ public class ServiceAddDeployFormController extends AbstractController
 			@Override
 			public void onClick(ClickEvent event) {
 
-				FlatMessageBox.show("Template Uploaded correctly!! " + getMap(), MessageType.SUCCESS);
+				FlatMessageBox.show("Template Uploaded correctly!! " + getContext(), MessageType.SUCCESS);
 
 			}
 		});	

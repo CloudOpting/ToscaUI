@@ -7,7 +7,7 @@
 	xmlns:gwt="http://www.cruxframework.org/crux/gwt">
 	
 	<head>
-		<title>UI Tosca</title>
+		<title>Cloudopting UI (Manager)</title>
 	</head>
 	
 	<body>
@@ -28,6 +28,10 @@
 		
 		<crux:simpleViewContainer id="loginView">
 			<crux:view name="login" active="true"/>
+		</crux:simpleViewContainer>
+
+		<crux:simpleViewContainer id="menu" visible="false">
+			<crux:view name="topMenu" active="true"/>
 		</crux:simpleViewContainer>
 
 		<crux:simpleViewContainer id="views" />

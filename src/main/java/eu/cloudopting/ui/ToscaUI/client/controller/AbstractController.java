@@ -8,7 +8,6 @@ import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox.MessageType;
 
 import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -22,14 +21,14 @@ import com.google.gwt.user.client.ui.TextBox;
 
 public abstract class AbstractController {
 
-	private final Map<String, String> map = new HashMap<String, String>();
+	private static final Map<String, Object> context = new HashMap<String, Object>();
 	
-	public Map<String, String> getMap() {
-		return map;
+	public Map<String, Object> getContext() {
+		return context;
 	}
 	
 	protected void addLabelTextBoxPair(HTMLPanel panel, String labelText, 
-			String labelStyle, String textBoxStyle, final String id, String value) {
+			String labelStyle, String textBoxStyle, final String id, String value, boolean enabled) {
 		//Create the widgets with parameters.
 		Label label = new Label();
 		label.setText(labelText);
@@ -37,13 +36,46 @@ public abstract class AbstractController {
 		final TextBox textBox = new TextBox();
 		textBox.setStyleName(textBoxStyle);
 		textBox.setValue(value);
-		textBox.setEnabled(false);
+		textBox.setEnabled(enabled);
 		
 		//Add widget to the panel.
 		panel.add(label);
 		panel.add(textBox);
+		
+		//Add handler
+		context.put(id, textBox);
+//		textBox.addChangeHandler(new ChangeHandler() {
+//			@Override
+//			public void onChange(ChangeEvent event) {
+//				map.put(id, textBox);
+//			}
+//		});
+	}
+	
+	protected void addLabelTextBoxPair(HTMLPanel panel, String labelText, 
+			String labelStyle, String textBoxStyle, final String id, String value) {
+		addLabelTextBoxPair(panel, labelText, 
+				labelStyle, textBoxStyle, id, value, true);
 	}
 
+
+	protected void addLabelTextBoxPair(HTMLPanel panel, String labelText, 
+			String labelStyle, String textBoxStyle, final String id) {
+		addLabelTextBoxPair(panel, labelText, 
+				labelStyle, textBoxStyle, id, "", true);
+//		//Create the widgets with parameters.
+//		Label label = new Label();
+//		label.setText(labelText);
+//		label.setStyleName(labelStyle);
+//		final TextBox textBox = new TextBox();
+//		textBox.setStyleName(textBoxStyle);
+//		
+//		//Add widget to the panel.
+//		panel.add(label);
+//		panel.add(textBox);
+		
+
+	}
 	
 	protected void addLabelButtonPair(HTMLPanel panel, String labelText, 
 			String labelStyle, String listButtonStyle, final String id, String buttonText) {
@@ -92,29 +124,6 @@ public abstract class AbstractController {
 		});
 	}
 
-	protected void addLabelTextBoxPair(HTMLPanel panel, String labelText, 
-			String labelStyle, String textBoxStyle, final String id) {
-		//Create the widgets with parameters.
-		Label label = new Label();
-		label.setText(labelText);
-		label.setStyleName(labelStyle);
-		final TextBox textBox = new TextBox();
-		textBox.setStyleName(textBoxStyle);
-		
-		
-		//Add widget to the panel.
-		panel.add(label);
-		panel.add(textBox);
-		
-		//Add handler
-		map.put(id, "");
-		textBox.addChangeHandler(new ChangeHandler() {
-			@Override
-			public void onChange(ChangeEvent event) {
-				map.put(id, textBox.getValue());
-			}
-		});
-	}
 	
 	protected void addButtonTextBoxPair(HTMLPanel panel, String buttonText, 
 			String buttonStyle, String textBoxStyle, final String id, EventHandler buttonHandler) {
@@ -144,18 +153,17 @@ public abstract class AbstractController {
 		}
 		
 		//Add handler
-		map.put(id, "");
-		textBox.addChangeHandler(new ChangeHandler() {
-			@Override
-			public void onChange(ChangeEvent event) {
-				map.put(id, textBox.getValue());
-			}
-		});
+		context.put(id, textBox);
+//		textBox.addChangeHandler(new ChangeHandler() {
+//			@Override
+//			public void onChange(ChangeEvent event) {
+//				map.put(id, textBox.getValue());
+//			}
+//		});
 	}
 
-	
 	protected void addLabelListBoxPair(HTMLPanel panel, String labelText, List<String> listItems,
-			String labelStyle, String listBoxStyle, final String id) {
+			String labelStyle, String listBoxStyle, final String id, ChangeHandler handler) {
 		//Create the widgets with parameters.
 		Label label = new Label();
 		label.setText(labelText);
@@ -171,13 +179,35 @@ public abstract class AbstractController {
 		panel.add(listBox);
 		
 		//Add handler
-		map.put(id, listBox.getItemText(0));
-		listBox.addChangeHandler(new ChangeHandler() {
-			@Override
-			public void onChange(ChangeEvent event) {
-				map.put(id, listBox.getItemText(listBox.getSelectedIndex()));
-			}
-		});
+		context.put(id, listBox);
+		if(handler!=null) {
+			listBox.addChangeHandler(handler);	
+		}
+		
+	}
+	
+	protected void addLabelListBoxPair(HTMLPanel panel, String labelText, List<String> listItems,
+			String labelStyle, String listBoxStyle, final String id) {
+		
+		addLabelListBoxPair(panel, labelText, listItems,
+				labelStyle, listBoxStyle, id, null);
+//		
+//		//Create the widgets with parameters.
+//		Label label = new Label();
+//		label.setText(labelText);
+//		label.setStyleName(labelStyle);
+//		final ListBox listBox = new ListBox();
+//		listBox.setStyleName(listBoxStyle);
+//		for(String item : listItems){
+//			listBox.addItem(item);
+//		}
+//		
+//		//Add widget to the panel.
+//		panel.add(label);
+//		panel.add(listBox);
+//		
+//		//Add handler
+
 	}
 
 	protected void setScreenHeader(HTMLPanel panel, String title) {

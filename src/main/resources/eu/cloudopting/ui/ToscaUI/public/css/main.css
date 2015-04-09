@@ -265,7 +265,7 @@
 }
 
 .publishService-Form {
-	display:block; 
+	display: block;
 	margin: 50px;
 }
 
@@ -278,4 +278,69 @@
 .panelScreen {
 	margin-top: 20px;
 	border: 1px solid #E0E0E0;
+}
+
+.panelVerticalButton{
+	display: inline;
+}
+
+.publish-Library {
+  margin-left: 20px;
+  width: 30%;
+}
+/*
+Syling for the Uplading button.
+*/
+
+
+.publish-upload::-webkit-file-upload-button {
+	visibility: hidden;
+	display: none;
+}
+
+.publish-upload::before {
+	content: 'Select TOSCA file';
+	display: inline-block;
+	background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1))
+		#4496c6;
+	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1) inset;
+	border: 1px solid #1a6299;
+	margin: 0 2px;
+	border-radius: 1px;
+	padding: 8px 14px;
+	outline: none;
+	white-space: nowrap;
+	-webkit-user-select: none;
+	cursor: pointer;
+	font-size: 100%;
+	color: white;
+}
+
+.publish-upload::before {
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.publish-upload:focus::before {
+	box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.22);
+}
+
+.publish-upload:hover::before {
+	border-color: #084471;
+}
+
+.publish-upload:focus:active::before {
+	box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2) inset, 0 0 0 3px
+		rgba(0, 0, 0, 0.12);
+}
+
+.topMenuEntry-Button {
+	width: auto;
+	padding: 10px;
+	color: #fff;
+	text-align: center !important;
+	border-right: 1px solid #1a6299;
+	box-shadow: none !important;
+	background: #4496c6;
 }

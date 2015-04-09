@@ -96,10 +96,10 @@ public class ServiceSubscriberOperateController extends AbstractController
 		HTMLPanel followKPIs = new HTMLPanel("<span class=\"mo_text\">Follow "+name+" KPI's</span>");
 		followKPIs.setStyleName("followKPIs");
 
-		addLabelTextBoxPair(followKPIs, "CPU Usage:", "taylor-Label", "taylor-TextBox", "numberCPUs", "2");
-		addLabelTextBoxPair(followKPIs, "Bandwith Usage:", "taylor-Label", "taylor-TextBox", "bandwith", "200Gb/month");
-		addLabelTextBoxPair(followKPIs, "Disk Space Usage:", "taylor-Label", "taylor-TextBox", "diskSpace", "256GB");
-		addLabelTextBoxPair(followKPIs, "RAM Memory Usage:", "taylor-Label", "taylor-TextBox", "memoryRAM", "2048");
+		addLabelTextBoxPair(followKPIs, "CPU Usage:", "taylor-Label", "taylor-TextBox", "numberCPUs", "2", false);
+		addLabelTextBoxPair(followKPIs, "Bandwith Usage:", "taylor-Label", "taylor-TextBox", "bandwith", "200Gb/month", false);
+		addLabelTextBoxPair(followKPIs, "Disk Space Usage:", "taylor-Label", "taylor-TextBox", "diskSpace", "256GB", false);
+		addLabelTextBoxPair(followKPIs, "RAM Memory Usage:", "taylor-Label", "taylor-TextBox", "memoryRAM", "2048", false);
 		
 		return followKPIs;
 	}

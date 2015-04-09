@@ -41,11 +41,11 @@ import eu.cloudopting.ui.ToscaUI.server.model.RowDTO;
  *
  */
 @SuppressWarnings("all")
-@Controller("instancesServiceCatalogController")
-public class InstancesServiceCatalogController extends AbstractController
+@Controller("servicesCatalogController")
+public class ServicesCatalogController extends AbstractController
 {
 	@Inject
-	public InstancesServiceCatalogView view;
+	public ServicesCatalogView view;
 	
 	@Inject
 	public IProxyAPIService api;
@@ -125,7 +125,7 @@ public class InstancesServiceCatalogController extends AbstractController
 			@Override
 			public void onOk(OkEvent event) 
 			{			
-				//FIXME: The status of instances are Requested, Running, Stopped, Deleted, To delete.
+				
 				if (dto.getStatus().equals("Uploaded")) {
 					((SimpleViewContainer) Screen.get("views")).showView("serviceAddDeployForm");	
 				} else if (dto.getStatus().equals("For Testing")) {
@@ -139,15 +139,15 @@ public class InstancesServiceCatalogController extends AbstractController
 		}, null);
 	}
 
-	@BindView("instancesServiceCatalog")
-	public static interface InstancesServiceCatalogView extends WidgetAccessor
+	@BindView("servicesCatalog")
+	public static interface ServicesCatalogView extends WidgetAccessor
 	{
 		HTMLPanel panelScreen();
 		DeviceAdaptiveGrid grid();
 	}
 	
 	private void buildView(ApplicationList result) {
-		setScreenHeader(view.panelScreen(), "Instances Service Catalog");
+		setScreenHeader(view.panelScreen(), "Services Catalog");
 		buildButtons();
 		buildGrid(result);
 	}
@@ -183,16 +183,10 @@ public class InstancesServiceCatalogController extends AbstractController
 		//Populate data to the grid.
 		List<RowDTO> rowsList = new ArrayList<RowDTO>();
 		for (Application app : list.getContent()) {
-			//Instances of services
-			List<Customizations> custList = app.getCustomizationss();
-			for (Customizations customizations : custList) {
-				//Add the customization to the list.
-				String username = customizations.getUsername();
-				username = "Admin";
-				rowsList.add(new RowDTO(app.getId().toString(), 
-						"Instance of: " + app.getApplicationName() + ", created by -" + username + "- (" + customizations.getCustomizationActivation() + ")", 
-						customizations.getStatusId().getStatus()));
-			}
+			//Add main instances
+			rowsList.add(new RowDTO(app.getId().toString(), 
+					"Main Service: " + app.getApplicationName(), 
+					app.getStatusId().getStatus()));			
 		}
 		
 		//Load data to the grid.
