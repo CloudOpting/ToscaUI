@@ -16,7 +16,6 @@ import org.cruxframework.crux.smartfaces.client.dialog.Confirm;
 import org.cruxframework.crux.widgets.client.deviceadaptivegrid.DeviceAdaptiveGrid;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox.MessageType;
-import org.cruxframework.crux.widgets.client.dialog.ProgressBox;
 import org.cruxframework.crux.widgets.client.grid.DataRow;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -48,7 +47,6 @@ public class ServicesCatalogController extends AbstractController
 	
 	private final static Integer RETRY_MAX = 3;
 	private Integer RETRY_COUNT = 0;
-	private ProgressBox progress;
 	
 	/*
 	 * CALLBACKS
@@ -58,7 +56,7 @@ public class ServicesCatalogController extends AbstractController
 		public void onSuccess(ApplicationList result) {
 			buildView(result);
 			RETRY_COUNT = 0;
-			progress.hide();
+			hideProgress();
 		}
 		@Override
 		public void onError(Exception e) {
@@ -67,7 +65,7 @@ public class ServicesCatalogController extends AbstractController
 				api.applicationListUnpaginated(callbackView);
 			} else {
 				RETRY_COUNT = 0;
-				progress.hide();
+				hideProgress();
 				FlatMessageBox.show("A problem occurred with the network, please try in a few minutes.", MessageType.WARN);
 			}
 		}
@@ -78,7 +76,7 @@ public class ServicesCatalogController extends AbstractController
 		public void onSuccess(ApplicationList result) {
 			buildGrid(result);
 			RETRY_COUNT = 0;
-			progress.hide();
+			hideProgress();
 		}
 		@Override
 		public void onError(Exception e) {
@@ -87,7 +85,7 @@ public class ServicesCatalogController extends AbstractController
 				api.applicationListUnpaginated(callbackGrid);
 			} else {
 				RETRY_COUNT = 0;
-				progress.hide();
+				hideProgress();
 				FlatMessageBox.show("A problem occurred with the network, please try in a few minutes.", MessageType.WARN);
 			}
 		}
@@ -104,7 +102,7 @@ public class ServicesCatalogController extends AbstractController
 
 	@Expose
 	public void onLoad() {
-		progress = ProgressBox.show("Retriving data...");
+		showProgress("Retriving data...");
 		//get the applications from the database
 		//connectApi.applicationList(DEFAULT_PAGE, DEFAULT_SIZE, DEFAULT_SORT_BY, DEFAULT_SORT_ORDER, DEFAULT_FILTER, callbackView);
 		//FIXME: FOR THE DEMO WE ARE GOING TO USE AN UNPAGINATED LIST OF APPLICATIONS

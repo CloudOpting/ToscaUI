@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox;
+import org.cruxframework.crux.widgets.client.dialog.ProgressBox;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox.MessageType;
 
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -23,8 +24,18 @@ public abstract class AbstractController {
 
 	private static final Map<String, Object> context = new HashMap<String, Object>();
 	
+	private ProgressBox progress;
+	
 	public Map<String, Object> getContext() {
 		return context;
+	}
+	
+	protected void showProgress(String message) {
+		progress = ProgressBox.show(message);
+	}
+	
+	protected void hideProgress() {
+		progress.hide();
 	}
 	
 	protected void addLabelTextBoxPair(HTMLPanel panel, String labelText, 

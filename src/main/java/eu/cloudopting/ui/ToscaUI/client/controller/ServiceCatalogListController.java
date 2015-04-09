@@ -10,7 +10,6 @@ import org.cruxframework.crux.core.client.rest.Callback;
 import org.cruxframework.crux.core.client.screen.views.BindView;
 import org.cruxframework.crux.core.client.screen.views.WidgetAccessor;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox;
-import org.cruxframework.crux.widgets.client.dialog.ProgressBox;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox.MessageType;
 import org.cruxframework.crux.widgets.client.dialogcontainer.DialogViewContainer;
 import org.cruxframework.crux.widgets.client.storyboard.Storyboard;
@@ -41,14 +40,13 @@ public class ServiceCatalogListController extends AbstractController
 	
 	private final static Integer RETRY_MAX = 3;
 	private Integer RETRY_COUNT = 0;
-	private ProgressBox progress;
 
 	private Callback<ApplicationList> callbackView = new Callback<ApplicationList>() {
 		@Override
 		public void onSuccess(ApplicationList result) {
 			buildView(result);
 			RETRY_COUNT = 0;
-			progress.hide();
+			hideProgress();
 		}
 		@Override
 		public void onError(Exception e) {
@@ -57,7 +55,7 @@ public class ServiceCatalogListController extends AbstractController
 				api.applicationListUnpaginated(callbackView);
 			} else {
 				RETRY_COUNT = 0;
-				progress.hide();
+				hideProgress();
 				FlatMessageBox.show("A problem occurred with the network, please try in a few minutes.", MessageType.WARN);
 			}
 		}
@@ -65,7 +63,7 @@ public class ServiceCatalogListController extends AbstractController
 
 	@Expose
 	public void onLoad() {
-		progress = ProgressBox.show("Retriving data...");
+		showProgress("Retriving data...");
 		api.applicationListUnpaginated(callbackView);
 	}
 
