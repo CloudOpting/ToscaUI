@@ -6,7 +6,6 @@ import org.cruxframework.crux.core.client.ioc.Inject;
 import org.cruxframework.crux.core.client.rest.Callback;
 import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.core.client.screen.views.BindView;
-import org.cruxframework.crux.core.client.screen.views.SingleViewContainer;
 import org.cruxframework.crux.core.client.screen.views.WidgetAccessor;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox.MessageType;
@@ -22,6 +21,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.TextBox;
 
 import eu.cloudopting.ui.ToscaUI.client.remote.IProxyAPIService;
+import eu.cloudopting.ui.ToscaUI.client.utils.Navigate;
 
 /**
  * 
@@ -46,7 +46,7 @@ public class LoginController  extends AbstractController implements KeyPressHand
 			if(result) {
 				((SimpleViewContainer) Screen.get("loginView")).setVisible(false);
 				((SimpleViewContainer) Screen.get("menu")).setVisible(true);
-				((SingleViewContainer) Screen.get("views")).showView("serviceCatalogList");
+				Navigate.to(Navigate.SERVICE_CATALOG_LIST);
 			} else {
 				FlatMessageBox.show("Try again!! Authentication ERROR: No SESSION ID recived.", MessageType.INFO);
 			}
@@ -63,7 +63,7 @@ public class LoginController  extends AbstractController implements KeyPressHand
 			if(result) {
 				((SimpleViewContainer) Screen.get("loginView")).setVisible(false);
 				((SimpleViewContainer) Screen.get("menu")).setVisible(true);
-				((SingleViewContainer) Screen.get("views")).showView("serviceCatalogList");
+				Navigate.to(Navigate.SERVICE_CATALOG_LIST);
 			} else {
 			}
 		}

@@ -3,15 +3,15 @@ package eu.cloudopting.ui.ToscaUI.client.controller;
 import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.ioc.Inject;
-import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.core.client.screen.views.BindView;
 import org.cruxframework.crux.core.client.screen.views.WidgetAccessor;
-import org.cruxframework.crux.widgets.client.simplecontainer.SimpleViewContainer;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
+
+import eu.cloudopting.ui.ToscaUI.client.utils.Navigate;
 
 @Controller("topMenuController")
 public class TopMenuController {
@@ -35,13 +35,13 @@ public class TopMenuController {
 	 */
 	private void buildView() {
 //		addButton("Main", "main");
-		addButton("Publish Service", "publishService");
-		addButton("Service Catalog List", "serviceCatalogList");
-		addButton("Subscribe Service - Taylor Form", "subscribeServiceTaylorForm");
-		addButton("Service Subscriber. Operate", "serviceSubscriberOperate");
-		addButton("Instances Service Catalog - Manager", "instancesServiceCatalog");
-		addButton("Services Catalog - Manager", "servicesCatalog");
-		addButton("Service Add Deploy Form", "serviceAddDeployForm");
+		addButton("Publish Service", Navigate.PUBLISH_SERVICE);
+		addButton("Service Catalog List", Navigate.SERVICE_CATALOG_LIST);
+		addButton("Subscribe Service - Taylor Form", Navigate.SUBSCIRBE_SERVICE_TAYLOR_FORM);
+		addButton("Service Subscriber. Operate", Navigate.SERVICE_SUBSCRIBER_OPERATE);
+		addButton("Instances Service Catalog - Manager", Navigate.INSTANCES_SERVICE_CATALOG);
+		addButton("Services Catalog - Manager", Navigate.SERVICES_CATALOG);
+		addButton("Service Add Deploy Form", Navigate.SERVICE_ADD_DEPLOY_FORM);
 	}
 
 	private void addButton(String name, final String viewStr) {
@@ -52,7 +52,7 @@ public class TopMenuController {
 		b.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				((SimpleViewContainer) Screen.get("views")).showView(viewStr);				
+				Navigate.to(viewStr);
 			}
 		});
 		view.panelScreen().add(b);

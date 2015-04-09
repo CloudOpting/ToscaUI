@@ -7,13 +7,11 @@ import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.ioc.Inject;
 import org.cruxframework.crux.core.client.rest.Callback;
-import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.core.client.screen.views.BindView;
 import org.cruxframework.crux.core.client.screen.views.WidgetAccessor;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox.MessageType;
 import org.cruxframework.crux.widgets.client.formdisplay.FormDisplay;
-import org.cruxframework.crux.widgets.client.simplecontainer.SimpleViewContainer;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -24,6 +22,7 @@ import com.google.gwt.user.client.ui.TextBox;
 
 import eu.cloudopting.ui.ToscaUI.client.remote.IProxyAPIService;
 import eu.cloudopting.ui.ToscaUI.client.remote.IUserInfo;
+import eu.cloudopting.ui.ToscaUI.client.utils.Navigate;
 
 @Controller("mainController")
 public class MainController extends AbstractController
@@ -115,7 +114,7 @@ public class MainController extends AbstractController
 	@Expose   
 	public void startReview()
 	{
-		((SimpleViewContainer) Screen.get("views")).showView("publishService");
+		Navigate.to(Navigate.PUBLISH_SERVICE);
 	}  
 
 	@BindView("main")

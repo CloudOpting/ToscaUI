@@ -10,18 +10,14 @@ import org.cruxframework.crux.core.client.event.OkHandler;
 import org.cruxframework.crux.core.client.event.SelectEvent;
 import org.cruxframework.crux.core.client.ioc.Inject;
 import org.cruxframework.crux.core.client.rest.Callback;
-import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.core.client.screen.views.BindView;
 import org.cruxframework.crux.core.client.screen.views.WidgetAccessor;
 import org.cruxframework.crux.smartfaces.client.dialog.Confirm;
-import org.cruxframework.crux.smartfaces.client.dialog.WaitBox;
-import org.cruxframework.crux.smartfaces.client.dialog.animation.DialogAnimation;
 import org.cruxframework.crux.widgets.client.deviceadaptivegrid.DeviceAdaptiveGrid;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox.MessageType;
 import org.cruxframework.crux.widgets.client.dialog.ProgressBox;
 import org.cruxframework.crux.widgets.client.grid.DataRow;
-import org.cruxframework.crux.widgets.client.simplecontainer.SimpleViewContainer;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -30,6 +26,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import eu.cloudopting.ui.ToscaUI.client.controller.datasource.RowDataSource;
 import eu.cloudopting.ui.ToscaUI.client.remote.IProxyAPIService;
+import eu.cloudopting.ui.ToscaUI.client.utils.Navigate;
 import eu.cloudopting.ui.ToscaUI.server.model.Application;
 import eu.cloudopting.ui.ToscaUI.server.model.ApplicationList;
 import eu.cloudopting.ui.ToscaUI.server.model.Customizations;
@@ -127,11 +124,11 @@ public class InstancesServiceCatalogController extends AbstractController
 			{			
 				//FIXME: The status of instances are Requested, Running, Stopped, Deleted, To delete.
 				if (dto.getStatus().equals("Uploaded")) {
-					((SimpleViewContainer) Screen.get("views")).showView("serviceAddDeployForm");	
+					Navigate.to(Navigate.SERVICE_ADD_DEPLOY_FORM);
 				} else if (dto.getStatus().equals("For Testing")) {
-					((SimpleViewContainer) Screen.get("views")).showView("serviceSubscriberOperate");	
+					Navigate.to(Navigate.SERVICE_SUBSCRIBER_OPERATE);
 				} else if (dto.getStatus().equals("Published")) {
-					((SimpleViewContainer) Screen.get("views")).showView("serviceSubscriberOperate");	
+					Navigate.to(Navigate.SERVICE_SUBSCRIBER_OPERATE);
 				} else {
 					//Do not move!! Show a message?
 				}

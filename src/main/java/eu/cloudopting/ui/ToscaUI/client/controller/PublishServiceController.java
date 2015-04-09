@@ -5,12 +5,10 @@ import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.ioc.Inject;
 import org.cruxframework.crux.core.client.rest.Callback;
-import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.core.client.screen.views.BindView;
 import org.cruxframework.crux.core.client.screen.views.WidgetAccessor;
 import org.cruxframework.crux.widgets.client.formdisplay.FormDisplay;
 import org.cruxframework.crux.widgets.client.select.SingleSelect;
-import org.cruxframework.crux.widgets.client.simplecontainer.SimpleViewContainer;
 import org.cruxframework.crux.widgets.client.textarea.TextArea;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -25,6 +23,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 
 import eu.cloudopting.ui.ToscaUI.client.remote.IProxyAPIService;
+import eu.cloudopting.ui.ToscaUI.client.utils.Navigate;
 
 /**
  * 
@@ -206,7 +205,7 @@ public class PublishServiceController extends AbstractController
 		api.applicationCreate(serviceName.getValue(), serviceDescription.getValue(), upload.getFilename(), new Callback<String>(){
 			@Override
 			public void onSuccess(String result) {
-				((SimpleViewContainer) Screen.get("views")).showView("serviceCatalogList");				
+				Navigate.to(Navigate.SERVICE_CATALOG_LIST);
 			}
 			@Override
 			public void onError(Exception e) {

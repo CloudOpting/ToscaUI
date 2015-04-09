@@ -7,12 +7,10 @@ import org.cruxframework.crux.core.client.controller.Controller;
 import org.cruxframework.crux.core.client.controller.Expose;
 import org.cruxframework.crux.core.client.ioc.Inject;
 import org.cruxframework.crux.core.client.rest.Callback;
-import org.cruxframework.crux.core.client.screen.Screen;
 import org.cruxframework.crux.core.client.screen.views.BindView;
 import org.cruxframework.crux.core.client.screen.views.WidgetAccessor;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox;
 import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox.MessageType;
-import org.cruxframework.crux.widgets.client.simplecontainer.SimpleViewContainer;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -220,7 +218,7 @@ public class SubscribeServiceTaylorFormController extends AbstractController
 			@Override
 			public void onSuccess(String result) {
 				FlatMessageBox.show("Subscription Requested", MessageType.SUCCESS);
-//				((SimpleViewContainer) Screen.get("views")).showView("serviceSubscriberOperate");
+//				Navigate.to(Navigate.SERVICE_SUBSCRIBER_OPERATE);
 			}
 			@Override
 			public void onError(Exception e) {
