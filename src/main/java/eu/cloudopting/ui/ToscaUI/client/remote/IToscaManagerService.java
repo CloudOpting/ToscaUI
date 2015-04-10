@@ -3,8 +3,8 @@ package eu.cloudopting.ui.ToscaUI.client.remote;
 import org.cruxframework.crux.core.client.rest.Callback;
 import org.cruxframework.crux.core.client.rest.RestProxy;
 import org.cruxframework.crux.core.client.rest.RestProxy.TargetRestService;
-import org.cruxframework.crux.core.shared.rest.annotation.QueryParam;
 
+import eu.cloudopting.ui.ToscaUI.client.remote.impl.ToscaManagerService.NodeTypeName;
 import eu.cloudopting.ui.ToscaUI.server.model.SLA;
 import eu.cloudopting.ui.ToscaUI.server.model.SubscribeServicesView;
 
@@ -37,6 +37,10 @@ public interface IToscaManagerService extends RestProxy {
 //	void listSlaAvaliable(String definitionId, String serviceTemplate,
 //			NodeTemplateType nodeTemplateType, 
 //			Callback<List<String>> callback);
+	
+	
+	void getChosenSLA(String definitionId, String serviceTemplate, String nodeTypeName,  
+			Callback<SLA> callback); 
 	
 	void setSLA(String nameId, String nodeTypeName, SLA sla, Callback<String> callback);
 	

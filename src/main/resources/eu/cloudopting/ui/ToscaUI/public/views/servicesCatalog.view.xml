@@ -16,7 +16,8 @@
 						</crux:widgetColumn>
 					</crux:largeColumns>
 					<crux:smallColumns>
-						<crux:dataColumn key="id" label="ID" width="100px" />
+						<crux:dataColumn key="idApplication" label="ID" width="100px" />
+						<crux:dataColumn key="idCustomization" label="ID CUSTOM" width="100px" />
 					</crux:smallColumns>
 				</crux:adaptiveGrid>
 			</gwt:HTMLPanel>

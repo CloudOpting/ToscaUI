@@ -26,6 +26,7 @@ import com.google.gwt.user.client.ui.Widget;
 import eu.cloudopting.ui.ToscaUI.client.controller.datasource.RowDataSource;
 import eu.cloudopting.ui.ToscaUI.client.remote.IProxyAPIService;
 import eu.cloudopting.ui.ToscaUI.client.utils.Navigate;
+import eu.cloudopting.ui.ToscaUI.client.utils.ViewConstants;
 import eu.cloudopting.ui.ToscaUI.server.model.Application;
 import eu.cloudopting.ui.ToscaUI.server.model.ApplicationList;
 import eu.cloudopting.ui.ToscaUI.server.model.Customizations;
@@ -120,18 +121,25 @@ public class InstancesServiceCatalogController extends AbstractController
 	public void go(SelectEvent event){
 		DataRow row = view.grid().getRow((Widget) event.getSource());
 		final RowDTO dto = (RowDTO) row.getBoundObject();
-		Confirm.show("Question", "Do you want to edit the instance of " + dto.getInstance() +" with ID \"" + dto.getId() + "\"?", new OkHandler() 
+		Confirm.show("Question", "Do you want to edit the instance of " + dto.getInstance() +" with ID \"" + dto.getIdCustomization() + "\"?", new OkHandler() 
 		{
 			@Override
 			public void onOk(OkEvent event) 
 			{			
-				//FIXME: The status of instances are Requested, Running, Stopped, Deleted, To delete.
-				if (dto.getStatus().equals("Uploaded")) {
+				//Update the current Application ID.
+				getContext().put(ViewConstants.INT_COSTUMIZATION_ID_CURRENT_INSTANCE, Integer.valueOf(dto.getIdCustomization()));
+				
+				//Navigate
+				if (dto.getStatus().equals("Requested")) {
 					Navigate.to(Navigate.SERVICE_ADD_DEPLOY_FORM);
-				} else if (dto.getStatus().equals("For Testing")) {
-					Navigate.to(Navigate.SERVICE_SUBSCRIBER_OPERATE);
-				} else if (dto.getStatus().equals("Published")) {
-					Navigate.to(Navigate.SERVICE_SUBSCRIBER_OPERATE);
+				} else if (dto.getStatus().equals("Running")) {
+					Navigate.to(Navigate.SERVICE_ADD_DEPLOY_FORM);
+				} else if (dto.getStatus().equals("Stopped")) {
+					Navigate.to(Navigate.SERVICE_ADD_DEPLOY_FORM);
+				} else if (dto.getStatus().equals("Deleted")) {
+					Navigate.to(Navigate.SERVICE_ADD_DEPLOY_FORM);
+				} else if (dto.getStatus().equals("To delete")) {
+					Navigate.to(Navigate.SERVICE_ADD_DEPLOY_FORM);
 				} else {
 					//Do not move!! Show a message?
 				}
@@ -189,7 +197,7 @@ public class InstancesServiceCatalogController extends AbstractController
 				//Add the customization to the list.
 				String username = customizations.getUsername();
 				username = "Admin";
-				rowsList.add(new RowDTO(app.getId().toString(), 
+				rowsList.add(new RowDTO(app.getId().toString(), customizations.getId().toString(),
 						"Instance of: " + app.getApplicationName() + ", created by -" + username + "- (" + customizations.getCustomizationActivation() + ")", 
 						customizations.getStatusId().getStatus()));
 			}

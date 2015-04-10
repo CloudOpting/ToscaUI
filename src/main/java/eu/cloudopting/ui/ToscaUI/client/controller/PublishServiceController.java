@@ -7,6 +7,8 @@ import org.cruxframework.crux.core.client.ioc.Inject;
 import org.cruxframework.crux.core.client.rest.Callback;
 import org.cruxframework.crux.core.client.screen.views.BindView;
 import org.cruxframework.crux.core.client.screen.views.WidgetAccessor;
+import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox;
+import org.cruxframework.crux.widgets.client.dialog.FlatMessageBox.MessageType;
 import org.cruxframework.crux.widgets.client.formdisplay.FormDisplay;
 import org.cruxframework.crux.widgets.client.select.SingleSelect;
 import org.cruxframework.crux.widgets.client.textarea.TextArea;
@@ -17,13 +19,13 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FileUpload;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 
 import eu.cloudopting.ui.ToscaUI.client.remote.IProxyAPIService;
-import eu.cloudopting.ui.ToscaUI.client.utils.Navigate;
 
 /**
  * 
@@ -39,6 +41,9 @@ public class PublishServiceController extends AbstractController
 	@Inject
 	public IProxyAPIService api;
 	
+	/*
+	 * CONSTANTS
+	 */
 	private final static String PAGE_NAME = "Publish Service";
 	
 	@Expose
@@ -69,14 +74,19 @@ public class PublishServiceController extends AbstractController
 	private void buildView() {
 		setScreenHeader(view.panelScreen(), PAGE_NAME);
 		
+		FormPanel fp = new FormPanel();
+		//rest/proxyAPIService/applcation/listunpaginated
+		fp.setAction("/rest/proxyAPIService/uploadFile");
+		fp.setMethod("POST");
+		view.panelScreen().add(fp);
+		
+		//FlatMessageBox.show(GWT.getHostPageBaseURL(), MessageType.INFO);
+		
 		FormDisplay formDisplay = new FormDisplay();
 		formDisplay.setStyleName("publishService-Form");
-		view.panelScreen().add(formDisplay);
-		
-		
+		fp.add(formDisplay);
 		serviceName.setWidth("630px");
 		formDisplay.addEntry("Service Name", serviceName, HasHorizontalAlignment.ALIGN_DEFAULT);
-		
 		
 		serviceDescription.setHeight("243px");
 		serviceDescription.setWidth("630px");
@@ -95,18 +105,20 @@ public class PublishServiceController extends AbstractController
 	}
 
 	private void buildFileUpload(FormDisplay formDisplay) {
-		HTMLPanel aux2 = new HTMLPanel("");
+		HTMLPanel fileUploadPanel = new HTMLPanel("");
 		
 		textUpload.setName("textUpload");
 		textUpload.setWidth("51%");
 		
-		aux2.add(textUpload);
+		fileUploadPanel.add(textUpload);
 		
-		upload.setName("Choose Tosca Template Upload");
+		upload.setName("fileUpload");
 		upload.setStyleName("publish-upload");
 		upload.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent event) {
+				//FileUpload fu = (FileUpload) event.getSource();
+				//FlatMessageBox.show(fu.getLayoutData().toString(), MessageType.INFO);
 				textUpload.setText(upload.getFilename().replace("C:\\fakepath\\", ""));
 				
 //				File f = new File(upload.getFilename());
@@ -115,9 +127,9 @@ public class PublishServiceController extends AbstractController
 			}
 		});
 		
-		aux2.add(upload);
+		fileUploadPanel.add(upload);
 		
-		formDisplay.addEntry("", aux2, HasHorizontalAlignment.ALIGN_DEFAULT);
+		formDisplay.addEntry("", fileUploadPanel, HasHorizontalAlignment.ALIGN_DEFAULT);
 	}
 
 	private void buildContentLibrary(FormDisplay formDisplay) {
@@ -172,6 +184,8 @@ public class PublishServiceController extends AbstractController
 	}
 	
 	private void buildBottomButtons(FormDisplay formDisplay) {
+		HTMLPanel otherPanel = new HTMLPanel("");
+		
 		Button buttonSave = new Button();
 		buttonSave.setText("Save Configuration");
 		buttonSave.setStyleName("crux-Button");
@@ -182,7 +196,7 @@ public class PublishServiceController extends AbstractController
 				saveConfiguration();				
 			}
 		});
-		formDisplay.addEntry("", buttonSave, HasHorizontalAlignment.ALIGN_DEFAULT);
+		otherPanel.add(buttonSave);
 		
 		Button buttonPublish = new Button();
 		buttonPublish.setText("Publish Service");
@@ -194,24 +208,47 @@ public class PublishServiceController extends AbstractController
 				publishService();				
 			}
 		});
-		formDisplay.addEntry("", buttonPublish, HasHorizontalAlignment.ALIGN_DEFAULT);
+		otherPanel.add(buttonPublish);
+		formDisplay.addEntry("", otherPanel, HasHorizontalAlignment.ALIGN_DEFAULT);
 	}
 	
-	private void addItem() {}
+	private void addItem() {
+		FlatMessageBox.show("Add item into the list", MessageType.INFO);
+	}
 	
-	private void deleteItem() {}
+	private void deleteItem() {
+		FlatMessageBox.show("Delete item from the list", MessageType.INFO);
+	}
 	
 	private void saveConfiguration() {
-		api.applicationCreate(serviceName.getValue(), serviceDescription.getValue(), upload.getFilename(), new Callback<String>(){
-			@Override
-			public void onSuccess(String result) {
-				Navigate.to(Navigate.SERVICE_CATALOG_LIST);
-			}
-			@Override
-			public void onError(Exception e) {
-			}
-		});
+		FlatMessageBox.show("Configuration Saved Successfully!!", MessageType.INFO);
 	}
 	
-	private void publishService() {}
+	private void publishService() {
+		String message = "";
+		if(serviceName.getValue().isEmpty()){
+			message += "Service Name,"; 
+		}
+		if(serviceDescription.getValue().isEmpty()) {
+			message += "Service Description,";
+		}
+		if(upload.getFilename().isEmpty()) {
+			message += "Tosca File,";
+		} 
+		
+		if(!message.equals("")){
+			FlatMessageBox.show(message + " are mandatory!", MessageType.WARN);
+		} else {
+			api.applicationCreate(serviceName.getValue(), serviceDescription.getValue(), upload.getFilename(), new Callback<String>(){
+				@Override
+				public void onSuccess(String result) {
+					FlatMessageBox.show("Service Created Successfully!!", MessageType.SUCCESS);
+					//Navigate.to(Navigate.SERVICE_CATALOG_LIST);
+				}
+				@Override
+				public void onError(Exception e) {
+				}
+			});
+		}
+	}
 }

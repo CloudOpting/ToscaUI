@@ -8,7 +8,8 @@ public class RowDTO implements Serializable {
 	 */
 	private static final long serialVersionUID = -6369298529119791729L;
 	
-	private String id;
+	private String idApplication;
+	private String idCustomization;
 	private String instance;
 	private String status;
 	
@@ -19,18 +20,30 @@ public class RowDTO implements Serializable {
 		this.status = status;
 	}
 	
-	public RowDTO(String id, String instance, String status){
-		this.id = id;
+	public RowDTO(String idApplication, String idCustomization, String instance, String status){
+		this.idApplication = idApplication;
+		this.idCustomization = idCustomization;
 		this.instance = instance;
 		this.status = status;
 	}
 	
-	public String getId() {
-		return id;
+
+	public String getIdApplication() {
+		return idApplication;
 	}
-	public void setId(String id) {
-		this.id = id;
+
+	public void setIdApplication(String idApplication) {
+		this.idApplication = idApplication;
 	}
+
+	public String getIdCustomization() {
+		return idCustomization;
+	}
+
+	public void setIdCustomization(String idCustomization) {
+		this.idCustomization = idCustomization;
+	}
+
 	public String getInstance() {
 		return instance;
 	}

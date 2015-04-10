@@ -22,7 +22,6 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.xml.dtm.ref.DTMNodeList;
 import org.cruxframework.crux.core.server.rest.annotation.RestService;
 import org.cruxframework.crux.core.shared.rest.annotation.DefaultValue;
 import org.cruxframework.crux.core.shared.rest.annotation.FormParam;
@@ -32,6 +31,7 @@ import org.cruxframework.crux.core.shared.rest.annotation.Path;
 import org.cruxframework.crux.core.shared.rest.annotation.QueryParam;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -65,9 +65,9 @@ public class ToscaManagerService {
 	/**
 	 * [VMhost, DockerContainer, Apache, ApacheVirtualHost, MySQL, MySQLDatabase]
 	 */
-	public enum NodeTemplateType {
-		VMhost, DockerContainer, Apache, ApacheVirtualHost, MySQL, MySQLDatabase
-	}
+//	public enum NodeTypeName {
+//		VMhost, DockerContainer, Apache, ApacheVirtualHost, MySQL, MySQLDatabase
+//	}
 	/**
 	 * [Install, Deploy]
 	 */
@@ -416,7 +416,7 @@ public class ToscaManagerService {
 	 * 
 	 * @param String definitionId 
 	 * @param String serviceTemplateId
-	 * @param {@link NodeTemplateType} nodeTemplateType 
+	 * @param {@link NodeTypeName} nodeTypeName 
 	 * @param String nodeTemplateId
 	 */
 	private static String GET_VHOSTNAME = "/Definitions[@id=\"%s\"]"
@@ -432,7 +432,7 @@ public class ToscaManagerService {
 	 * 
 	 * @param String definitionId 
 	 * @param String serviceTemplateId
-	 * @param {@link NodeTemplateType} nodeTemplateType
+	 * @param {@link NodeTypeName} nodeTypeName
 	 * @param String SLAid
 	 */
 	private static String GET_SLA = "/Definitions[@id=\"%s\"]"
@@ -449,7 +449,7 @@ public class ToscaManagerService {
 	 * 
 	 * @param String definitionId 
 	 * @param String serviceTemplate
-	 * @param {@link NodeTemplateType} nodeTemplateType
+	 * @param {@link NodeTypeName} nodeTypeName
 	 */
 	private static String LIST_SLA_AVALIABLE = "/Definitions[@id=\"%s\"]"
 			+ "/ServiceTemplate[@id=\"%s\"]"
@@ -526,11 +526,11 @@ public class ToscaManagerService {
 			//SAVE IT in pair <nodetype, paramNames> <String, List>
 			
 			//List SLA Avaliable
-			List<String> listSLA = listSlaAvaliable(nameId, nameId, NodeTemplateType.valueOf(type));
+			List<String> listSLA = listSlaAvaliable(nameId, nameId, NodeTypeName.valueOf(type));
 			
 			//Get each SLA and add it to the list
 			for (String sla : listSLA) {
-				ssl.getListSLAs().add(getSLA(nameId, nameId, NodeTemplateType.valueOf(type), sla));
+				ssl.getListSLAs().add(getSLA(nameId, nameId, NodeTypeName.valueOf(type), sla));
 			}
 		}
 		
@@ -651,11 +651,11 @@ public class ToscaManagerService {
 	public String getVHostName(
 			@QueryParam("definitionId") String definitionId, 
 			@QueryParam("serviceTemplate") String serviceTemplate, 
-			@QueryParam("nodeTemplateType") NodeTemplateType nodeTemplateType,
+			@QueryParam("nodeTypeName") NodeTypeName nodeTypeName,
 			@QueryParam("nodeTemplateId") String nodeTemplateId) 
 	throws XPathExpressionException 
 	{
-		String result = evaluateSingleValue(String.format(GET_VHOSTNAME, definitionId, serviceTemplate, nodeTemplateType, nodeTemplateId));
+		String result = evaluateSingleValue(String.format(GET_VHOSTNAME, definitionId, serviceTemplate, nodeTypeName, nodeTemplateId));
 		return result;
 	}
 	
@@ -665,11 +665,11 @@ public class ToscaManagerService {
 			@QueryParam("vHostName") String vHostName,
 			@QueryParam("definitionId") String definitionId, 
 			@QueryParam("serviceTemplate") String serviceTemplate, 
-			@QueryParam("nodeTemplateType") NodeTemplateType nodeTemplateType,
+			@QueryParam("nodeTypeName") NodeTypeName nodeTypeName,
 			@QueryParam("nodeTemplateId") String nodeTemplateId) 
 	throws XPathExpressionException, IOException 
 	{
-		insertSingleValue(String.format(GET_VHOSTNAME, definitionId, serviceTemplate, nodeTemplateType, nodeTemplateId), vHostName);
+		insertSingleValue(String.format(GET_VHOSTNAME, definitionId, serviceTemplate, nodeTypeName, nodeTemplateId), vHostName);
 		return "";//TODO: Check the result param
 	}
 
@@ -678,12 +678,37 @@ public class ToscaManagerService {
 	public SLA getSLA(
 			@QueryParam("definitionId") String definitionId, 
 			@QueryParam("serviceTemplate") String serviceTemplate, 
-			@QueryParam("nodeTemplateType") NodeTemplateType nodeTemplateType,
+			@QueryParam("nodeTypeName") NodeTypeName nodeTypeName,
 			@QueryParam("slaID") String slaID) 
 	throws XPathExpressionException 
 	{
 		SLA sla = new SLA();
-		String expression = String.format(GET_SLA, definitionId, serviceTemplate, nodeTemplateType, slaID);
+		String expression = String.format(GET_SLA, definitionId, serviceTemplate, nodeTypeName, slaID);
+
+		sla.setId(slaID);
+		sla.setNumCpus(evaluateSingleValue(expression + "/NumCpus"));
+		sla.setMemory(evaluateSingleValue(expression + "/Memory"));
+		sla.setPrice(evaluateSingleValue(expression + "/Price"));
+		sla.setDisk(evaluateSingleValue(expression + "/Disk"));
+		sla.setChosen(evaluateSingleValue(expression + "/Chosen"));
+
+		return sla;
+	}
+	
+	@GET
+	@Path("/getChosenSLA")
+	public SLA getChosenSLA(
+			@QueryParam("definitionId") String definitionId, 
+			@QueryParam("serviceTemplate") String serviceTemplate, 
+			@QueryParam("nodeTypeName") String nodeTypeName) 
+	throws XPathExpressionException 
+	{
+		// /Definitions[@id="Clearo"]/NodeType/Interfaces/Interface/Operation[@name="Install"]/InputParameters/InputParameter[@type="co:SLA"]
+		String inputParameterType = "co:SLA";
+		String slaID = getInputParametersType(definitionId, NodeTypeName.valueOf(nodeTypeName), serviceTemplate, OperationName.Install, inputParameterType);
+		
+		SLA sla = new SLA();
+		String expression = String.format(GET_SLA, definitionId, serviceTemplate, nodeTypeName, slaID);
 
 		sla.setId(slaID);
 		sla.setNumCpus(evaluateSingleValue(expression + "/NumCpus"));
@@ -700,10 +725,10 @@ public class ToscaManagerService {
 	public List<String> listSlaAvaliable(
 			@QueryParam("definitionId") String definitionId, 
 			@QueryParam("serviceTemplate") String serviceTemplate, 
-			@QueryParam("nodeTemplateType") NodeTemplateType nodeTemplateType) 
+			@QueryParam("nodeTypeName") NodeTypeName nodeTypeName) 
 	throws XPathExpressionException 
 	{
-		return evaluateMultipleValues(String.format(LIST_SLA_AVALIABLE, definitionId, serviceTemplate, nodeTemplateType));
+		return evaluateMultipleValues(String.format(LIST_SLA_AVALIABLE, definitionId, serviceTemplate, nodeTypeName));
 	}
 	
 //	@GET
@@ -781,7 +806,8 @@ public class ToscaManagerService {
 	 * @throws XPathExpressionException
 	 */
 	private List<String> evaluateMultipleValues(String expression) throws XPathExpressionException {
-		DTMNodeList nodeList = (DTMNodeList) xpath.evaluate(expression, document, XPathConstants.NODESET);
+//		DTMNodeList nodeList = (DTMNodeList) xpath.evaluate(expression, document, XPathConstants.NODESET);
+		NodeList nodeList = (NodeList) xpath.evaluate(expression, document, XPathConstants.NODESET);
 		List<String> result = new ArrayList<String>();
 		for(int i = 0; i < nodeList.getLength(); i++) {
 			result.add( nodeList.item(i).getNodeValue() );

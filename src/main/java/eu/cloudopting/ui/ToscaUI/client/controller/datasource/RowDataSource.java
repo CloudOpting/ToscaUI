@@ -9,7 +9,7 @@ import org.cruxframework.crux.core.client.datasource.annotation.DataSourceRecord
 import eu.cloudopting.ui.ToscaUI.server.model.RowDTO;
 
 @DataSource("rowDataSource")
-@DataSourceRecordIdentifier("id")
+@DataSourceRecordIdentifier("idCustomization")
 public class RowDataSource extends LocalPagedDataSource<RowDTO> {
 
 	private List<RowDTO> rows;

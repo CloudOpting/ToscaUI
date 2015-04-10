@@ -28,6 +28,7 @@ import org.apache.http.protocol.HTTP;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.cruxframework.crux.core.server.rest.annotation.RestService;
 import org.cruxframework.crux.core.server.rest.spi.InternalServerErrorException;
+import org.cruxframework.crux.core.server.rest.spi.NotFoundException;
 import org.cruxframework.crux.core.shared.rest.annotation.DefaultValue;
 import org.cruxframework.crux.core.shared.rest.annotation.FormParam;
 import org.cruxframework.crux.core.shared.rest.annotation.GET;
@@ -35,8 +36,6 @@ import org.cruxframework.crux.core.shared.rest.annotation.POST;
 import org.cruxframework.crux.core.shared.rest.annotation.Path;
 import org.cruxframework.crux.core.shared.rest.annotation.PathParam;
 import org.cruxframework.crux.core.shared.rest.annotation.QueryParam;
-
-import com.google.gwt.core.ext.typeinfo.NotFoundException;
 
 import eu.cloudopting.ui.ToscaUI.server.model.Application;
 import eu.cloudopting.ui.ToscaUI.server.model.ApplicationList;
@@ -53,12 +52,11 @@ import eu.cloudopting.ui.ToscaUI.server.utils.IOUtils;
 public class ProxyAPIService {
 	
 //	private static String baseURI = "http://localhost:8080";
+	
+//	private static String restBaseURI = "http://172.17.0.59:8080/cloudopting/api/";
 	private static String restBaseURI = "http://localhost:8080/api/";
-//	private static String authentication = ""; //For admin/admin is: Basic YWRtaW46YWRtaW4=
-//	private CredentialsProvider provider;
-//	private UsernamePasswordCredentials credentials; 
+	
 	private static CloseableHttpClient httpclient;
-//	private static String cookie = "";
 	
 	/**
 	 * USER_METHOD prepared method needs 1 parameters to work. 
@@ -123,55 +121,52 @@ public class ProxyAPIService {
 			Application a = null;
 			try {
 				a = application("1");
-			} catch (InternalServerErrorException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			} catch (Exception e) {}
 			
-			if(a!=null) return true;
+			if( a != null ) return true;
 			else return false;
 
-//			//create a httpget to test the credentials
-//	        HttpGet httpget = new HttpGet(baseURI);
-//	        httpget.setHeader("Content-type", "application/json");
-//	        //execute the url
-//	        CloseableHttpResponse response = httpclient.execute(httpget);
-//	        //Check if the response is OK, then proceed.
-//	        try {
-//	            System.out.println(response.getStatusLine());
-//	            HttpEntity entity = response.getEntity();
-//	            // do something useful with the response body
-//	            // and ensure it is fully consumed
-//	            EntityUtils.consume(entity);
-//	        } finally {
-//	        	response.close();
-//	        }
+			/*
+			//create a httpget to test the credentials
+	        HttpGet httpget = new HttpGet(baseURI);
+	        httpget.setHeader("Content-type", "application/json");
+	        //execute the url
+	        CloseableHttpResponse response = httpclient.execute(httpget);
+	        //Check if the response is OK, then proceed.
+	        try {
+	            System.out.println(response.getStatusLine());
+	            HttpEntity entity = response.getEntity();
+	            // do something useful with the response body
+	            // and ensure it is fully consumed
+	            EntityUtils.consume(entity);
+	        } finally {
+	        	response.close();
+	        }
 	        
-//			authentication = "Basic " + ConnectionUtils.getAuthString(user, pass);
-//			URL url = new URL(baseURI);
-//			URLConnection urlConnection = url.openConnection();
-//			urlConnection.setRequestProperty("Authorization", authentication);
-//
-//
-//			cookie = urlConnection.getHeaderField("Set-Cookie");
-//			
-//			if(LogsUtil.DEBUG_ENABLED){
-//				System.out.println("CONNECTION:: ");
-//				System.out.println("URL: " + baseURI);
-//				System.out.println("Authorization: " + authentication);
-//				System.out.println("Cookie: " + cookie);
-//			}
-//		
-//		return cookie;
-	}
+			authentication = "Basic " + ConnectionUtils.getAuthString(user, pass);
+			URL url = new URL(baseURI);
+			URLConnection urlConnection = url.openConnection();
+			urlConnection.setRequestProperty("Authorization", authentication);
 
+
+			cookie = urlConnection.getHeaderField("Set-Cookie");
+			
+			if(LogsUtil.DEBUG_ENABLED){
+				System.out.println("CONNECTION:: ");
+				System.out.println("URL: " + baseURI);
+				System.out.println("Authorization: " + authentication);
+				System.out.println("Cookie: " + cookie);
+			}
+		
+		return cookie;
+		*/
+	}
+	
 //	@POST
-//	@Path("application/create")
-//	public String applicationCreate(@QueryParam("json") String json) throws MalformedURLException, IOException {
-//		return doCallToStringAndPayload(APPLICATION_CREATE_METHOD, json);
+//	@Path("uploadFile")
+//	public Boolean uploadFile(@FormParam("textUpload") InputStream textUpload) {
+//		System.out.println("HOLA");
+//		return true;
 //	}
 	
 	@POST
@@ -203,10 +198,7 @@ public class ProxyAPIService {
 					"\t\"applicationToscaTemplate\": \"" + Base64.encodeBase64String(xmlFile.getBytes()) +  "\",\n" +
 					"\t\"applicationVersion\": \"1\"\n" +
 					"}";
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} catch (IOException e) {}
 		return createNewApplicationJson;
 	}
 
@@ -300,8 +292,6 @@ public class ProxyAPIService {
 	    } finally { 
 	        br.close();
 	    } 
-		//File f = new File(fileName);
-//	    System.out.println("everything: " + everything);
 		return everything;
 	}
 
@@ -339,8 +329,6 @@ public class ProxyAPIService {
         }
         return message;
         
-        
-		//return ConnectionUtils.getBodyContent(createRESTConnection(method));
 	}
 
 	/**
@@ -369,33 +357,5 @@ public class ProxyAPIService {
         	response.close();
         }
 		
-//		URLConnection urlConnection = createRESTConnection(method);
-//		ConnectionUtils.setPayload(urlConnection, payload);
-//		return ConnectionUtils.getBodyContent(urlConnection);
 	}
-	
-//	/**
-//	 * Method that creates a connection with the default authentication.
-//	 * @param method
-//	 * @return
-//	 * @throws MalformedURLException
-//	 * @throws IOException
-//	 */
-//	private URLConnection createRESTConnection(String method)
-//			throws MalformedURLException, IOException {
-//		//Build the URLConection
-//		URL url = new URL(restBaseURI + method);
-//		URLConnection urlConnection = url.openConnection();
-////		urlConnection.setRequestProperty("Authorization", authentication);
-////		urlConnection.setRequestProperty("Cookie", cookie);
-////		if(LogsUtil.DEBUG_ENABLED){
-////			System.out.println("REST CALL:: ");
-////			System.out.println("URL: " + restBaseURI + method);
-////			System.out.println("Authorization: " + authentication);
-////			System.out.println("Cookie: " + cookie);
-////		}
-//		return urlConnection;
-//	}
-
-
 }
