@@ -19,29 +19,29 @@ import org.json.JSONObject;
 @Path("userInfo")
 public class UserInfo {
 
-	@GET
-	@Path("/")
-	public Map<String,String> getLastModifiedBy(@QueryParam("user") String json) {
-		Map<String,String> result = new HashMap<String,String>();
-		JSONObject jsonObject;
-		try {
-			jsonObject = new JSONObject(json);
-			result.put("createdBy", jsonObject.getString("createdBy"));
-			result.put("createdDate", jsonObject.getString("createdDate"));
-			result.put("lastModifiedBy", jsonObject.getString("lastModifiedBy"));
-			result.put("lastModifiedDate", jsonObject.getString("lastModifiedDate"));
-			result.put("id", jsonObject.getString("id"));
-			result.put("login", jsonObject.getString("login"));
-			result.put("firstName", jsonObject.getString("firstName"));
-			result.put("lastName", jsonObject.getString("lastName"));
-			result.put("email", jsonObject.getString("email"));
-			result.put("activated", jsonObject.getString("activated"));
-			result.put("langKey", jsonObject.getString("langKey"));
-			result.put("activationKey", jsonObject.getString("activationKey"));
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
+//	@GET
+//	@Path("/")
+//	public Map<String,String> getLastModifiedBy(@QueryParam("user") String json) {
+//		Map<String,String> result = new HashMap<String,String>();
+//		JSONObject jsonObject;
+//		try {
+//			jsonObject = new JSONObject(json);
+//			result.put("createdBy", jsonObject.getString("createdBy"));
+//			result.put("createdDate", jsonObject.getString("createdDate"));
+//			result.put("lastModifiedBy", jsonObject.getString("lastModifiedBy"));
+//			result.put("lastModifiedDate", jsonObject.getString("lastModifiedDate"));
+//			result.put("id", jsonObject.getString("id"));
+//			result.put("login", jsonObject.getString("login"));
+//			result.put("firstName", jsonObject.getString("firstName"));
+//			result.put("lastName", jsonObject.getString("lastName"));
+//			result.put("email", jsonObject.getString("email"));
+//			result.put("activated", jsonObject.getString("activated"));
+//			result.put("langKey", jsonObject.getString("langKey"));
+//			result.put("activationKey", jsonObject.getString("activationKey"));
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//		return result;
+//	}
 
 }

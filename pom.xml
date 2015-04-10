@@ -55,6 +55,13 @@
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>1.9.13</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.4.1</version>
+		</dependency>
+		
 		<!-- GSON -->
 <!-- 		<dependency> -->
 <!-- 			<groupId>com.google.code.gson</groupId> -->
@@ -139,6 +146,7 @@
 					<webappDirectory>${webappDirectory}</webappDirectory>
 					<warSourceExcludes>WEB-INF/web.xml</warSourceExcludes>
 					<packagingExcludes>
+					
 						**/gwt-dev*.jar,
 						**/gwt-codeserver*.jar,
 						**/gwt-user*.jar,
@@ -151,6 +159,7 @@
 						**/*.template.xml,
 						**/*.offline.xml,
 						**/*.xdevice.xml
+						 
 					</packagingExcludes>
 				</configuration>
 			</plugin>

@@ -34,8 +34,8 @@ public class MainController extends AbstractController
 	@Inject
 	public IProxyAPIService connectApi;
 
-	@Inject
-	public IUserInfo userInfo;
+//	@Inject
+//	public IUserInfo userInfo;
 
 	@Expose
 	public void onLoad() {
@@ -59,39 +59,39 @@ public class MainController extends AbstractController
 	public void getInfoUser()
 	{
 		
-		final Callback<Map<String,String>> callbackUserInfo = new Callback<Map<String,String>>() {
-			@Override
-			public void onSuccess(Map<String,String> result) {
-				mainView.createdBy().setValue(result.get("createdBy"));
-				mainView.createdDate().setValue(new Date(Long.parseLong(result.get("createdDate"))).toString());
-				mainView.lastModifiedBy().setValue(result.get("lastModifiedBy"));
-				mainView.lastModifiedDate().setValue(new Date(Long.parseLong(result.get("lastModifiedDate"))).toString());
-				mainView.id().setValue(result.get("id"));
-				mainView.login().setValue(result.get("login"));
-				mainView.firstName().setValue(result.get("firstName"));
-				mainView.lastName().setValue(result.get("lastName"));
-				mainView.email().setValue(result.get("email"));
-				mainView.activated().setValue(result.get("activated"));
-				mainView.langKey().setValue(result.get("langKey"));
-				mainView.activationKey().setValue(result.get("activationKey"));
-			}
-			@Override
-			public void onError(Exception e) {}
-		};
-
-		final Callback<String> callback = new Callback<String>() {
-			@Override
-			public void onSuccess(String json) {
-				if(json==null || json.isEmpty()) FlatMessageBox.show("The user [" + mainView.nameTextBox().getValue() + "] does not exist!!", MessageType.WARN);
-				else userInfo.getLastModifiedBy(json, callbackUserInfo);
-			}
-			@Override
-			public void onError(Exception e) {
-				FlatMessageBox.show("The user [" + mainView.nameTextBox().getValue() + "] does not exist!!", MessageType.ERROR);
-			}
-		};
-
-		connectApi.users(mainView.nameTextBox().getValue(), callback);
+//		final Callback<Map<String,String>> callbackUserInfo = new Callback<Map<String,String>>() {
+//			@Override
+//			public void onSuccess(Map<String,String> result) {
+//				mainView.createdBy().setValue(result.get("createdBy"));
+//				mainView.createdDate().setValue(new Date(Long.parseLong(result.get("createdDate"))).toString());
+//				mainView.lastModifiedBy().setValue(result.get("lastModifiedBy"));
+//				mainView.lastModifiedDate().setValue(new Date(Long.parseLong(result.get("lastModifiedDate"))).toString());
+//				mainView.id().setValue(result.get("id"));
+//				mainView.login().setValue(result.get("login"));
+//				mainView.firstName().setValue(result.get("firstName"));
+//				mainView.lastName().setValue(result.get("lastName"));
+//				mainView.email().setValue(result.get("email"));
+//				mainView.activated().setValue(result.get("activated"));
+//				mainView.langKey().setValue(result.get("langKey"));
+//				mainView.activationKey().setValue(result.get("activationKey"));
+//			}
+//			@Override
+//			public void onError(Exception e) {}
+//		};
+//
+//		final Callback<String> callback = new Callback<String>() {
+//			@Override
+//			public void onSuccess(String json) {
+//				if(json==null || json.isEmpty()) FlatMessageBox.show("The user [" + mainView.nameTextBox().getValue() + "] does not exist!!", MessageType.WARN);
+//				else userInfo.getLastModifiedBy(json, callbackUserInfo);
+//			}
+//			@Override
+//			public void onError(Exception e) {
+//				FlatMessageBox.show("The user [" + mainView.nameTextBox().getValue() + "] does not exist!!", MessageType.ERROR);
+//			}
+//		};
+//
+//		connectApi.users(mainView.nameTextBox().getValue(), callback);
 
 	}  
 

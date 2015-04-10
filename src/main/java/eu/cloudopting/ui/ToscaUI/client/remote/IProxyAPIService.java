@@ -19,8 +19,6 @@ public interface IProxyAPIService extends RestProxy {
 	
 	void connect(String user, String pass, Callback<Boolean> callback);
 	
-//	void applicationCreate(String json, Callback<String> callback);
-	
 	void applicationCreate(String name, String description, String fileName, Callback<String> callback);
 	
 	void applicationList(
@@ -40,5 +38,7 @@ public interface IProxyAPIService extends RestProxy {
 	void sendFile(String fileName, Callback<String> callback);
 	
 	void customizationCreate(String applicationId, String xmlFileBase64Encoded, Callback<String> callback);
+	
+//	void uploadFile(InputStream textUpload, Callback<Boolean> callback);
 	
 }

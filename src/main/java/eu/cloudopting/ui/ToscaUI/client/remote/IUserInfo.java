@@ -14,6 +14,6 @@ import org.cruxframework.crux.core.client.rest.RestProxy.TargetRestService;
 @TargetRestService("userInfoService")
 public interface IUserInfo extends RestProxy {
 	
-	void getLastModifiedBy(String json, Callback<Map<String,String>> callback);
+//	void getLastModifiedBy(String json, Callback<Map<String,String>> callback);
 	
 }

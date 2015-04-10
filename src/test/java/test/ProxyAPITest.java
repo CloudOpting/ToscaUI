@@ -9,12 +9,11 @@ import java.nio.charset.Charset;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.math.RandomUtils;
 import org.cruxframework.crux.core.server.rest.spi.InternalServerErrorException;
+import org.cruxframework.crux.core.server.rest.spi.NotFoundException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.google.gwt.core.ext.typeinfo.NotFoundException;
 
 import eu.cloudopting.ui.ToscaUI.client.remote.impl.ProxyAPIService;
 import eu.cloudopting.ui.ToscaUI.server.model.Application;
