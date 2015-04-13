@@ -55,9 +55,9 @@ public class ProxyAPIService {
 //	private static String baseURI = "http://localhost:8080";
 	
 	//External resource
-	private static String restBaseURI = "http://cloudopting1.cloudapp.net:8081/cloudopting/api";
+//	private static String restBaseURI = "http://cloudopting1.cloudapp.net:8081/cloudopting/api";
 	//Internal resource
-//	private static String restBaseURI = "http://172.17.0.59:8080/cloudopting/api/";
+	private static String restBaseURI = "http://172.17.0.59:8080/cloudopting/api/";
 	//Development resource 
 //	private static String restBaseURI = "http://localhost:8080/api/";
 	
