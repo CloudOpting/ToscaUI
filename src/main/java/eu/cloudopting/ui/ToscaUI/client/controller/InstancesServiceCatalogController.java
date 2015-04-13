@@ -23,6 +23,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import eu.cloudopting.ui.ToscaUI.client.controller.datasource.RowCustomizationDataSource;
 import eu.cloudopting.ui.ToscaUI.client.controller.datasource.RowDataSource;
 import eu.cloudopting.ui.ToscaUI.client.remote.IProxyAPIService;
 import eu.cloudopting.ui.ToscaUI.client.utils.Navigate;
@@ -30,6 +31,7 @@ import eu.cloudopting.ui.ToscaUI.client.utils.ViewConstants;
 import eu.cloudopting.ui.ToscaUI.server.model.Application;
 import eu.cloudopting.ui.ToscaUI.server.model.ApplicationList;
 import eu.cloudopting.ui.ToscaUI.server.model.Customizations;
+import eu.cloudopting.ui.ToscaUI.server.model.RowCustomizationDTO;
 import eu.cloudopting.ui.ToscaUI.server.model.RowDTO;
 
 /**
@@ -120,14 +122,15 @@ public class InstancesServiceCatalogController extends AbstractController
 	@Expose
 	public void go(SelectEvent event){
 		DataRow row = view.grid().getRow((Widget) event.getSource());
-		final RowDTO dto = (RowDTO) row.getBoundObject();
+		final RowCustomizationDTO dto = (RowCustomizationDTO) row.getBoundObject();
 		Confirm.show("Question", "Do you want to edit the instance of " + dto.getInstance() +" with ID \"" + dto.getIdCustomization() + "\"?", new OkHandler() 
 		{
 			@Override
 			public void onOk(OkEvent event) 
 			{			
 				//Update the current Application ID.
-				getContext().put(ViewConstants.INT_COSTUMIZATION_ID_CURRENT_INSTANCE, Integer.valueOf(dto.getIdCustomization()));
+				getContext().put(ViewConstants.INT_CUSTOMIZATION_ID_CURRENT_INSTANCE, Integer.valueOf(dto.getIdCustomization()));
+				getContext().put(ViewConstants.STRING_CUSTOMIZATION_NAME_CURRENT_INSTANCE, dto.getApplicationName());
 				
 				//Navigate
 				if (dto.getStatus().equals("Requested")) {
@@ -186,10 +189,10 @@ public class InstancesServiceCatalogController extends AbstractController
 		grid.setStyleName("grid");
 		
 		//Get data source of the grid.
-		RowDataSource rowDataSource = (RowDataSource) grid.getDataSource();
+		RowCustomizationDataSource rowDataSource = (RowCustomizationDataSource) grid.getDataSource();
 
 		//Populate data to the grid.
-		List<RowDTO> rowsList = new ArrayList<RowDTO>();
+		List<RowCustomizationDTO> rowsList = new ArrayList<RowCustomizationDTO>();
 		for (Application app : list.getContent()) {
 			//Instances of services
 			List<Customizations> custList = app.getCustomizationss();
@@ -197,9 +200,15 @@ public class InstancesServiceCatalogController extends AbstractController
 				//Add the customization to the list.
 				String username = customizations.getUsername();
 				username = "Admin";
-				rowsList.add(new RowDTO(app.getId().toString(), customizations.getId().toString(),
-						"Instance of: " + app.getApplicationName() + ", created by -" + username + "- (" + customizations.getCustomizationActivation() + ")", 
-						customizations.getStatusId().getStatus()));
+				rowsList.add(
+						new RowCustomizationDTO(
+								app.getId().toString(), 
+								customizations.getId().toString(), 
+								app.getApplicationName(),
+								"Instance of: " + app.getApplicationName() + ", created by -" + username + "- (" + customizations.getCustomizationActivation() + ")",
+								customizations.getStatusId().getStatus()
+								)
+						);
 			}
 		}
 		

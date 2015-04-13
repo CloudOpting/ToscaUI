@@ -116,6 +116,7 @@ public class ToscaManagerService {
 			+ "/InputParameters"
 			+ "/InputParameter[@type=\"%s\"]";
 	
+
 	/**
 	 * LIST_INPUT_PARAMETERS_NAMES prepared query needs some parameters to work. 
 	 * 
@@ -433,9 +434,26 @@ public class ToscaManagerService {
 	 * @param String definitionId 
 	 * @param String serviceTemplateId
 	 * @param {@link NodeTypeName} nodeTypeName
-	 * @param String SLAid
+	 * @param String SLAtype
 	 */
 	private static String GET_SLA = "/Definitions[@id=\"%s\"]"
+			+ "/ServiceTemplate[@id=\"%s\"]"
+			+ "/TopologyTemplate"
+			+ "/NodeTemplate[@type=\"%s\"]"
+			+ "/Properties"
+			+ "/VMhostProperties"
+			+ "/SLAsProperties"
+			+ "/SLA[@type=\"%s\"]";
+	
+	/**
+	 * GET_SLA_BYID prepared query needs 4 parameters to work. 
+	 * 
+	 * @param String definitionId 
+	 * @param String serviceTemplateId
+	 * @param {@link NodeTypeName} nodeTypeName
+	 * @param String SLAid
+	 */
+	private static String GET_SLA_BYID = "/Definitions[@id=\"%s\"]"
 			+ "/ServiceTemplate[@id=\"%s\"]"
 			+ "/TopologyTemplate"
 			+ "/NodeTemplate[@type=\"%s\"]"
@@ -683,7 +701,7 @@ public class ToscaManagerService {
 	throws XPathExpressionException 
 	{
 		SLA sla = new SLA();
-		String expression = String.format(GET_SLA, definitionId, serviceTemplate, nodeTypeName, slaID);
+		String expression = String.format(GET_SLA_BYID, definitionId, serviceTemplate, nodeTypeName, slaID);
 
 		sla.setId(slaID);
 		sla.setNumCpus(evaluateSingleValue(expression + "/NumCpus"));
@@ -699,16 +717,16 @@ public class ToscaManagerService {
 	@Path("/getChosenSLA")
 	public SLA getChosenSLA(
 			@QueryParam("definitionId") String definitionId, 
-			@QueryParam("serviceTemplate") String serviceTemplate, 
 			@QueryParam("nodeTypeName") String nodeTypeName) 
 	throws XPathExpressionException 
 	{
 		// /Definitions[@id="Clearo"]/NodeType/Interfaces/Interface/Operation[@name="Install"]/InputParameters/InputParameter[@type="co:SLA"]
 		String inputParameterType = "co:SLA";
-		String slaID = getInputParametersType(definitionId, NodeTypeName.valueOf(nodeTypeName), serviceTemplate, OperationName.Install, inputParameterType);
-		
+		String slaID = getInputParametersType(definitionId, NodeTypeName.valueOf(nodeTypeName), interfaceName, OperationName.Install, inputParameterType);
+		System.out.println("slaID: " + slaID);
 		SLA sla = new SLA();
-		String expression = String.format(GET_SLA, definitionId, serviceTemplate, nodeTypeName, slaID);
+		String expression = String.format(GET_SLA_BYID, definitionId, definitionId, nodeTypeName, slaID);
+		System.out.println("expression: " + expression);
 
 		sla.setId(slaID);
 		sla.setNumCpus(evaluateSingleValue(expression + "/NumCpus"));
@@ -794,6 +812,7 @@ public class ToscaManagerService {
 //			result = nodeToString(node);
 //		}
 		if(LogsUtil.DEBUG_ENABLED){
+			System.out.println(expression);
 			System.out.println(result.trim());
 		}
 		return result.trim();

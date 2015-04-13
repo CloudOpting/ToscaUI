@@ -6,6 +6,7 @@ import org.cruxframework.crux.core.client.rest.RestProxy.TargetRestService;
 
 import eu.cloudopting.ui.ToscaUI.server.model.Application;
 import eu.cloudopting.ui.ToscaUI.server.model.ApplicationList;
+import eu.cloudopting.ui.ToscaUI.server.model.Customizations;
 
 /**
  * This interface acts as a proxy to the REST API of the middleware.
@@ -32,6 +33,8 @@ public interface IProxyAPIService extends RestProxy {
 	void applicationListUnpaginated(Callback<ApplicationList> callback);
 		
 	void application(String id, Callback<Application> callback);
+	
+	void customization(String id, Callback<Customizations> callback);
 	
 	void users(String user, Callback<String> callback);
 	

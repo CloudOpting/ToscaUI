@@ -39,6 +39,7 @@ import org.cruxframework.crux.core.shared.rest.annotation.QueryParam;
 
 import eu.cloudopting.ui.ToscaUI.server.model.Application;
 import eu.cloudopting.ui.ToscaUI.server.model.ApplicationList;
+import eu.cloudopting.ui.ToscaUI.server.model.Customizations;
 import eu.cloudopting.ui.ToscaUI.server.utils.ConnectionUtils;
 import eu.cloudopting.ui.ToscaUI.server.utils.IOUtils;
 
@@ -53,8 +54,12 @@ public class ProxyAPIService {
 	
 //	private static String baseURI = "http://localhost:8080";
 	
+	//External resource
+	private static String restBaseURI = "http://cloudopting1.cloudapp.net:8081/cloudopting/api";
+	//Internal resource
 //	private static String restBaseURI = "http://172.17.0.59:8080/cloudopting/api/";
-	private static String restBaseURI = "http://localhost:8080/api/";
+	//Development resource 
+//	private static String restBaseURI = "http://localhost:8080/api/";
 	
 	private static CloseableHttpClient httpclient;
 	
@@ -71,6 +76,13 @@ public class ProxyAPIService {
 	 * @param ApplicationId 
 	 */
 	private static String APPLICATION_METHOD = "application/%s";
+	
+	/**
+	 * CUSTOMIZATION_METHOD prepared method needs 1 parameters to work. 
+	 * 
+	 * @param CustomizationId 
+	 */
+	private static String CUSTOMIZATION_METHOD = "customization/%s";
 	
 	/**
 	 * APPLICATION_CREATE_METHOD prepared method. 
@@ -266,6 +278,15 @@ public class ProxyAPIService {
 		ObjectMapper mapper = new ObjectMapper();
 		Application application = mapper.readValue(json, Application.class);
 		return application;
+	}
+	
+	@GET
+	@Path("customization/{id}")
+	public Customizations customization(@PathParam("id") String id) throws MalformedURLException, IOException, InternalServerErrorException, NotFoundException {
+		String json = doCallToString(String.format(CUSTOMIZATION_METHOD, id));
+		ObjectMapper mapper = new ObjectMapper();
+		Customizations customization = mapper.readValue(json, Customizations.class);
+		return customization;
 	}
 
 	@GET

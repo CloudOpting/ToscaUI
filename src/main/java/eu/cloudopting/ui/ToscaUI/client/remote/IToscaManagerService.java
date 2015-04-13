@@ -39,7 +39,7 @@ public interface IToscaManagerService extends RestProxy {
 //			Callback<List<String>> callback);
 	
 	
-	void getChosenSLA(String definitionId, String serviceTemplate, String nodeTypeName,  
+	void getChosenSLA(String definitionId, String nodeTypeName,  
 			Callback<SLA> callback); 
 	
 	void setSLA(String nameId, String nodeTypeName, SLA sla, Callback<String> callback);

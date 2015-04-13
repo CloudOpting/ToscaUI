@@ -62,7 +62,7 @@ public class ServiceSubscriberOperateController extends AbstractController
 		@Override
 		public void onSuccess(String result) {
 			Application app = (Application) getContext().get(ViewConstants.APPLICATION_CURRENT_INSTANCE);
-			toscaManager.getChosenSLA(app.getApplicationName(), app.getApplicationName(), "VMhost", callbackSLA);
+			toscaManager.getChosenSLA(app.getApplicationName(), "VMhost", callbackSLA);
 		}
 		@Override
 		public void onError(Exception e) {
