@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLConnection;
+import java.util.logging.Logger;
 
 import org.apache.commons.codec.binary.Base64;
 
@@ -16,6 +17,8 @@ import org.apache.commons.codec.binary.Base64;
  */
 public class ConnectionUtils {
 
+	private static final Logger log = Logger.getLogger("ConnectionUtils");
+	
 	/**
 	 * Get the authorization string for basic authentication.
 	 * @param user
@@ -59,7 +62,7 @@ public class ConnectionUtils {
 		if(urlConnection==null) return;
 
 		for(String key : urlConnection.getHeaderFields().keySet()){
-			System.out.println(key + ": " + urlConnection.getHeaderField(key));
+			log.fine(key + ": " + urlConnection.getHeaderField(key));
 		}
 	}
 	

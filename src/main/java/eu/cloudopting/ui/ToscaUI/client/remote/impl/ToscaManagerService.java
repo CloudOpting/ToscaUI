@@ -5,6 +5,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -37,7 +38,6 @@ import org.xml.sax.SAXException;
 
 import eu.cloudopting.ui.ToscaUI.server.model.SLA;
 import eu.cloudopting.ui.ToscaUI.server.model.SubscribeServicesView;
-import eu.cloudopting.ui.ToscaUI.server.utils.LogsUtil;
 import eu.cloudopting.ui.ToscaUI.server.utils.UniversalNamespaceResolver;
 
 /**
@@ -49,6 +49,8 @@ import eu.cloudopting.ui.ToscaUI.server.utils.UniversalNamespaceResolver;
 @Path("toscaManagerService")
 public class ToscaManagerService {
 
+	private static final Logger log = Logger.getLogger("ToscaManagerService");
+	
 	//TODO: Edit temp variables
 	private String interfaceName = "http://tempuri.org";
 	
@@ -566,9 +568,9 @@ public class ToscaManagerService {
 			@QueryParam("nodeTypeName") String nodeTypeName,
 			@QueryParam("sla") SLA sla) throws XPathExpressionException, IOException {
 		
-		System.out.println(nameId);
-		System.out.println(nodeTypeName);
-		System.out.println(sla);
+		log.fine(nameId);
+		log.fine(nodeTypeName);
+		log.fine(sla.toString());
 		
 		String inputParameterType = "co:SLA";
 		
@@ -723,10 +725,10 @@ public class ToscaManagerService {
 		// /Definitions[@id="Clearo"]/NodeType/Interfaces/Interface/Operation[@name="Install"]/InputParameters/InputParameter[@type="co:SLA"]
 		String inputParameterType = "co:SLA";
 		String slaID = getInputParametersType(definitionId, NodeTypeName.valueOf(nodeTypeName), interfaceName, OperationName.Install, inputParameterType);
-		System.out.println("slaID: " + slaID);
+		log.fine("slaID: " + slaID);
 		SLA sla = new SLA();
 		String expression = String.format(GET_SLA_BYID, definitionId, definitionId, nodeTypeName, slaID);
-		System.out.println("expression: " + expression);
+		log.fine("expression: " + expression);
 
 		sla.setId(slaID);
 		sla.setNumCpus(evaluateSingleValue(expression + "/NumCpus"));
@@ -787,7 +789,7 @@ public class ToscaManagerService {
 	 * @throws XPathExpressionException
 	 */
 	private String insertSingleValue(String expression, String value) throws XPathExpressionException, IOException {
-		System.out.println("Insert: " + expression);
+		log.fine("Insert: " + expression);
 		if(value != null) {
 			Node node = (Node) xpath.evaluate(expression, document, XPathConstants.NODE);
 			if(node!=null){
@@ -811,10 +813,8 @@ public class ToscaManagerService {
 //			Node node = (Node) xpath.evaluate(expression, document, XPathConstants.NODE);
 //			result = nodeToString(node);
 //		}
-		if(LogsUtil.DEBUG_ENABLED){
-			System.out.println(expression);
-			System.out.println(result.trim());
-		}
+		log.fine(expression);
+		log.fine(result.trim());
 		return result.trim();
 	}
 
@@ -831,10 +831,8 @@ public class ToscaManagerService {
 		for(int i = 0; i < nodeList.getLength(); i++) {
 			result.add( nodeList.item(i).getNodeValue() );
 		}
-		if(LogsUtil.DEBUG_ENABLED){
-			System.out.println(expression);
-			System.out.println(result);
-		}
+		log.fine(expression);
+		log.fine(result.toString());
 		return result;
 	}
 	
@@ -852,7 +850,7 @@ public class ToscaManagerService {
 			t.setOutputProperty(OutputKeys.INDENT, "yes");
 			t.transform(new DOMSource(node), new StreamResult(sw));
 		} catch (TransformerException te) {
-			System.out.println("nodeToString Transformer Exception");
+			log.warning("nodeToString Transformer Exception");
 		} 
 		return sw.toString();
 	} 

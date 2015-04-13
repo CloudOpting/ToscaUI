@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Logger;
 
 import org.cruxframework.crux.core.server.rest.annotation.RestService;
 import org.cruxframework.crux.core.shared.rest.annotation.GET;
@@ -20,6 +21,8 @@ import org.cruxframework.crux.core.shared.rest.annotation.Path;
 @RestService("toscaProviderService")
 @Path("/toscaProvider")
 public class ToscaProviderServiceImpl {
+	
+	private static final Logger log = Logger.getLogger("ToscaProviderServiceImpl");
 	
 	@GET
 	@Path("getToscaFile")
@@ -40,9 +43,9 @@ public class ToscaProviderServiceImpl {
 					(conn.getInputStream())));
 
 			String output;
-			System.out.println("Output from Server .... \n");
+			log.fine("Output from Server .... \n");
 			while ((output = br.readLine()) != null) {
-				System.out.println(output);
+				log.fine(output);
 			}
 
 			conn.disconnect();
@@ -62,7 +65,7 @@ public class ToscaProviderServiceImpl {
 //
 //		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 //		Customer customer = (Customer) jaxbUnmarshaller.unmarshal(file);
-//		System.out.println(customer);
+//		log.fine(customer.toString());
 
 
 		return null;
@@ -81,7 +84,7 @@ public class ToscaProviderServiceImpl {
 //
 //		jaxbMarshaller.marshal(customer, file);
 //		jaxbMarshaller.marshal(customer, System.out);
-		System.out.println("INSIDE SET TOSCA FILE");
+		log.fine("INSIDE SET TOSCA FILE");
 	}
 
 }

@@ -10,6 +10,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.logging.Logger;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpEntity;
@@ -52,6 +53,7 @@ import eu.cloudopting.ui.ToscaUI.server.utils.IOUtils;
 @Path("proxyAPIService")
 public class ProxyAPIService {
 	
+	private static final Logger log = Logger.getLogger("ProxyAPIService");
 //	private static String baseURI = "http://localhost:8080";
 	
 	//External resource
@@ -146,7 +148,7 @@ public class ProxyAPIService {
 	        CloseableHttpResponse response = httpclient.execute(httpget);
 	        //Check if the response is OK, then proceed.
 	        try {
-	            System.out.println(response.getStatusLine());
+	            log.fine(response.getStatusLine().toString());
 	            HttpEntity entity = response.getEntity();
 	            // do something useful with the response body
 	            // and ensure it is fully consumed
@@ -164,10 +166,10 @@ public class ProxyAPIService {
 			cookie = urlConnection.getHeaderField("Set-Cookie");
 			
 			if(LogsUtil.DEBUG_ENABLED){
-				System.out.println("CONNECTION:: ");
-				System.out.println("URL: " + baseURI);
-				System.out.println("Authorization: " + authentication);
-				System.out.println("Cookie: " + cookie);
+				log.fine("CONNECTION:: ");
+				log.fine("URL: " + baseURI);
+				log.fine("Authorization: " + authentication);
+				log.fine("Cookie: " + cookie);
 			}
 		
 		return cookie;
@@ -177,7 +179,7 @@ public class ProxyAPIService {
 //	@POST
 //	@Path("uploadFile")
 //	public Boolean uploadFile(@FormParam("textUpload") InputStream textUpload) {
-//		System.out.println("HOLA");
+//		log.fine("HOLA");
 //		return true;
 //	}
 	
@@ -329,7 +331,7 @@ public class ProxyAPIService {
 	 * @throws NotFoundException 
 	 */
 	private String doCallToString(String method) throws MalformedURLException, NotFoundException, InternalServerErrorException, IOException {
-		System.out.println(restBaseURI+method);
+		log.info(restBaseURI+method);
 		//Create the http post
         HttpGet httpget = new HttpGet(restBaseURI+method);
         httpget.setHeader("Content-type", "application/json");
@@ -338,7 +340,7 @@ public class ProxyAPIService {
         CloseableHttpResponse response = httpclient.execute(httpget);
         String message = "RARE";
         try {
-            System.out.println(response.getStatusLine());
+        	log.info(response.getStatusLine().toString());
             HttpEntity entity = response.getEntity();
             message = ConnectionUtils.getStringFromInputStream(entity.getContent());
             if(response.getStatusLine().getStatusCode()==404)
@@ -371,7 +373,7 @@ public class ProxyAPIService {
         CloseableHttpResponse response = httpclient.execute(httppost);
         //get the data.
         try {
-            System.out.println(response.getStatusLine());
+        	log.info(response.getStatusLine().toString());
             HttpEntity entity = response.getEntity();
             return ConnectionUtils.getStringFromInputStream(entity.getContent());
         } finally {
