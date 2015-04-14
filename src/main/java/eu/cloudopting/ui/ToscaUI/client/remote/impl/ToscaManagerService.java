@@ -484,6 +484,7 @@ public class ToscaManagerService {
 	@POST
 	@Path("/")
 	public String setTosca(@FormParam("toscaXmlBase64Encoded") String toscaXmlBase64Encoded) {
+		log.info("Sarting setTosca.");
 		try {
 			String toscaXml = new String(Base64.decodeBase64(toscaXmlBase64Encoded));
 			//Parse the String to a Document
@@ -500,12 +501,14 @@ public class ToscaManagerService {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		log.info("Ending setTosca.");
 		return "OK";//TODO: CHeck return param
 	}
 	
 	@GET
 	@Path("/")
 	public String getTosca(@QueryParam("original") @DefaultValue("false") boolean original) {
+		log.info("Sarting getTosca.");
 		String result = "";
 		try {
 			
@@ -530,12 +533,14 @@ public class ToscaManagerService {
 		} catch (TransformerException e) {
 			e.printStackTrace();
 		}
+		log.info("Ending getTosca.");
 		return result;
 	}
 	
 	@GET
 	@Path("/getSubscribeServiceLists")
 	public SubscribeServicesView getSubscribeServiceLists(@QueryParam("nameId") String nameId) throws XPathExpressionException {
+		log.info("Sarting getSubscribeServiceLists.");
 		SubscribeServicesView ssl = new SubscribeServicesView();
 		
 		//GET NODE TYPES
@@ -553,6 +558,7 @@ public class ToscaManagerService {
 				ssl.getListSLAs().add(getSLA(nameId, nameId, NodeTypeName.valueOf(type), sla));
 			}
 		}
+		log.info("Ending getSubscribeServiceLists.");
 		
 //		ssl.setListCPUs(listCPUs);
 //		ssl.setListCSSs(listCSSs);
@@ -567,6 +573,7 @@ public class ToscaManagerService {
 	public String setSLA(@QueryParam("nameId") String nameId, 
 			@QueryParam("nodeTypeName") String nodeTypeName,
 			@QueryParam("sla") SLA sla) throws XPathExpressionException, IOException {
+		log.info("Sarting setSLA.");
 		
 		log.fine(nameId);
 		log.fine(nodeTypeName);
@@ -576,7 +583,10 @@ public class ToscaManagerService {
 		
 		setInputParameter(nameId, NodeTypeName.valueOf(nodeTypeName), interfaceName, OperationName.Install, inputParameterType, "BigCity");
 		
-		return getTosca(false);
+		String toscaFile = getTosca(false);
+		
+		log.info("Ending setSLA.");
+		return toscaFile;
 	}
 
 	//** EXPOSED QUERIES **//
@@ -702,6 +712,7 @@ public class ToscaManagerService {
 			@QueryParam("slaID") String slaID) 
 	throws XPathExpressionException 
 	{
+		log.info("Sarting getSLA.");
 		SLA sla = new SLA();
 		String expression = String.format(GET_SLA_BYID, definitionId, serviceTemplate, nodeTypeName, slaID);
 
@@ -712,6 +723,7 @@ public class ToscaManagerService {
 		sla.setDisk(evaluateSingleValue(expression + "/Disk"));
 		sla.setChosen(evaluateSingleValue(expression + "/Chosen"));
 
+		log.info("Ending getSLA.");
 		return sla;
 	}
 	
@@ -722,6 +734,7 @@ public class ToscaManagerService {
 			@QueryParam("nodeTypeName") String nodeTypeName) 
 	throws XPathExpressionException 
 	{
+		log.info("Sarting getChosenSLA.");
 		// /Definitions[@id="Clearo"]/NodeType/Interfaces/Interface/Operation[@name="Install"]/InputParameters/InputParameter[@type="co:SLA"]
 		String inputParameterType = "co:SLA";
 		String slaID = getInputParametersType(definitionId, NodeTypeName.valueOf(nodeTypeName), interfaceName, OperationName.Install, inputParameterType);
@@ -736,7 +749,7 @@ public class ToscaManagerService {
 		sla.setPrice(evaluateSingleValue(expression + "/Price"));
 		sla.setDisk(evaluateSingleValue(expression + "/Disk"));
 		sla.setChosen(evaluateSingleValue(expression + "/Chosen"));
-
+		log.info("Ending getChosenSLA.");
 		return sla;
 	}
 
@@ -778,7 +791,7 @@ public class ToscaManagerService {
 
 	
 	/*
-	 * TOSCA UTILS
+	 * TOSCA UTILS. PRIVATE METHODS
 	 */
 	
 	/**
@@ -789,16 +802,21 @@ public class ToscaManagerService {
 	 * @throws XPathExpressionException
 	 */
 	private String insertSingleValue(String expression, String value) throws XPathExpressionException, IOException {
-		log.fine("Insert: " + expression);
+		log.info("Starting insertSingleValue.");
+		log.fine("Expresion: " + expression + ", Value: " + value);
 		if(value != null) {
 			Node node = (Node) xpath.evaluate(expression, document, XPathConstants.NODE);
 			if(node!=null){
 				node.setTextContent(value);
 			} else {
+				log.warning("The value could not be inserted, Node not found.");
 				throw new IOException("The value could not be inserted, Node not found."); 
 			}
 		}
-		return evaluateSingleValue(expression);
+		String result = evaluateSingleValue(expression);
+		log.fine(result);
+		log.info("Ending insertSingleValue.");
+		return result;
 	}
 
 	/**
@@ -808,13 +826,15 @@ public class ToscaManagerService {
 	 * @throws XPathExpressionException
 	 */
 	private String evaluateSingleValue(String expression) throws XPathExpressionException {
+		log.info("Starting evaluateSingleValue.");
+		log.fine("Expresion: " + expression);
 		String result = (String) xpath.evaluate(expression, document, XPathConstants.STRING);
 //		if(result.isEmpty()) {
 //			Node node = (Node) xpath.evaluate(expression, document, XPathConstants.NODE);
 //			result = nodeToString(node);
 //		}
-		log.fine(expression);
 		log.fine(result.trim());
+		log.info("Ending evaluateSingleValue.");
 		return result.trim();
 	}
 
@@ -825,14 +845,16 @@ public class ToscaManagerService {
 	 * @throws XPathExpressionException
 	 */
 	private List<String> evaluateMultipleValues(String expression) throws XPathExpressionException {
+		log.info("Starting evaluateMultipleValues.");
+		log.fine("Expresion: " + expression);
 //		DTMNodeList nodeList = (DTMNodeList) xpath.evaluate(expression, document, XPathConstants.NODESET);
 		NodeList nodeList = (NodeList) xpath.evaluate(expression, document, XPathConstants.NODESET);
 		List<String> result = new ArrayList<String>();
 		for(int i = 0; i < nodeList.getLength(); i++) {
 			result.add( nodeList.item(i).getNodeValue() );
 		}
-		log.fine(expression);
 		log.fine(result.toString());
+		log.info("Ending evaluateMultipleValues.");
 		return result;
 	}
 	

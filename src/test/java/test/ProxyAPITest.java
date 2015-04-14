@@ -223,7 +223,7 @@ public class ProxyAPITest {
 //		String decoded = new String(Base64.decodeBase64(base));
 //		System.out.println(decoded);
 	
-		ProxyAPIService p = new ProxyAPIService();
-		p.createJsonCreate("HOLA", "DESC", "FILE BAME");
+//		ProxyAPIService p = new ProxyAPIService();
+//		p.createJsonCreate("HOLA", "DESC", "FILE BAME");
 	}
 }

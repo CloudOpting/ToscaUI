@@ -7,6 +7,7 @@ public class Customizations {
 
 	private Integer id;
 	private StatusId statusId;
+	private ApplicationId applicationId;
 	private String customizationToscaFile;
 	private String customizationCreation;
 	private String customizationActivation;
@@ -48,6 +49,14 @@ public class Customizations {
 	 */
 	public void setStatusId(StatusId statusId) {
 		this.statusId = statusId;
+	}
+
+	public ApplicationId getApplicationId() {
+		return applicationId;
+	}
+
+	public void setApplicationId(ApplicationId applicationId) {
+		this.applicationId = applicationId;
 	}
 
 	/**
